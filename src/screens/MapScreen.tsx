@@ -13,10 +13,12 @@ import { useLocation, startWatch, locateOnce, startCompass } from '../lib/locati
 import { buildStyle, type BaseStyleName } from '../lib/mapstyle';
 import { useIsDark } from '../lib/theme';
 import { CAT, KIND_HEX } from '../lib/meta';
-import { travelLegs } from '../lib/positions';
+import { crewTrails, travelLegs } from '../lib/positions';
 import { route as fetchRoute, routeProgress, type RouteResult } from '../lib/routing';
 import { useDB, useMe, usePresence, useSettings, setSettings } from '../lib/store';
-import { durationLabel } from '../lib/time';
+import { dayKey, durationLabel, zonedToUtc } from '../lib/time';
+
+const dayStartMs = (ms: number) => zonedToUtc(dayKey(ms), '00:00');
 import { mapsLink } from '../lib/trip';
 import { clearMapIntent, openSheet, useMapIntent } from '../lib/ui';
 
@@ -86,6 +88,7 @@ export function MapScreen({ active }: { active: boolean }) {
   const [styleOpen, setStyleOpen] = useState(false);
   const [noteHidden, setNoteHidden] = useState(false);
   const [navFollow, setNavFollow] = useState(false);
+  const [showTrails, setShowTrails] = useState(true);
   const crewMarkers = useRef<Map<string, { m: maplibregl.Marker; el: HTMLDivElement }>>(new Map());
   const meMarker = useRef<maplibregl.Marker | null>(null);
   const liveMarkers = useRef<Map<string, maplibregl.Marker>>(new Map());
@@ -182,6 +185,15 @@ export function MapScreen({ active }: { active: boolean }) {
     if (!map.getSource('legs')) map.addSource('legs', { type: 'geojson', data: empty });
     if (!map.getSource('route')) map.addSource('route', { type: 'geojson', data: empty });
     if (!map.getSource('places')) map.addSource('places', { type: 'geojson', data: empty });
+    if (!map.getSource('trails')) map.addSource('trails', { type: 'geojson', data: empty });
+    if (!map.getLayer('trails'))
+      map.addLayer({
+        id: 'trails',
+        type: 'line',
+        source: 'trails',
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: { 'line-color': ['get', 'color'], 'line-width': ['interpolate', ['linear'], ['zoom'], 5, 1.5, 15, 5], 'line-opacity': 0.55, 'line-offset': ['get', 'off'] },
+      });
     if (!map.getLayer('legs-casing'))
       map.addLayer({
         id: 'legs-casing',
@@ -302,6 +314,31 @@ export function MapScreen({ active }: { active: boolean }) {
       }));
     src.setData({ type: 'FeatureCollection', features: feats });
   }, [legs, tBucket, ready]);
+
+  // ── today's trails ("where we've been") ──
+  const trailBucket = Math.floor(t / (10 * 60_000));
+  useEffect(() => {
+    const map = mapRef.current;
+    const src = map?.getSource('trails') as GeoJSONSource | undefined;
+    if (!src) return;
+    const tt = trailBucket * 10 * 60_000;
+    const from = Math.max(dayStartMs(tt), Date.parse('2026-11-12T20:00:00+01:00'));
+    if (!showTrails || tt <= from) {
+      src.setData({ type: 'FeatureCollection', features: [] });
+      return;
+    }
+    const trails = crewTrails(db.people, db.events, db.place, from, tt, db);
+    src.setData({
+      type: 'FeatureCollection',
+      features: trails
+        .filter((tr) => tr.path.length > 1)
+        .map((tr, i) => ({
+          type: 'Feature' as const,
+          properties: { color: tr.color, off: (i - 1) * 2.5 },
+          geometry: { type: 'LineString' as const, coordinates: tr.path },
+        })),
+    });
+  }, [trailBucket, db, ready, showTrails]);
 
   // ── crew markers ──
   useEffect(() => {
@@ -576,6 +613,9 @@ export function MapScreen({ active }: { active: boolean }) {
         </button>
         {styleOpen && (
           <div className="style-pop card">
+            <button className="chip" aria-pressed={showTrails} onClick={() => setShowTrails((v) => !v)}>
+              〰 Today’s trails
+            </button>
             {(['liberty', 'positron', 'bright', 'dark'] as const).map((s) => (
               <button
                 key={s}

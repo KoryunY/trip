@@ -223,6 +223,26 @@ export function crewPositions(people: Person[], events: TripEvent[], places: Rec
   });
 }
 
+/** Sampled path of a person between t0 and t1 (for "where we've been" trails) */
+export function crewTrails(people: Person[], events: TripEvent[], places: Record<string, Place>, t0: number, t1: number, version: unknown, step = 5 * 60_000) {
+  crewPositions(people, events, places, t1, version); // warms the timeline cache
+  return people.map((p) => {
+    const segs = cache.get(p.id)!;
+    const pts: LngLat[] = [];
+    let last: LngLat | null = null;
+    for (let t = t0; t <= t1; t += step) {
+      const pos = positionAt(p.id, segs, t);
+      if (!last || Math.abs(last[0] - pos.p[0]) > 1e-5 || Math.abs(last[1] - pos.p[1]) > 1e-5) {
+        pts.push(pos.p);
+        last = pos.p;
+      }
+    }
+    const end = positionAt(p.id, segs, t1).p;
+    pts.push(end);
+    return { person: p.id, color: p.color, path: pts };
+  });
+}
+
 /** All travel legs (for drawing routes/arcs on the map) */
 export function travelLegs(events: TripEvent[], places: Record<string, Place>) {
   const out: { id: string; kind: string; path: LngLat[]; people: string[]; start: number; end: number }[] = [];
