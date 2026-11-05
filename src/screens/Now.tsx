@@ -34,7 +34,7 @@ import { useWeather, wmo, NORMAL } from '../lib/weather';
 export function NowScreen() {
   const db = useDB();
   const me = useMe()!;
-  const { t, live } = useTripTime(15_000);
+  const { t, live } = useTripTime(15_000, 5 * 60_000);
   const person = db.person[me];
   const [scope, setScope] = useState<'mine' | 'all'>('mine');
   const today = dayKey(t);

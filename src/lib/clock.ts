@@ -121,9 +121,21 @@ export function useNow(every = 15_000): number {
   return now;
 }
 
-/** Effective time for the UI: live clock or the time-machine cursor */
-export function useTripTime(every = 15_000): { t: number; live: boolean } {
+/** Sim cursor quantised to `quant` ms (or -1 when live), so subscribers only re-render when it moves enough */
+function useSimQuantised(quant: number): number {
+  return useSyncExternalStore(
+    (l) => {
+      listeners.add(l);
+      return () => listeners.delete(l);
+    },
+    () => (ts.mode === 'live' ? -1 : quant > 0 ? Math.floor(ts.sim / quant) * quant : ts.sim),
+    () => -1,
+  );
+}
+
+/** Effective time for the UI: live clock or the time-machine cursor (quantised for cheap re-renders) */
+export function useTripTime(every = 15_000, quant = 60_000): { t: number; live: boolean } {
   const now = useNow(every);
-  const s = useTimeState();
-  return s.mode === 'live' ? { t: now, live: true } : { t: s.sim, live: false };
+  const sim = useSimQuantised(quant);
+  return sim === -1 ? { t: now, live: true } : { t: sim, live: false };
 }

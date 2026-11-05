@@ -307,13 +307,17 @@ export function MapScreen({ active }: { active: boolean }) {
       entry.m.setOffset(off);
       const moving = pos.mode === 'travel' || pos.mode === 'moving';
       const icon = pos.mode === 'travel' ? (db.event[pos.eventId ?? '']?.kind === 'flight' ? '✈️' : '🚆') : pos.mode === 'moving' ? '🚶' : '';
-      entry.el.style.setProperty('--c', person.color);
-      entry.el.dataset.mode = pos.mode;
-      entry.el.classList.toggle('grouped', n > 1);
-      entry.el.innerHTML = `<span class="cm-av">${person.name[0]}</span>${moving ? `<span class="cm-badge">${icon}</span>` : ''}<span class="cm-label">${person.name}</span>`;
-      entry.el.setAttribute('aria-label', `${person.name}: ${pos.label}`);
-      entry.el.title = `${person.name}: ${pos.label}`;
-      entry.el.classList.toggle('me', pos.person === me);
+      const sig = `${person.color}|${person.name}|${pos.mode}|${icon}|${n > 1}|${pos.label}|${pos.person === me}`;
+      if (entry.el.dataset.sig !== sig) {
+        entry.el.dataset.sig = sig;
+        entry.el.style.setProperty('--c', person.color);
+        entry.el.dataset.mode = pos.mode;
+        entry.el.classList.toggle('grouped', n > 1);
+        entry.el.innerHTML = `<span class="cm-av">${person.name[0]}</span>${moving ? `<span class="cm-badge">${icon}</span>` : ''}<span class="cm-label">${person.name}</span>`;
+        entry.el.setAttribute('aria-label', `${person.name}: ${pos.label}`);
+        entry.el.title = `${person.name}: ${pos.label}`;
+        entry.el.classList.toggle('me', pos.person === me);
+      }
     }
     for (const [pid, entry] of crewMarkers.current) {
       if (!seen.has(pid)) {

@@ -15,7 +15,7 @@ import { useWeather, wmo, NORMAL } from '../lib/weather';
 
 export function PlanScreen() {
   const route = useRoute();
-  const { t } = useTripTime(30_000);
+  const { t } = useTripTime(30_000, 5 * 60_000);
   const days = tripDays();
   const today = dayKey(t);
   const defaultDay = today < TRIP_START_DAY ? TRIP_START_DAY : today > TRIP_END_DAY ? TRIP_START_DAY : today;

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Person, TripEvent } from '../../shared/types';
+import type { TripEvent } from '../../shared/types';
 import { crewPositions, type PersonPos } from './positions';
 import { useDB } from './store';
 import { evStart, evEnd } from './trip';
@@ -16,8 +16,4 @@ export function nextEventFor(pid: string, events: TripEvent[], t: number) {
 }
 export function currentEventFor(pid: string, events: TripEvent[], t: number) {
   return events.find((e) => e.status !== 'cancelled' && e.people.includes(pid) && evStart(e) <= t && evEnd(e) > t);
-}
-
-export function firstTravelInto(p: Person, events: TripEvent[]) {
-  return events.find((e) => e.people.includes(p.id) && e.toPlaceId === 'base' || (e.people.includes(p.id) && e.kind === 'flight' && e.toPlaceId === 'prg'));
 }

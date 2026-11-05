@@ -13,7 +13,7 @@ import { Avatar, Sheet, toast } from '../ui';
 export function PersonSheet({ id, onClose }: { id: string; onClose: () => void }) {
   const db = useDB();
   const me = useMe();
-  const { t, live } = useTripTime(15_000);
+  const { t, live } = useTripTime(15_000, 60_000);
   const crew = useCrew(t);
   const presence = usePresence();
   const p = db.person[id];
