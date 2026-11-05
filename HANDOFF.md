@@ -35,6 +35,8 @@ Status as of 5 Nov 2026. Live at **https://prague-crew.vercel.app**. Every push 
 - Editor time-zone and midnight handling work.
 - The position engine was simulated for all three people across the trip.
 
+Test scripts used (Playwright, run against `vite preview` + `scripts/dev-api.mjs`): two-phone sync, live GPS, mocked-OSRM navigation, editor tz/midnight, offline reload, offline download, and an axe-core WCAG 2 AA audit of every screen in light and dark (0 violations).
+
 ## Not verifiable from the build container
 These hosts are blocked by its proxy: real OpenFreeMap tiles/styles, Open-Meteo weather, OSRM routing, and er-api rates. The code paths were exercised with mocks; check them on a phone.
 
