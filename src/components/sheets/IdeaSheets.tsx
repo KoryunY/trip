@@ -7,6 +7,7 @@ import { voteScore } from '../../lib/trip';
 import { openSheet, replaceSheet } from '../../lib/ui';
 import { Avatar, Sheet, toast } from '../ui';
 import { PlacePicker } from './PlacePicker';
+import { t as tx } from '../../i18n';
 
 export function IdeaSheet({ id, onClose }: { id: string; onClose: () => void }) {
   const db = useDB();
@@ -14,8 +15,8 @@ export function IdeaSheet({ id, onClose }: { id: string; onClose: () => void }) 
   const idea = db.ideas.find((i) => i.id === id);
   if (!idea) {
     return (
-      <Sheet title="Idea removed" onClose={onClose}>
-        <p className="muted">Gone.</p>
+      <Sheet title={tx("Idea removed")} onClose={onClose}>
+        <p className="muted">{tx("Gone.")}</p>
       </Sheet>
     );
   }
@@ -32,7 +33,7 @@ export function IdeaSheet({ id, onClose }: { id: string; onClose: () => void }) 
       title={idea.title}
       onClose={onClose}
       actions={
-        <button className="icon-btn" aria-label="Edit idea" onClick={() => replaceSheet({ t: 'ideaEdit', id: idea.id })}>
+        <button className="icon-btn" aria-label={tx("Edit idea")} onClick={() => replaceSheet({ t: 'ideaEdit', id: idea.id })}>
           <Pencil />
         </button>
       }
@@ -50,10 +51,10 @@ export function IdeaSheet({ id, onClose }: { id: string; onClose: () => void }) 
           </button>
         )}
         <div className="pl-votes">
-          <button className={`vote ${my === 1 ? 'on' : ''}`} onClick={() => vote(1)} aria-label="Vote up" aria-pressed={my === 1}>
+          <button className={`vote ${my === 1 ? 'on' : ''}`} onClick={() => vote(1)} aria-label={tx("Vote up")} aria-pressed={my === 1}>
             <ThumbsUp />
           </button>
-          <button className={`vote down ${my === -1 ? 'on' : ''}`} onClick={() => vote(-1)} aria-label="Vote down" aria-pressed={my === -1}>
+          <button className={`vote down ${my === -1 ? 'on' : ''}`} onClick={() => vote(-1)} aria-label={tx("Vote down")} aria-pressed={my === -1}>
             <ThumbsDown />
           </button>
           <span className="tnum score">{voteScore(idea.votes)}</span>
@@ -83,8 +84,7 @@ export function IdeaSheet({ id, onClose }: { id: string; onClose: () => void }) 
             });
           }}
         >
-          <CalendarPlus /> Schedule it
-        </button>
+          <CalendarPlus />{tx(" Schedule it")}</button>
       </div>
     </Sheet>
   );
@@ -99,21 +99,17 @@ export function IdeaEditor({ id, draft, onClose }: { id?: string; draft?: Partia
   const submit = () => {
     if (!f.title.trim()) return;
     save('ideas', { ...f, title: f.title.trim() });
-    toast(existing ? 'Idea saved' : 'Idea added: now get votes!');
+    toast(existing ? tx("Idea saved") : tx("Idea added: now get votes!"));
     onClose();
   };
   return (
     <Sheet
-      title={existing ? 'Edit idea' : 'New idea'}
+      title={existing ? tx("Edit idea") : tx("New idea")}
       onClose={onClose}
       footer={
         <>
-          <button className="btn" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="btn primary" style={{ flex: 1 }} disabled={!f.title.trim()} onClick={submit}>
-            Save
-          </button>
+          <button className="btn" onClick={onClose}>{tx("Cancel")}</button>
+          <button className="btn primary" style={{ flex: 1 }} disabled={!f.title.trim()} onClick={submit}>{tx("Save")}</button>
         </>
       }
     >
@@ -125,12 +121,12 @@ export function IdeaEditor({ id, draft, onClose }: { id?: string; draft?: Partia
         }}
       >
         <div className="field">
-          <label htmlFor="id-title">Idea</label>
+          <label htmlFor="id-title">{tx("Idea")}</label>
           <input id="id-title" value={f.title} onChange={(e) => set({ title: e.target.value })} autoFocus={!existing} />
         </div>
         <div className="grid2">
           <div className="field">
-            <label htmlFor="id-kind">Type</label>
+            <label htmlFor="id-kind">{tx("Type")}</label>
             <select id="id-kind" value={f.kind} onChange={(e) => set({ kind: e.target.value as EventKind })}>
               {KIND_ORDER.map((k) => (
                 <option key={k} value={k}>
@@ -140,20 +136,20 @@ export function IdeaEditor({ id, draft, onClose }: { id?: string; draft?: Partia
             </select>
           </div>
           <div className="field">
-            <label htmlFor="id-dur">Hours needed</label>
+            <label htmlFor="id-dur">{tx("Hours needed")}</label>
             <input id="id-dur" type="number" min={0.5} step={0.5} value={(f.durationMin ?? 120) / 60} onChange={(e) => set({ durationMin: Math.round(Number(e.target.value) * 60) })} />
           </div>
         </div>
         <div className="field">
-          <label htmlFor="id-place">Place</label>
+          <label htmlFor="id-place">{tx("Place")}</label>
           <PlacePicker id="id-place" value={f.placeId} onChange={(v) => set({ placeId: v })} />
         </div>
         <div className="field">
-          <label htmlFor="id-cost">Cost</label>
+          <label htmlFor="id-cost">{tx("Cost")}</label>
           <input id="id-cost" value={f.cost ?? ''} onChange={(e) => set({ cost: e.target.value })} />
         </div>
         <div className="field">
-          <label htmlFor="id-notes">Notes</label>
+          <label htmlFor="id-notes">{tx("Notes")}</label>
           <textarea id="id-notes" value={f.notes ?? ''} onChange={(e) => set({ notes: e.target.value })} />
         </div>
         {existing && (
@@ -165,8 +161,7 @@ export function IdeaEditor({ id, draft, onClose }: { id?: string; draft?: Partia
               onClose();
             }}
           >
-            <Trash2 /> Delete idea
-          </button>
+            <Trash2 />{tx(" Delete idea")}</button>
         )}
       </form>
     </Sheet>

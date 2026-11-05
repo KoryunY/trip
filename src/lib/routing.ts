@@ -30,25 +30,36 @@ function persist(key: string, r: RouteResult) {
   }
 }
 
+const MOD: Record<string, string> = {
+  left: 'left',
+  right: 'right',
+  'slight left': 'slight left',
+  'slight right': 'slight right',
+  'sharp left': 'sharp left',
+  'sharp right': 'sharp right',
+  straight: 'straight',
+  uturn: 'U-turn',
+};
 function stepText(s: { maneuver: { type: string; modifier?: string }; name: string }) {
   const m = s.maneuver;
-  const name = s.name ? ` onto ${s.name}` : '';
+  const name = s.name ? tx(' onto {street}', { street: s.name }) : '';
+  const mod = m.modifier ? tx(MOD[m.modifier] ?? m.modifier) : '';
   switch (m.type) {
     case 'depart':
-      return `Start${s.name ? ` on ${s.name}` : ''}`;
+      return s.name ? tx('Start on {street}', { street: s.name }) : tx('Start');
     case 'arrive':
-      return 'Arrive at destination';
+      return tx('Arrive at destination');
     case 'turn':
     case 'end of road':
-      return `Turn ${m.modifier ?? ''}${name}`.trim();
+      return (tx('Turn {dir}', { dir: mod }) + name).trim();
     case 'continue':
     case 'new name':
-      return `Continue${name}`;
+      return tx('Continue') + name;
     case 'roundabout':
     case 'rotary':
-      return `Take the roundabout${name}`;
+      return tx('Take the roundabout') + name;
     default:
-      return `${m.type.replace(/^\w/, (c) => c.toUpperCase())} ${m.modifier ?? ''}${name}`.trim();
+      return `${tx(m.type.replace(/^\w/, (c) => c.toUpperCase()))} ${mod}${name}`.trim();
   }
 }
 
@@ -82,6 +93,7 @@ export async function route(from: LngLat, to: LngLat, profile: 'foot' | 'car' = 
 }
 
 import { distance as dist } from './geo';
+import { t as tx } from '../i18n';
 
 /** progress of a position along a route: remaining metres, distance off the route, next instruction */
 export function routeProgress(r: RouteResult, at: LngLat) {

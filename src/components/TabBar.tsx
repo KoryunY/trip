@@ -2,13 +2,14 @@ import { CalendarDays, ClipboardCheck, House, LayoutGrid, Map } from 'lucide-rea
 import { go, useRoute, type Tab } from '../lib/router';
 import { useDB, useMe } from '../lib/store';
 import { myOpenTasks } from '../lib/trip';
+import { t as tx } from '../i18n';
 
 const TABS: { id: Tab; label: string; icon: typeof House }[] = [
-  { id: 'now', label: 'Now', icon: House },
-  { id: 'map', label: 'Map', icon: Map },
-  { id: 'plan', label: 'Plan', icon: CalendarDays },
-  { id: 'prep', label: 'Prep', icon: ClipboardCheck },
-  { id: 'more', label: 'More', icon: LayoutGrid },
+  { id: 'now', label: tx('Now'), icon: House },
+  { id: 'map', label: tx('Map'), icon: Map },
+  { id: 'plan', label: tx('Plan'), icon: CalendarDays },
+  { id: 'prep', label: tx('Prep'), icon: ClipboardCheck },
+  { id: 'more', label: tx('More'), icon: LayoutGrid },
 ];
 
 export function TabBar() {
@@ -17,7 +18,7 @@ export function TabBar() {
   const me = useMe();
   const urgent = me ? myOpenTasks(db.tasks, me).filter((t) => t.priority === 'high').length : 0;
   return (
-    <nav className="tabbar" aria-label="Main">
+    <nav className="tabbar" aria-label={tx("Main")}>
       <div className="tabbar-inner">
         {TABS.map((t) => {
           const Icon = t.icon;

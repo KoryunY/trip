@@ -2,6 +2,7 @@
 import { useSyncExternalStore } from 'react';
 import { getSettings } from './store';
 import { sendPresence } from './sync';
+import { t as tx } from '../i18n';
 
 export interface Fix {
   lat: number;
@@ -40,7 +41,7 @@ export const getFix = () => st.fix;
 let watchId: number | null = null;
 export function startWatch() {
   if (watchId != null || !('geolocation' in navigator)) {
-    if (!('geolocation' in navigator)) set({ error: 'No GPS in this browser' });
+    if (!('geolocation' in navigator)) set({ error: tx('No GPS in this browser') });
     return;
   }
   set({ watching: true, error: null });
@@ -58,7 +59,7 @@ export function startWatch() {
       if (getSettings().shareLocation) void sendPresence({ lat: fix.lat, lon: fix.lon, acc: Math.round(fix.acc), heading: fix.heading, speed: fix.speed });
     },
     (err) => {
-      set({ error: err.code === 1 ? 'Location permission denied' : 'Location unavailable' });
+      set({ error: err.code === 1 ? tx('Location permission denied') : tx('Location unavailable') });
       if (err.code === 1) stopWatch();
     },
     { enableHighAccuracy: true, maximumAge: 10_000, timeout: 30_000 },

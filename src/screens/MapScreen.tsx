@@ -21,18 +21,19 @@ import { dayKey, durationLabel, zonedToUtc } from '../lib/time';
 const dayStartMs = (ms: number) => zonedToUtc(dayKey(ms), '00:00');
 import { mapsLink } from '../lib/trip';
 import { clearMapIntent, openSheet, useMapIntent } from '../lib/ui';
+import { t as tx } from '../i18n';
 
 const PRAGUE: LngLat = [14.44, 50.083];
 
 const FILTERS: { id: string; label: string; cats: PlaceCategory[] | null }[] = [
-  { id: 'all', label: 'All', cats: null },
-  { id: 'plan', label: '⭐ In plan', cats: null },
-  { id: 'beer', label: '🍺 Beer', cats: ['beer'] },
-  { id: 'sight', label: '🏛️ Sights', cats: ['sight', 'viewpoint', 'museum'] },
-  { id: 'food', label: '🍽️ Food & cafés', cats: ['food', 'cafe'] },
-  { id: 'night', label: '🎉 Night', cats: ['nightlife', 'venue'] },
-  { id: 'transport', label: '🚉 Transport', cats: ['transport'] },
-  { id: 'more', label: '🛒 Other', cats: ['shop', 'service', 'daytrip', 'city', 'home'] },
+  { id: 'all', label: tx('All'), cats: null },
+  { id: 'plan', label: tx('⭐ In plan'), cats: null },
+  { id: 'beer', label: tx('🍺 Beer'), cats: ['beer'] },
+  { id: 'sight', label: tx('🏛️ Sights'), cats: ['sight', 'viewpoint', 'museum'] },
+  { id: 'food', label: tx('🍽️ Food & cafés'), cats: ['food', 'cafe'] },
+  { id: 'night', label: tx('🎉 Night'), cats: ['nightlife', 'venue'] },
+  { id: 'transport', label: tx('🚉 Transport'), cats: ['transport'] },
+  { id: 'more', label: tx('🛒 Other'), cats: ['shop', 'service', 'daytrip', 'city', 'home'] },
 ];
 
 function isDark() {
@@ -421,7 +422,7 @@ export function MapScreen({ active }: { active: boolean }) {
         }
         m.getElement().style.setProperty('--c', person.color);
         m.getElement().innerHTML = `<span>${person.name[0]}</span>`;
-        m.getElement().title = `${person.name} · live GPS`;
+        m.getElement().title = tx('{name} · live GPS', { name: person.name });
         m.setLngLat([p.lon, p.lat]);
       }
     }
@@ -521,7 +522,7 @@ export function MapScreen({ active }: { active: boolean }) {
   useEffect(() => {
     if (nav && distToDest != null && distToDest < 35 && navFollow) {
       setNavFollow(false);
-      toast(`You’ve arrived at ${nav.name} 🎉`);
+      toast(tx('You’ve arrived at {place} 🎉', { place: nav.name }));
       navigator.vibrate?.([60, 60, 120]);
     }
   }, [distToDest, nav, navFollow]);
@@ -545,12 +546,12 @@ export function MapScreen({ active }: { active: boolean }) {
         ],
         { padding: { top: 110, bottom: 260, left: 50, right: 50 }, maxZoom: 17 },
       );
-      if (!fix) toast('No GPS fix, so the route starts from the base');
+      if (!fix) toast(tx("No GPS fix, so the route starts from the base"));
     } catch (err) {
       // offline or routing down: straight line + compass
       const src = mapRef.current?.getSource('route') as GeoJSONSource | undefined;
       src?.setData({ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: [from, to] } });
-      setNav({ to, name, err: navigator.onLine ? String((err as Error).message) : 'Offline: straight-line direction shown. Use the compass.' });
+      setNav({ to, name, err: navigator.onLine ? String((err as Error).message) : tx("Offline: straight-line direction shown. Use the compass.") });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -567,7 +568,7 @@ export function MapScreen({ active }: { active: boolean }) {
     startWatch();
     const fix = await locateOnce();
     if (fix) mapRef.current?.flyTo({ center: [fix.lon, fix.lat], zoom: 16 });
-    else toast(loc.error ?? 'Could not get your location');
+    else toast(loc.error ?? tx("Could not get your location"));
   };
 
   const myDistHome = loc.fix ? distance([loc.fix.lon, loc.fix.lat], [db.place.base.lon, db.place.base.lat]) : null;
@@ -586,8 +587,8 @@ export function MapScreen({ active }: { active: boolean }) {
         </div>
         {!remote && !noteHidden && (
           <div className="map-offline-note" role="status">
-            <span>No street map right now. Settings → Download offline map.</span>
-            <button onClick={() => setNoteHidden(true)} aria-label="Dismiss">
+            <span>{tx("No street map right now. Settings → Download offline map.")}</span>
+            <button onClick={() => setNoteHidden(true)} aria-label={tx("Dismiss")}>
               <X />
             </button>
           </div>
@@ -595,27 +596,25 @@ export function MapScreen({ active }: { active: boolean }) {
       </div>
       {/* right controls */}
       <div className="map-controls">
-        <button className="icon-btn raised" onClick={() => setStyleOpen((v) => !v)} aria-label="Map style" aria-expanded={styleOpen}>
+        <button className="icon-btn raised" onClick={() => setStyleOpen((v) => !v)} aria-label={tx("Map style")} aria-expanded={styleOpen}>
           <Layers />
         </button>
-        <button className={`icon-btn raised ${follow ? 'on' : ''}`} onClick={() => (setFollow(true), fitCrew())} aria-label="Follow the crew" aria-pressed={follow}>
+        <button className={`icon-btn raised ${follow ? 'on' : ''}`} onClick={() => (setFollow(true), fitCrew())} aria-label={tx("Follow the crew")} aria-pressed={follow}>
           <Users />
         </button>
-        <button className="icon-btn raised" onClick={locateMe} aria-label="My location">
+        <button className="icon-btn raised" onClick={locateMe} aria-label={tx("My location")}>
           <Crosshair />
         </button>
         <button
           className="icon-btn raised"
           onClick={() => openSheet({ t: 'compass', target: { lat: db.place.base.lat, lon: db.place.base.lon, name: 'Base' } })}
-          aria-label="Compass to base"
+          aria-label={tx("Compass to base")}
         >
           <Compass />
         </button>
         {styleOpen && (
           <div className="style-pop card">
-            <button className="chip" aria-pressed={showTrails} onClick={() => setShowTrails((v) => !v)}>
-              〰 Today’s trails
-            </button>
+            <button className="chip" aria-pressed={showTrails} onClick={() => setShowTrails((v) => !v)}>{tx("〰 Today’s trails")}</button>
             {(['liberty', 'positron', 'bright', 'dark'] as const).map((s) => (
               <button
                 key={s}
@@ -641,18 +640,18 @@ export function MapScreen({ active }: { active: boolean }) {
                 <Navigation />
               </span>
               <span className="grow">
-                <span className="t">To {nav.name}</span>
+                <span className="t">{tx("To ")}{nav.name}</span>
                 <span className="s">
                   {nav.loading
-                    ? 'Finding a walking route…'
+                    ? tx("Finding a walking route…")
                     : nav.res && prog
-                      ? `${fmtDistance(prog.remaining)} left · ~${durationLabel((prog.remaining / 1.3) * 1000)}`
+                      ? tx('{dist} left · ~{dur}', { dist: fmtDistance(prog.remaining), dur: durationLabel((prog.remaining / 1.3) * 1000) })
                       : nav.res
-                        ? `${durationLabel(nav.res.duration * 1000)} walk · ${fmtDistance(nav.res.distance)}`
+                        ? tx('{dur} walk · {dist}', { dur: durationLabel(nav.res.duration * 1000), dist: fmtDistance(nav.res.distance) })
                         : nav.err}
                 </span>
               </span>
-              <button className="icon-btn" onClick={stopNav} aria-label="Stop navigation">
+              <button className="icon-btn" onClick={stopNav} aria-label={tx("Stop navigation")}>
                 <X />
               </button>
             </div>
@@ -662,9 +661,7 @@ export function MapScreen({ active }: { active: boolean }) {
               </div>
             )}
             {prog && prog.offRoute > 70 && nav.res && (
-              <button className="btn sm danger" onClick={() => startNav(nav.to, nav.name)}>
-                Off route: re-route from here
-              </button>
+              <button className="btn sm danger" onClick={() => startNav(nav.to, nav.name)}>{tx("Off route: re-route from here")}</button>
             )}
             <div className="nav-actions">
               {nav.res && (
@@ -678,24 +675,20 @@ export function MapScreen({ active }: { active: boolean }) {
                     setNavFollow((v) => !v);
                   }}
                 >
-                  <Navigation /> {navFollow ? 'Following you' : 'Start'}
+                  <Navigation /> {navFollow ? tx("Following you") : tx("Start")}
                 </button>
               )}
               <a className="btn sm" href={mapsLink(nav.to[1], nav.to[0], 'transit', loc.fix ? [loc.fix.lon, loc.fix.lat] : undefined)} target="_blank" rel="noreferrer">
-                <ExternalLink /> Transit (Google)
-              </a>
+                <ExternalLink />{tx(" Transit (Google)")}</a>
               <a className="btn sm" href={mapsLink(nav.to[1], nav.to[0], 'walking')} target="_blank" rel="noreferrer">
-                <Footprints /> Walk (Google)
-              </a>
+                <Footprints />{tx(" Walk (Google)")}</a>
               <button className="btn sm" onClick={() => openSheet({ t: 'compass', target: { lat: nav.to[1], lon: nav.to[0], name: nav.name } })}>
-                <Compass /> Compass
-              </button>
+                <Compass />{tx(" Compass")}</button>
             </div>
             {nav.res && nav.res.steps.length > 1 && (
               <details className="nav-steps">
                 <summary>
-                  <RouteIcon aria-hidden /> {nav.res.steps.length} steps
-                </summary>
+                  <RouteIcon aria-hidden /> {nav.res.steps.length}{tx(" steps")}</summary>
                 <ol>
                   {nav.res.steps.map((s, i) => (
                     <li key={i}>
@@ -708,7 +701,7 @@ export function MapScreen({ active }: { active: boolean }) {
           </div>
         ) : (
           <div className={`card map-panel ${panel ? '' : 'collapsed'}`}>
-            <button className="map-panel-toggle" onClick={() => setPanel((v) => !v)} aria-expanded={panel} aria-label={panel ? 'Collapse panel' : 'Expand panel'}>
+            <button className="map-panel-toggle" onClick={() => setPanel((v) => !v)} aria-expanded={panel} aria-label={panel ? tx("Collapse panel") : tx("Expand panel")}>
               {panel ? <ChevronDown /> : <ChevronUp />}
             </button>
             {panel && (
@@ -741,8 +734,7 @@ export function MapScreen({ active }: { active: boolean }) {
                   );
                 })}
                 {myDistHome != null && myDistHome > 150 && (
-                  <button className="btn sm home-btn" onClick={() => startNav([db.place.base.lon, db.place.base.lat], 'Base')}>
-                    🏠 Home · {fmtDistance(myDistHome)}
+                  <button className="btn sm home-btn" onClick={() => startNav([db.place.base.lon, db.place.base.lat], 'Base')}>{tx("🏠 Home · ")}{fmtDistance(myDistHome)}
                   </button>
                 )}
               </div>

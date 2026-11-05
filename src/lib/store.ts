@@ -17,6 +17,8 @@ import type {
 } from '../../shared/types';
 import { itemKey, newer } from '../../shared/merge.js';
 import { SEED } from '../data/seed';
+import { CONTENT_RU } from '../i18n/content.ru';
+import { PLACES_RU } from '../i18n/places.ru';
 
 const LS_SERVER = 'pc.server.v1';
 const LS_PENDING = 'pc.pending.v1';
@@ -46,6 +48,7 @@ export interface Settings {
   shareLocation: boolean;
   onlyMine: boolean;
   currency: string;
+  lang: 'en' | 'ru';
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -56,6 +59,7 @@ const DEFAULT_SETTINGS: Settings = {
   shareLocation: false,
   onlyMine: false,
   currency: 'EUR',
+  lang: 'en',
 };
 
 // ---------- safe storage ----------
@@ -127,6 +131,41 @@ function resolveItem(key: string): SyncItem | undefined {
   return best;
 }
 
+// ---------- content translation (seed texts only; edited texts stay as written) ----------
+const TR_FIELDS: Partial<Record<Collection, string[]>> = {
+  events: ['title', 'notes', 'booking', 'cost'],
+  tasks: ['title', 'details'],
+  ideas: ['title', 'notes', 'cost'],
+  people: ['name', 'from', 'note', 'homeName'],
+  notes: ['title', 'body'],
+  places: ['name', 'blurb', 'hours', 'price', 'area'],
+};
+function ruFor(col: Collection, id: string): Record<string, string | undefined> | undefined {
+  if (col === 'places') return PLACES_RU[id];
+  const m = (CONTENT_RU as unknown as Record<string, Record<string, Record<string, string>>>)[col];
+  return m?.[id];
+}
+function translateRec(col: Collection, data: any): any {
+  if (settings.lang !== 'ru') return data;
+  const fields = TR_FIELDS[col];
+  const ru = fields && ruFor(col, data.id);
+  const seed = seedLayer.get(itemKey(col, data.id))?.data as any;
+  if (!fields || !ru || !seed) return data;
+  const out = { ...data };
+  for (const f of fields) if (ru[f] != null && data[f] === seed[f]) out[f] = ru[f];
+  return out;
+}
+/** map Russian seed texts back to the English originals before saving, so other languages stay intact */
+function untranslateRec(col: Collection, data: any): any {
+  const fields = TR_FIELDS[col];
+  const ru = fields && ruFor(col, data.id);
+  const seed = seedLayer.get(itemKey(col, data.id))?.data as any;
+  if (!fields || !ru || !seed) return data;
+  const out = { ...data };
+  for (const f of fields) if (ru[f] != null && data[f] === ru[f]) out[f] = seed[f];
+  return out;
+}
+
 // ---------- normalisation (synced data may be partial/old) ----------
 const arr = (v: unknown) => (Array.isArray(v) ? v : []);
 function normalise(col: Collection, d: any): any | null {
@@ -167,8 +206,9 @@ function buildDB(): DB {
   for (const key of keys) {
     const it = resolveItem(key);
     if (!it || it.data === null || !buckets[it.col]) continue;
-    const data = normalise(it.col, it.data);
-    if (!data) continue;
+    const norm = normalise(it.col, it.data);
+    if (!norm) continue;
+    const data = translateRec(it.col, norm);
     buckets[it.col].push({ data, key });
     if (it.u > 0) meta[key] = { u: it.u, by: it.by };
   }
@@ -236,7 +276,7 @@ export function onLocalChange(fn: () => void) {
 }
 
 function pushOp(col: Collection, id: string, data: unknown | null) {
-  const op: SyncItem = { col, id, data, u: stamp(), by: me ?? 'anon' };
+  const op: SyncItem = { col, id, data: data === null ? null : untranslateRec(col, data), u: stamp(), by: me ?? 'anon' };
   pending.set(itemKey(col, id), op);
   lsSet(LS_PENDING, [...pending.values()]);
   emit();

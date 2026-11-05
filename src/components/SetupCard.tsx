@@ -7,6 +7,7 @@ import { setSettings, useDB, useMe, useSettings } from '../lib/store';
 import { go } from '../lib/router';
 import { toast } from './ui';
 import { realNow } from '../lib/clock';
+import { t as tx } from '../i18n';
 
 const LS = 'pc.setup.v1';
 const read = () => {
@@ -35,44 +36,44 @@ export function SetupCard() {
     {
       done: Boolean(off.finishedAt),
       icon: CloudDownload,
-      label: off.running ? `Downloading offline map… ${off.total ? Math.round((off.done / off.total) * 100) : 0}%` : 'Download the offline map',
+      label: off.running ? tx('Downloading offline map… {pct}%', { pct: off.total ? Math.round((off.done / off.total) * 100) : 0 }) : tx("Download the offline map"),
       run: () => void downloadOffline(),
     },
     {
       done: s.shareLocation,
       icon: Radio,
-      label: 'Share live location with the crew',
+      label: tx("Share live location with the crew"),
       run: () => {
         setSettings({ shareLocation: true });
         startWatch();
-        toast('Sharing your location while the app is open');
+        toast(tx("Sharing your location while the app is open"));
       },
     },
     {
       done: Boolean(st.ics),
       icon: CalendarPlus,
-      label: 'Add my plan to the phone calendar',
+      label: tx("Add my plan to the phone calendar"),
       run: () => {
         download(`prague-${me}.ics`, buildICS(db.events.filter((e) => e.people.includes(me)), db.place, `Prague Crew · ${db.person[me]?.name}`), 'text/calendar');
         write({ ics: true });
         setSt(read());
       },
     },
-    { done: standalone, icon: Smartphone, label: 'Install on the home screen', run: () => go('settings') },
+    { done: standalone, icon: Smartphone, label: tx("Install on the home screen"), run: () => go('settings') },
   ];
   const left = items.filter((i) => !i.done).length;
   if (st.hidden || left === 0 || realNow() > Date.parse('2026-11-22T20:00:00+01:00')) return null;
   return (
     <div className="card pad setup">
       <div className="setup-h">
-        <b>Get your phone trip-ready</b>
+        <b>{tx("Get your phone trip-ready")}</b>
         <span className="muted tnum">
           {items.length - left}/{items.length}
         </span>
         <button
           className="icon-btn"
           style={{ width: 34, height: 34 }}
-          aria-label="Hide"
+          aria-label={tx("Hide")}
           onClick={() => {
             write({ hidden: true });
             setSt(read());

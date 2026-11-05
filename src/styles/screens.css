@@ -2207,3 +2207,59 @@ details[open] > summary::before {
   width: 17px;
   height: 17px;
 }
+
+.qt {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.qt-btn {
+  height: 34px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.qt-btn.theme {
+  width: 34px;
+}
+.qt-btn.theme svg {
+  width: 17px;
+  height: 17px;
+}
+.qt-btn.lang {
+  padding: 2px;
+  gap: 1px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.qt-btn.lang span {
+  padding: 5px 6px;
+  border-radius: 7px;
+  color: var(--ink-3);
+}
+.qt-btn.lang span.on {
+  background: var(--ink);
+  color: var(--bg);
+}
+.login-toggles {
+  position: absolute;
+  top: calc(var(--safe-top) + 14px);
+  right: 16px;
+}
+.login-toggles .qt-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #f7f3ea;
+}
+.login-toggles .qt-btn.lang span {
+  color: rgba(247, 243, 234, 0.6);
+}
+.login-toggles .qt-btn.lang span.on {
+  background: #f7f3ea;
+  color: #16151b;
+}

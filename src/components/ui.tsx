@@ -2,6 +2,7 @@ import { Check, X } from 'lucide-react';
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import type { Person } from '../../shared/types';
+import { t as tx } from '../i18n';
 
 // ───────── Avatar ─────────
 export function Avatar({
@@ -82,7 +83,7 @@ export function Sheet({
     };
   }, [onClose]);
   return createPortal(
-    <div className="sheet-root" role="dialog" aria-modal="true" aria-label={label ?? (typeof title === 'string' ? title : 'Details')}>
+    <div className="sheet-root" role="dialog" aria-modal="true" aria-label={label ?? (typeof title === 'string' ? title : tx("Details"))}>
       <div className="sheet-scrim" onClick={onClose} />
       <div
         className="sheet"
@@ -106,7 +107,7 @@ export function Sheet({
           <div className="sheet-head">
             {title ? <h2>{title}</h2> : <div style={{ flex: 1 }} />}
             {actions}
-            <button className="icon-btn" onClick={onClose} aria-label="Close">
+            <button className="icon-btn" onClick={onClose} aria-label={tx("Close")}>
               <X />
             </button>
           </div>

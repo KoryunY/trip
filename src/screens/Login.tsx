@@ -2,23 +2,28 @@ import { ArrowRight } from 'lucide-react';
 import { Avatar } from '../components/ui';
 import { Skyline } from '../components/Skyline';
 import { setMe, useDB } from '../lib/store';
+import { t as tx } from '../i18n';
+import { QuickToggles } from '../components/QuickToggles';
 
 export function Login() {
   const db = useDB();
   return (
     <div className="login">
       <div className="login-hero">
-        <div className="login-badge">13 – 22 NOV 2026</div>
+        <div className="login-toggles">
+          <QuickToggles />
+        </div>
+        <div className="login-badge">{tx("13 – 22 NOV 2026")}</div>
         <h1>
           Prague
           <br />
           Crew
         </h1>
-        <p>Map, plan, prep & live crew tracker for the three of us.</p>
+        <p>{tx("Map, plan, prep & live crew tracker for the three of us.")}</p>
         <Skyline className="login-skyline" />
       </div>
       <div className="login-body">
-        <h2>Who’s holding this phone?</h2>
+        <h2>{tx("Who’s holding this phone?")}</h2>
         <div className="login-people">
           {db.people.map((p) => (
             <button key={p.id} className="login-person" onClick={() => setMe(p.id)}>
@@ -31,7 +36,7 @@ export function Login() {
             </button>
           ))}
         </div>
-        <p className="login-note">No passwords. Everyone sees and edits everything, and changes sync to the whole crew.</p>
+        <p className="login-note">{tx("No passwords. Everyone sees and edits everything, and changes sync to the whole crew.")}</p>
       </div>
     </div>
   );

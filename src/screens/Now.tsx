@@ -30,10 +30,12 @@ import { distance, fmtDistance, walkMinutes } from '../lib/geo';
 import { DAY_THEMES, SUN } from '../lib/meta';
 import { go } from '../lib/router';
 import { isSeed, useActivity, useDB, useMe } from '../lib/store';
-import { countdownParts, dayKey, fmtDayLong, relTime, tripDays, hhmm } from '../lib/time';
+import { countdownParts, dayKey, fmtDayLong, fmtWeekday, relTime, tripDays, hhmm } from '../lib/time';
 import { eventDay, eventsOnDay, myOpenTasks, taskStats, TRIP_START_MS, TRIP_END_MS, evEnd, evStart } from '../lib/trip';
 import { openSheet, mapIntent } from '../lib/ui';
 import { useWeather, wmo, NORMAL } from '../lib/weather';
+import { t as tx } from '../i18n';
+import { QuickToggles } from '../components/QuickToggles';
 
 export function NowScreen() {
   const db = useDB();
@@ -69,13 +71,14 @@ export function NowScreen() {
     <>
       <header className="appbar">
         <div className="appbar-inner">
-          <button className="me-btn" onClick={() => go('settings')} aria-label="Profile & settings">
+          <button className="me-btn" onClick={() => go('settings')} aria-label={tx("Profile & settings")}>
             <Avatar person={person} size="md" />
           </button>
           <div className="appbar-title">
-            <h1>Hi, {person?.name ?? 'friend'}</h1>
-            <div className="sub">{live ? fmtDayLong(t) : `Time travel · ${fmtDayLong(t)} ${hhmm(t)}`}</div>
+            <h1>{tx("Hi, ")}{person?.name ?? 'friend'}</h1>
+            <div className="sub">{live ? fmtDayLong(t) : `${tx('Time travel')} · ${fmtDayLong(t)} ${hhmm(t)}`}</div>
           </div>
+          <QuickToggles />
           <SyncBadge />
         </div>
       </header>
@@ -85,29 +88,29 @@ export function NowScreen() {
           <Skyline className="hero-skyline" />
           {phase === 'before' && (
             <>
-              <div className="eyebrow hero-eyebrow">Your Prague trip starts in</div>
+              <div className="eyebrow hero-eyebrow">{tx("Your Prague trip starts in")}</div>
               <div className="countdown tnum" role="timer">
                 <span>
                   <b>{cd.days}</b>
-                  <i>days</i>
+                  <i>{tx("days")}</i>
                 </span>
                 <span>
                   <b>{cd.hours}</b>
-                  <i>hrs</i>
+                  <i>{tx("hrs")}</i>
                 </span>
                 <span>
                   <b>{cd.minutes}</b>
-                  <i>min</i>
+                  <i>{tx("min")}</i>
                 </span>
               </div>
               {firstMine && (
                 <button className="hero-next" onClick={() => openSheet({ t: 'event', id: firstMine.id })}>
                   <span>
-                    <span className="eyebrow">First up</span>
+                    <span className="eyebrow">{tx("First up")}</span>
                     <span className="hero-next-t">{firstMine.title}</span>
                     <span className="hero-next-s">
                       {fmtDayLong(evStart(firstMine), firstMine.tz)} · {hhmm(evStart(firstMine), firstMine.tz)}
-                      {firstMine.tz && firstMine.tz !== 'Europe/Prague' ? ' local' : ''}
+                      {firstMine.tz && firstMine.tz !== 'Europe/Prague' ? tx(" local") : ''}
                     </span>
                   </span>
                   <ArrowRight aria-hidden />
@@ -118,9 +121,9 @@ export function NowScreen() {
           {phase === 'during' && (
             <>
               <div className="eyebrow hero-eyebrow">
-                {dayIdx >= 0 ? `Day ${dayIdx + 1} of ${days.length}` : 'On the way'} · {theme?.emoji}
+                {dayIdx >= 0 ? tx('Day {n} of {total}', { n: dayIdx + 1, total: days.length }) : tx("On the way")} · {theme?.emoji}
               </div>
-              <h2 className="hero-title">{theme?.title ?? 'Prague'}</h2>
+              <h2 className="hero-title">{theme?.title ?? tx("Prague")}</h2>
               <div className="hero-meta">
                 {w ? (
                   <span>
@@ -131,14 +134,14 @@ export function NowScreen() {
                     🌡️ ~{NORMAL.tmax}° / {NORMAL.tmin}°
                   </span>
                 )}
-                {SUN[today] && <span>🌇 sunset {SUN[today][1]}</span>}
+                {SUN[today] && <span>{tx("🌇 sunset ")}{SUN[today][1]}</span>}
               </div>
             </>
           )}
           {phase === 'after' && (
             <>
-              <div className="eyebrow hero-eyebrow">Na zdraví!</div>
-              <h2 className="hero-title">That’s a wrap. What a trip.</h2>
+              <div className="eyebrow hero-eyebrow">{tx("Na zdraví!")}</div>
+              <h2 className="hero-title">{tx("That’s a wrap. What a trip.")}</h2>
             </>
           )}
         </div>
@@ -148,8 +151,8 @@ export function NowScreen() {
             <Play aria-hidden />
           </span>
           <span className="grow">
-            <b>Watch the whole trip</b>
-            <span className="muted">Timelapse: everyone’s icons travel to Prague, explore, and fly home</span>
+            <b>{tx("Watch the whole trip")}</b>
+            <span className="muted">{tx("Timelapse: everyone’s icons travel to Prague, explore, and fly home")}</span>
           </span>
         </button>
 
@@ -158,10 +161,8 @@ export function NowScreen() {
         {/* CREW + TIME MACHINE */}
         <section className="section">
           <div className="section-h">
-            <h2>The crew {live ? 'right now' : 'at that moment'}</h2>
-            <button className="link" onClick={() => mapIntent({ fitCrew: true })}>
-              On map
-            </button>
+            <h2>{tx("The crew ")}{live ? tx("right now") : tx("at that moment")}</h2>
+            <button className="link" onClick={() => mapIntent({ fitCrew: true })}>{tx("On map")}</button>
           </div>
           <CrewList t={t} live={live} />
           <div className="card tm-card">
@@ -172,14 +173,14 @@ export function NowScreen() {
         {/* UP NEXT */}
         <section className="section">
           <div className="section-h">
-            <h2>Up next</h2>
+            <h2>{tx("Up next")}</h2>
             <Segmented
-              label="Whose events"
+              label={tx("Whose events")}
               value={scope}
               onChange={setScope}
               options={[
-                { v: 'mine', label: 'Me' },
-                { v: 'all', label: 'Crew' },
+                { v: 'mine', label: tx("Me") },
+                { v: 'all', label: tx("Crew") },
               ]}
             />
           </div>
@@ -195,7 +196,7 @@ export function NowScreen() {
                 />
               ))
             ) : (
-              <div className="empty">Nothing left on the plan. Time to improvise 🍻</div>
+              <div className="empty">{tx("Nothing left on the plan. Time to improvise 🍻")}</div>
             )}
           </div>
           <LeaveHint />
@@ -207,7 +208,7 @@ export function NowScreen() {
                 return (
                   <>
                     <button className="btn sm" onClick={() => mapIntent({ route: { to: [pl.lon, pl.lat], name: pl.name } })}>
-                      <Footprints /> Route to {pl.name.split('·')[0].trim().slice(0, 22)}
+                      <Footprints />{tx(" Route to ")}{pl.name.split('·')[0].trim().slice(0, 22)}
                     </button>
                     <span className="muted" style={{ fontSize: 13 }}>
                       {relTime(evStart(upcoming[0]), t)}
@@ -223,10 +224,8 @@ export function NowScreen() {
         {phase === 'during' && todays.length > 0 && (
           <section className="section">
             <div className="section-h">
-              <h2>Today’s plan</h2>
-              <button className="link" onClick={() => go(`plan/${today}`)}>
-                Full day
-              </button>
+              <h2>{tx("Today’s plan")}</h2>
+              <button className="link" onClick={() => go(`plan/${today}`)}>{tx("Full day")}</button>
             </div>
             <div className="today-strip">
               {todays.map((e) => {
@@ -246,10 +245,8 @@ export function NowScreen() {
         {/* PREP */}
         <section className="section">
           <div className="section-h">
-            <h2>Your prep</h2>
-            <button className="link" onClick={() => go('prep')}>
-              All tasks
-            </button>
+            <h2>{tx("Your prep")}</h2>
+            <button className="link" onClick={() => go('prep')}>{tx("All tasks")}</button>
           </div>
           <div className="card pad prep-card">
             <div className="prep-top">
@@ -258,10 +255,9 @@ export function NowScreen() {
               </div>
               <div>
                 <div className="t" style={{ fontWeight: 700 }}>
-                  {stats.done} of {stats.total} done
-                </div>
+                  {stats.done}{tx(" of ")}{stats.total}{tx(" done")}</div>
                 <div className="muted" style={{ fontSize: 13.5 }}>
-                  {open.length ? `${open.filter((x) => x.priority === 'high').length} important left` : 'All set! 🎉'}
+                  {open.length ? tx('{n} important left', { n: open.filter((x) => x.priority === 'high').length }) : tx("All set! 🎉")}
                 </div>
               </div>
             </div>
@@ -281,21 +277,21 @@ export function NowScreen() {
         {/* TOOLS */}
         <section className="section">
           <div className="section-h">
-            <h2>Handy</h2>
+            <h2>{tx("Handy")}</h2>
           </div>
           <div className="tools">
-            <Tool icon={House} label="Take me home" onClick={() => mapIntent({ route: { to: [db.place.base.lon, db.place.base.lat], name: 'Base' } })} />
-            <Tool icon={Compass} label="Compass home" onClick={() => openSheet({ t: 'compass', target: { lat: db.place.base.lat, lon: db.place.base.lon, name: 'Base' } })} />
-            <Tool icon={Bus} label="Airport ↔ base" onClick={() => go('guide/airport')} />
-            <Tool icon={Luggage} label="Baggage rules" onClick={() => go('guide/baggage')} />
-            <Tool icon={ArrowLeftRight} label="Converter" onClick={() => openSheet({ t: 'converter' })} />
-            <Tool icon={Beer} label="Who buys the round?" onClick={() => openSheet({ t: 'roulette' })} />
-            <Tool icon={Wallet} label="Expenses & split" onClick={() => go('expenses')} />
-            <Tool icon={Users} label="First days plan" onClick={() => go('guide/firstdays')} />
-            <Tool icon={Languages} label="Czech phrases" onClick={() => go('guide/phrases')} />
-            <Tool icon={Siren} label="Emergency" onClick={() => go('guide/emergency')} />
-            <Tool icon={BookOpen} label="All guides" onClick={() => go('guides')} />
-            <Tool icon={MapIcon} label="Timelapse" onClick={() => mapIntent({ fitCrew: true })} />
+            <Tool icon={House} label={tx("Take me home")} onClick={() => mapIntent({ route: { to: [db.place.base.lon, db.place.base.lat], name: 'Base' } })} />
+            <Tool icon={Compass} label={tx("Compass home")} onClick={() => openSheet({ t: 'compass', target: { lat: db.place.base.lat, lon: db.place.base.lon, name: 'Base' } })} />
+            <Tool icon={Bus} label={tx("Airport ↔ base")} onClick={() => go('guide/airport')} />
+            <Tool icon={Luggage} label={tx("Baggage rules")} onClick={() => go('guide/baggage')} />
+            <Tool icon={ArrowLeftRight} label={tx("Converter")} onClick={() => openSheet({ t: 'converter' })} />
+            <Tool icon={Beer} label={tx("Who buys the round?")} onClick={() => openSheet({ t: 'roulette' })} />
+            <Tool icon={Wallet} label={tx("Expenses & split")} onClick={() => go('expenses')} />
+            <Tool icon={Users} label={tx("First days plan")} onClick={() => go('guide/firstdays')} />
+            <Tool icon={Languages} label={tx("Czech phrases")} onClick={() => go('guide/phrases')} />
+            <Tool icon={Siren} label={tx("Emergency")} onClick={() => go('guide/emergency')} />
+            <Tool icon={BookOpen} label={tx("All guides")} onClick={() => go('guides')} />
+            <Tool icon={MapIcon} label={tx("Timelapse")} onClick={() => mapIntent({ fitCrew: true })} />
           </div>
         </section>
 
@@ -303,7 +299,7 @@ export function NowScreen() {
         {activity.length > 0 && (
           <section className="section">
             <div className="section-h">
-              <h2>Crew activity</h2>
+              <h2>{tx("Crew activity")}</h2>
             </div>
             <div className="card list">
               {[...activity]
@@ -357,18 +353,18 @@ function WeatherStrip() {
   return (
     <section className="section">
       <div className="section-h">
-        <h2>Prague weather</h2>
+        <h2>{tx("Prague weather")}</h2>
         <span className="muted" style={{ fontSize: 12.5 }}>
-          {have.length ? 'Open-Meteo forecast' : 'November normals until the forecast reaches the trip'}
+          {have.length ? tx("Open-Meteo forecast") : tx("November normals until the forecast reaches the trip")}
         </span>
       </div>
-      <div className="wx-strip" tabIndex={0} role="group" aria-label="Weather for each trip day">
+      <div className="wx-strip" tabIndex={0} role="group" aria-label={tx("Weather for each trip day")}>
         {days.map((d) => {
           const w = weather?.days?.[d];
           const ms = Date.parse(`${d}T12:00:00+01:00`);
           return (
             <div key={d} className={`wx ${w ? '' : 'normal'}`}>
-              <span className="wx-d">{new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'Europe/Prague' }).format(ms)}</span>
+              <span className="wx-d">{fmtWeekday(ms)}</span>
               <span className="wx-n tnum">{d.slice(8)}</span>
               <span className="wx-e">{w ? wmo(w.code).emoji : '🌥️'}</span>
               <span className="wx-t tnum">{w ? Math.round(w.tmax) : NORMAL.tmax}°</span>
@@ -402,7 +398,8 @@ function LeaveHint() {
     <div className={`banner ${leaveIn <= 0 ? 'danger' : 'info'}`} style={{ marginTop: 10 }}>
       <Footprints aria-hidden />
       <span>
-        {leaveIn <= 0 ? <b>Leave now</b> : <b>Leave in {leaveIn} min</b>} for {next.title}: {fmtDistance(d)} away, ~{travel} min {d > 2500 ? 'by tram/metro' : 'walk'}.
+        {leaveIn <= 0 ? <b>{tx('Leave now')}</b> : <b>{tx('Leave in {n} min', { n: leaveIn })}</b>}{' '}
+        {tx(d > 2500 ? 'for {title}: {dist} away, ~{n} min by tram/metro.' : 'for {title}: {dist} away, ~{n} min walk.', { title: next.title, dist: fmtDistance(d), n: travel })}
       </span>
     </div>
   );

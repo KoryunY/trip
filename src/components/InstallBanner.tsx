@@ -1,5 +1,6 @@
 import { Share2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { t as tx } from '../i18n';
 
 interface BIPEvent extends Event {
   prompt: () => Promise<void>;
@@ -42,12 +43,10 @@ export function InstallBanner() {
     <div className="card install-banner">
       <img src="/icons/icon-192.png" alt="" />
       <div className="grow">
-        <b>Put Prague Crew on your home screen</b>
+        <b>{tx("Put Prague Crew on your home screen")}</b>
         <div className="muted">
           {isIOS() ? (
-            <>
-              Safari → <Share2 style={{ display: 'inline', width: 13, verticalAlign: -2 }} /> Share → “Add to Home Screen”. Works offline.
-            </>
+            <>{tx("Safari → ")}<Share2 style={{ display: 'inline', width: 13, verticalAlign: -2 }} />{tx(" Share → “Add to Home Screen”. Works offline.")}</>
           ) : (
             'Full-screen, offline, one tap away.'
           )}
@@ -61,11 +60,9 @@ export function InstallBanner() {
             const r = await deferred?.userChoice;
             if (r?.outcome === 'accepted') hide();
           }}
-        >
-          Install
-        </button>
+        >{tx("Install")}</button>
       )}
-      <button className="icon-btn" style={{ width: 36, height: 36 }} onClick={hide} aria-label="Dismiss">
+      <button className="icon-btn" style={{ width: 36, height: 36 }} onClick={hide} aria-label={tx("Dismiss")}>
         <X />
       </button>
     </div>

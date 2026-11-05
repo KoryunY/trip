@@ -1,13 +1,14 @@
 import type { PlaceCategory } from '../../../shared/types';
 import { CAT, CAT_ORDER } from '../../lib/meta';
 import { useDB } from '../../lib/store';
+import { t as tx } from '../../i18n';
 
 export function PlacePicker({ id, value, onChange, allowNone = true }: { id: string; value: string | null | undefined; onChange: (v: string | null) => void; allowNone?: boolean }) {
   const db = useDB();
   const by = (c: PlaceCategory) => db.places.filter((p) => p.category === c);
   return (
     <select id={id} value={value ?? ''} onChange={(e) => onChange(e.target.value || null)}>
-      {allowNone && <option value="">— none —</option>}
+      {allowNone && <option value="">{tx("— none —")}</option>}
       {CAT_ORDER.map((c) => {
         const list = by(c);
         if (!list.length) return null;

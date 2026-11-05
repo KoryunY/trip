@@ -6,14 +6,15 @@ import { useDB } from '../../lib/store';
 import { relTime } from '../../lib/time';
 import { isPresent } from '../../lib/trip';
 import { Avatar, Sheet } from '../ui';
+import { t as tx } from '../../i18n';
 
 const QUICK: { label: string; czk: number }[] = [
-  { label: 'Beer 0.5 l (local pub)', czk: 65 },
-  { label: 'Beer in the Old Town', czk: 120 },
-  { label: '90-min transit ticket', czk: 46 },
-  { label: 'Lunch menu', czk: 220 },
-  { label: 'Airport Express', czk: 200 },
-  { label: 'Bolt to the airport', czk: 600 },
+  { label: tx('Beer 0.5 l (local pub)'), czk: 65 },
+  { label: tx('Beer in the Old Town'), czk: 120 },
+  { label: tx('90-min transit ticket'), czk: 46 },
+  { label: tx('Lunch menu'), czk: 220 },
+  { label: tx('Airport Express'), czk: 200 },
+  { label: tx('Bolt to the airport'), czk: 600 },
 ];
 
 export function ConverterSheet({ onClose }: { onClose: () => void }) {
@@ -23,11 +24,11 @@ export function ConverterSheet({ onClose }: { onClose: () => void }) {
   const n = Number(amt.replace(',', '.')) || 0;
   const czk = toCZK(n, cur);
   return (
-    <Sheet title="Money converter" onClose={onClose}>
+    <Sheet title={tx("Money converter")} onClose={onClose}>
       <div className="form">
         <div className="conv-in">
-          <input className="input conv-amt tnum" inputMode="decimal" value={amt} onChange={(e) => setAmt(e.target.value)} aria-label="Amount" />
-          <select className="input conv-cur" value={cur} onChange={(e) => setCur(e.target.value)} aria-label="Currency">
+          <input className="input conv-amt tnum" inputMode="decimal" value={amt} onChange={(e) => setAmt(e.target.value)} aria-label={tx("Amount")} />
+          <select className="input conv-cur" value={cur} onChange={(e) => setCur(e.target.value)} aria-label={tx("Currency")}>
             {CURRENCIES.map((c) => (
               <option key={c}>{c}</option>
             ))}
@@ -41,22 +42,21 @@ export function ConverterSheet({ onClose }: { onClose: () => void }) {
             </div>
           ))}
         </div>
-        <div className="eyebrow">Typical prices</div>
+        <div className="eyebrow">{tx("Typical prices")}</div>
         <div className="card list">
           {QUICK.map((q) => (
             <button key={q.label} className="row" onClick={() => (setAmt(String(q.czk)), setCur('CZK'))}>
               <span className="grow">
                 <span className="t">{q.label}</span>
                 <span className="s tnum">
-                  {q.czk} CZK ≈ {fmtMoney(fromCZK(q.czk, 'EUR'), 'EUR')} ≈ {fmtMoney(fromCZK(q.czk, 'AMD'), 'AMD')} ≈ {fmtMoney(fromCZK(q.czk, 'CHF'), 'CHF')}
+                  {q.czk}{tx(" CZK ≈ ")}{fmtMoney(fromCZK(q.czk, 'EUR'), 'EUR')} ≈ {fmtMoney(fromCZK(q.czk, 'AMD'), 'AMD')} ≈ {fmtMoney(fromCZK(q.czk, 'CHF'), 'CHF')}
                 </span>
               </span>
             </button>
           ))}
         </div>
         <p className="muted" style={{ fontSize: 12.5 }}>
-          {at ? `Live rates from ${relTime(at, Date.now())}` : 'Offline rates (Nov 2026): 1 EUR ≈ 24.3 CZK, 1 CHF ≈ 26.4 CZK, 1 CZK ≈ 16.5 AMD'}. Always pay in CZK at card terminals.
-        </p>
+          {at ? `Live rates from ${relTime(at, Date.now())}` : tx("Offline rates (Nov 2026): 1 EUR ≈ 24.3 CZK, 1 CHF ≈ 26.4 CZK, 1 CZK ≈ 16.5 AMD")}{tx(". Always pay in CZK at card terminals.")}</p>
       </div>
     </Sheet>
   );
@@ -90,7 +90,7 @@ export function RouletteSheet({ onClose }: { onClose: () => void }) {
   };
   const winner = idx != null && !spinning ? pool[idx] : null;
   return (
-    <Sheet title="Who buys the next round?" onClose={onClose}>
+    <Sheet title={tx("Who buys the next round?")} onClose={onClose}>
       <div className="roulette">
         <div className="roulette-ring">
           {pool.map((p, i) => (
@@ -103,14 +103,13 @@ export function RouletteSheet({ onClose }: { onClose: () => void }) {
         <div className="roulette-result" aria-live="polite">
           {winner ? (
             <>
-              <Beer aria-hidden /> <b>{winner.name}</b> buys this round. Na zdraví!
-            </>
+              <Beer aria-hidden /> <b>{winner.name}</b>{tx(" buys this round. Na zdraví!")}</>
           ) : (
             'Fate decides. No appeals.'
           )}
         </div>
         <button className="btn accent block" onClick={spin} disabled={spinning}>
-          <RefreshCw /> {winner ? 'Spin again' : 'Spin'}
+          <RefreshCw /> {winner ? tx("Spin again") : tx("Spin")}
         </button>
       </div>
     </Sheet>

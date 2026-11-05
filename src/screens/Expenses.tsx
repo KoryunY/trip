@@ -6,6 +6,7 @@ import { useDB, useMe } from '../lib/store';
 import { fmtDayShort } from '../lib/time';
 import { openSheet } from '../lib/ui';
 import { SubBar } from './More';
+import { t as tx } from '../i18n';
 
 export function balances(expenses: { amount: number; currency: string; paidBy: string; split: string[] }[], people: string[]) {
   const bal: Record<string, number> = Object.fromEntries(people.map((p) => [p, 0]));
@@ -47,10 +48,10 @@ export function ExpensesView() {
   return (
     <>
       <SubBar
-        title="Expenses & split"
+        title={tx("Expenses & split")}
         sub="Converted to CZK at current rates"
         right={
-          <select className="input cur-sel" value={cur} onChange={(e) => setCur(e.target.value)} aria-label="Display currency">
+          <select className="input cur-sel" value={cur} onChange={(e) => setCur(e.target.value)} aria-label={tx("Display currency")}>
             {CURRENCIES.map((c) => (
               <option key={c}>{c}</option>
             ))}
@@ -60,7 +61,7 @@ export function ExpensesView() {
       <div className="wrap">
         <div className="card pad exp-sum">
           <div>
-            <div className="eyebrow">Crew total</div>
+            <div className="eyebrow">{tx("Crew total")}</div>
             <div className="exp-total tnum">{show(total)}</div>
           </div>
           <div className="exp-bal">
@@ -79,7 +80,7 @@ export function ExpensesView() {
         {transfers.length > 0 && (
           <section className="section">
             <div className="section-h">
-              <h2>Settle up</h2>
+              <h2>{tx("Settle up")}</h2>
             </div>
             <div className="card list">
               {transfers.map((x, i) => (
@@ -88,7 +89,7 @@ export function ExpensesView() {
                   <ArrowRight className="chev" aria-hidden />
                   <Avatar person={db.person[x.to]} size="md" />
                   <span className="grow">
-                    <b>{db.person[x.from]?.name}</b> pays <b>{db.person[x.to]?.name}</b>
+                    <b>{db.person[x.from]?.name}</b>{tx(" pays ")}<b>{db.person[x.to]?.name}</b>
                   </span>
                   <b className="tnum">{show(x.czk)}</b>
                 </div>
@@ -98,13 +99,11 @@ export function ExpensesView() {
         )}
         <section className="section">
           <div className="section-h">
-            <h2>All expenses</h2>
+            <h2>{tx("All expenses")}</h2>
           </div>
           <div className="card list">
             {db.expenses.length === 0 && (
-              <Empty icon={<Receipt />}>
-                No expenses yet. Add the apartment, tickets, rounds of beer… The app works out who owes whom.
-              </Empty>
+              <Empty icon={<Receipt />}>{tx("No expenses yet. Add the apartment, tickets, rounds of beer… The app works out who owes whom.")}</Empty>
             )}
             {db.expenses.map((e) => (
               <button key={e.id} className="row" onClick={() => openSheet({ t: 'expenseEdit', id: e.id })}>
@@ -112,7 +111,7 @@ export function ExpensesView() {
                 <span className="grow">
                   <span className="t">{e.title}</span>
                   <span className="s">
-                    {db.person[e.paidBy]?.name} paid · split {e.split.length === db.people.length ? 'between all' : e.split.map((p) => db.person[p]?.name).join(', ')} · {fmtDayShort(Date.parse(e.date))}
+                    {db.person[e.paidBy]?.name}{tx(" paid · split ")}{e.split.length === db.people.length ? tx("between all") : e.split.map((p) => db.person[p]?.name).join(', ')} · {fmtDayShort(Date.parse(e.date))}
                   </span>
                 </span>
                 <span className="tnum" style={{ fontWeight: 700 }}>
@@ -124,8 +123,7 @@ export function ExpensesView() {
         </section>
       </div>
       <button className="fab" onClick={() => openSheet({ t: 'expenseEdit' })} aria-label={`Add expense paid by ${db.person[me]?.name}`}>
-        <Plus aria-hidden /> Expense
-      </button>
+        <Plus aria-hidden />{tx(" Expense")}</button>
     </>
   );
 }

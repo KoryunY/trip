@@ -34,26 +34,28 @@ import {
   Package,
 } from 'lucide-react';
 import type { EventKind, PlaceCategory, TaskCategory } from '../../shared/types';
+import { getLang, t as tx } from '../i18n';
+import { CONTENT_RU } from '../i18n/content.ru';
 
 export const KIND: Record<EventKind, { label: string; icon: LucideIcon; color: string }> = {
-  flight: { label: 'Flight', icon: Plane, color: 'var(--k-flight)' },
-  train: { label: 'Train', icon: TrainFront, color: 'var(--k-train)' },
-  bus: { label: 'Bus', icon: Bus, color: 'var(--k-bus)' },
-  transit: { label: 'Transit', icon: TramFront, color: 'var(--k-transit)' },
-  walk: { label: 'Walk', icon: Footprints, color: 'var(--k-walk)' },
-  taxi: { label: 'Taxi', icon: CarTaxiFront, color: 'var(--k-taxi)' },
-  airport: { label: 'Airport', icon: PlaneTakeoff, color: 'var(--k-airport)' },
-  sight: { label: 'Sightseeing', icon: Landmark, color: 'var(--k-sight)' },
-  food: { label: 'Food', icon: UtensilsCrossed, color: 'var(--k-food)' },
-  beer: { label: 'Beer', icon: Beer, color: 'var(--k-beer)' },
-  concert: { label: 'Concert', icon: Guitar, color: 'var(--k-concert)' },
-  gaming: { label: 'Gaming', icon: Gamepad2, color: 'var(--k-gaming)' },
-  rest: { label: 'Rest', icon: BedDouble, color: 'var(--k-rest)' },
-  party: { label: 'Night out', icon: PartyPopper, color: 'var(--k-party)' },
-  shopping: { label: 'Shopping', icon: ShoppingBag, color: 'var(--k-shopping)' },
-  meet: { label: 'Meet', icon: Users, color: 'var(--k-meet)' },
-  errand: { label: 'Errand', icon: ClipboardCheck, color: 'var(--k-errand)' },
-  other: { label: 'Other', icon: Sparkles, color: 'var(--k-other)' },
+  flight: { label: tx('Flight'), icon: Plane, color: 'var(--k-flight)' },
+  train: { label: tx('Train'), icon: TrainFront, color: 'var(--k-train)' },
+  bus: { label: tx('Bus'), icon: Bus, color: 'var(--k-bus)' },
+  transit: { label: tx('Transit'), icon: TramFront, color: 'var(--k-transit)' },
+  walk: { label: tx('Walk'), icon: Footprints, color: 'var(--k-walk)' },
+  taxi: { label: tx('Taxi'), icon: CarTaxiFront, color: 'var(--k-taxi)' },
+  airport: { label: tx('Airport'), icon: PlaneTakeoff, color: 'var(--k-airport)' },
+  sight: { label: tx('Sightseeing'), icon: Landmark, color: 'var(--k-sight)' },
+  food: { label: tx('Food'), icon: UtensilsCrossed, color: 'var(--k-food)' },
+  beer: { label: tx('Beer'), icon: Beer, color: 'var(--k-beer)' },
+  concert: { label: tx('Concert'), icon: Guitar, color: 'var(--k-concert)' },
+  gaming: { label: tx('Gaming'), icon: Gamepad2, color: 'var(--k-gaming)' },
+  rest: { label: tx('Rest'), icon: BedDouble, color: 'var(--k-rest)' },
+  party: { label: tx('Night out'), icon: PartyPopper, color: 'var(--k-party)' },
+  shopping: { label: tx('Shopping'), icon: ShoppingBag, color: 'var(--k-shopping)' },
+  meet: { label: tx('Meet'), icon: Users, color: 'var(--k-meet)' },
+  errand: { label: tx('Errand'), icon: ClipboardCheck, color: 'var(--k-errand)' },
+  other: { label: tx('Other'), icon: Sparkles, color: 'var(--k-other)' },
 };
 export const KIND_ORDER = Object.keys(KIND) as EventKind[];
 export const TRAVEL_KINDS: EventKind[] = ['flight', 'train', 'bus', 'transit', 'walk', 'taxi'];
@@ -81,40 +83,40 @@ export const KIND_HEX: Record<EventKind, string> = {
 };
 
 export const CAT: Record<PlaceCategory, { label: string; plural: string; emoji: string; color: string; icon: LucideIcon }> = {
-  home: { label: 'Home', plural: 'Home', emoji: '🏠', color: '#18171b', icon: House },
-  sight: { label: 'Sight', plural: 'Sights', emoji: '🏛️', color: '#8b5cf6', icon: Landmark },
-  viewpoint: { label: 'Viewpoint', plural: 'Views', emoji: '🌄', color: '#7c3aed', icon: Binoculars },
-  beer: { label: 'Beer', plural: 'Beer', emoji: '🍺', color: '#e09400', icon: Beer },
-  food: { label: 'Food', plural: 'Food', emoji: '🍽️', color: '#f97316', icon: UtensilsCrossed },
-  cafe: { label: 'Café', plural: 'Cafés', emoji: '☕', color: '#a16207', icon: Coffee },
-  nightlife: { label: 'Nightlife', plural: 'Night', emoji: '🎉', color: '#d946ef', icon: PartyPopper },
-  shop: { label: 'Shop', plural: 'Shops', emoji: '🛒', color: '#ec4899', icon: Store },
-  transport: { label: 'Transport', plural: 'Transport', emoji: '🚉', color: '#475569', icon: TramFront },
-  venue: { label: 'Venue', plural: 'Venues', emoji: '🎸', color: '#e11d48', icon: Ticket },
-  museum: { label: 'Museum', plural: 'Museums', emoji: '🖼️', color: '#6d28d9', icon: Building2 },
-  daytrip: { label: 'Day trip', plural: 'Day trips', emoji: '🚆', color: '#0ea5e9', icon: TrainFront },
-  service: { label: 'Service', plural: 'Services', emoji: '🧳', color: '#57534e', icon: Wrench },
-  city: { label: 'City', plural: 'Cities', emoji: '📍', color: '#334155', icon: MapPin },
+  home: { label: tx('Home'), plural: tx('Home'), emoji: '🏠', color: '#18171b', icon: House },
+  sight: { label: tx('Sight'), plural: tx('Sights'), emoji: '🏛️', color: '#8b5cf6', icon: Landmark },
+  viewpoint: { label: tx('Viewpoint'), plural: tx('Views'), emoji: '🌄', color: '#7c3aed', icon: Binoculars },
+  beer: { label: tx('Beer'), plural: tx('Beer'), emoji: '🍺', color: '#e09400', icon: Beer },
+  food: { label: tx('Food'), plural: tx('Food'), emoji: '🍽️', color: '#f97316', icon: UtensilsCrossed },
+  cafe: { label: tx('Café'), plural: tx('Cafés'), emoji: '☕', color: '#a16207', icon: Coffee },
+  nightlife: { label: tx('Nightlife'), plural: tx('Night'), emoji: '🎉', color: '#d946ef', icon: PartyPopper },
+  shop: { label: tx('Shop'), plural: tx('Shops'), emoji: '🛒', color: '#ec4899', icon: Store },
+  transport: { label: tx('Transport'), plural: tx('Transport'), emoji: '🚉', color: '#475569', icon: TramFront },
+  venue: { label: tx('Venue'), plural: tx('Venues'), emoji: '🎸', color: '#e11d48', icon: Ticket },
+  museum: { label: tx('Museum'), plural: tx('Museums'), emoji: '🖼️', color: '#6d28d9', icon: Building2 },
+  daytrip: { label: tx('Day trip'), plural: tx('Day trips'), emoji: '🚆', color: '#0ea5e9', icon: TrainFront },
+  service: { label: tx('Service'), plural: tx('Services'), emoji: '🧳', color: '#57534e', icon: Wrench },
+  city: { label: tx('City'), plural: tx('Cities'), emoji: '📍', color: '#334155', icon: MapPin },
 };
 export const CAT_ORDER = Object.keys(CAT) as PlaceCategory[];
 
 export const TASK_CAT: Record<TaskCategory, { label: string; icon: LucideIcon }> = {
-  docs: { label: 'Documents & border', icon: ShieldCheck },
-  flights: { label: 'Flights & travel', icon: Luggage },
-  connectivity: { label: 'Phone & data', icon: Smartphone },
-  apps: { label: 'Apps', icon: Smartphone },
-  money: { label: 'Money', icon: Wallet },
-  apartment: { label: 'Apartment', icon: House },
-  gta: { label: 'GTA VI night', icon: Gamepad2 },
-  concert: { label: 'Korn night', icon: Guitar },
-  bookings: { label: 'Bookings & decisions', icon: Ticket },
-  packing: { label: 'Packing', icon: Package },
-  other: { label: 'Other', icon: Banknote },
+  docs: { label: tx('Documents & border'), icon: ShieldCheck },
+  flights: { label: tx('Flights & travel'), icon: Luggage },
+  connectivity: { label: tx('Phone & data'), icon: Smartphone },
+  apps: { label: tx('Apps'), icon: Smartphone },
+  money: { label: tx('Money'), icon: Wallet },
+  apartment: { label: tx('Apartment'), icon: House },
+  gta: { label: tx('GTA VI night'), icon: Gamepad2 },
+  concert: { label: tx('Korn night'), icon: Guitar },
+  bookings: { label: tx('Bookings & decisions'), icon: Ticket },
+  packing: { label: tx('Packing'), icon: Package },
+  other: { label: tx('Other'), icon: Banknote },
 };
 export const TASK_CAT_ORDER = Object.keys(TASK_CAT) as TaskCategory[];
 
 
-export const DAY_THEMES: Record<string, { title: string; emoji: string }> = {
+const DAY_THEMES_EN: Record<string, { title: string; emoji: string }> = {
   '2026-11-13': { title: 'Arrival · Friday the 13th', emoji: '🛬' },
   '2026-11-14': { title: 'Crew complete · Castle day', emoji: '🏰' },
   '2026-11-15': { title: 'Views & beer halls', emoji: '🍺' },
@@ -126,6 +128,10 @@ export const DAY_THEMES: Record<string, { title: string; emoji: string }> = {
   '2026-11-21': { title: 'Last full day', emoji: '🥨' },
   '2026-11-22': { title: 'Goodbye Prague', emoji: '👋' },
 };
+
+export const DAY_THEMES: Record<string, { title: string; emoji: string }> = Object.fromEntries(
+  Object.entries(DAY_THEMES_EN).map(([k, v]) => [k, { ...v, title: getLang() === 'ru' ? (CONTENT_RU.dayThemes[k] ?? v.title) : v.title }]),
+);
 
 export const SUN: Record<string, [string, string]> = {
   '2026-11-13': ['07:12', '16:21'],

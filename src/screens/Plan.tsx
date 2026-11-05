@@ -8,10 +8,11 @@ import { useTripTime } from '../lib/clock';
 import { CAT, DAY_THEMES, KIND, SUN } from '../lib/meta';
 import { go, useRoute } from '../lib/router';
 import { save, useDB, useMe, useSettings, setSettings } from '../lib/store';
-import { dayKey, fmtDayLong, tripDays, TRIP_END_DAY, TRIP_START_DAY } from '../lib/time';
+import { dayKey, fmtDayLong, fmtWeekday, tripDays, TRIP_END_DAY, TRIP_START_DAY } from '../lib/time';
 import { eventsOnDay, evStart, evEnd, presentOnDay, voteScore, startLocal } from '../lib/trip';
 import { openSheet } from '../lib/ui';
 import { useWeather, wmo, NORMAL } from '../lib/weather';
+import { t as tx } from '../i18n';
 
 export function PlanScreen() {
   const route = useRoute();
@@ -36,31 +37,31 @@ export function PlanScreen() {
       <header className="appbar">
         <div className="appbar-inner">
           <div className="appbar-title">
-            <h1>Plan</h1>
-            <div className="sub">13–22 Nov · tap anything to edit</div>
+            <h1>{tx("Plan")}</h1>
+            <div className="sub">{tx("13–22 Nov · tap anything to edit")}</div>
           </div>
           <button
             className="mine-toggle"
             onClick={() => setSettings({ onlyMine: !onlyMine })}
             aria-pressed={onlyMine}
-            aria-label={onlyMine ? 'Showing only my events. Tap to show everyone' : 'Showing everyone. Tap to show only mine'}
+            aria-label={onlyMine ? tx("Showing only my events. Tap to show everyone") : tx("Showing everyone. Tap to show only mine")}
           >
             {onlyMine ? <Avatar person={db.person[me]} size="sm" /> : <Users aria-hidden style={{ width: 16, height: 16 }} />}
-            {onlyMine ? 'Mine' : 'Everyone'}
+            {onlyMine ? tx("Mine") : tx("Everyone")}
           </button>
           <SyncBadge />
         </div>
-        <div className="daystrip" ref={stripRef} role="tablist" aria-label="Days">
+        <div className="daystrip" ref={stripRef} role="tablist" aria-label={tx("Days")}>
           <button role="tab" className="daychip ideas" aria-current={sel === 'all'} aria-selected={sel === 'all'} onClick={() => go('plan/all')}>
             <CalendarRange aria-hidden />
-            <span className="dc-w">All</span>
+            <span className="dc-w">{tx("All")}</span>
           </button>
           {days.map((d) => {
             const ms = Date.parse(`${d}T12:00:00+01:00`);
             const present = presentOnDay(db.people, d);
             return (
               <button key={d} role="tab" className={`daychip ${d === today ? 'is-today' : ''}`} aria-current={sel === d} aria-selected={sel === d} onClick={() => go(`plan/${d}`)}>
-                <span className="dc-w">{new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'Europe/Prague' }).format(ms)}</span>
+                <span className="dc-w">{fmtWeekday(ms)}</span>
                 <span className="dc-n tnum">{Number(d.slice(8))}</span>
                 <span className="dc-dots" aria-hidden>
                   {present.map((p) => (
@@ -72,7 +73,7 @@ export function PlanScreen() {
           })}
           <button role="tab" className="daychip ideas" aria-current={isIdeas} aria-selected={isIdeas} onClick={() => go('plan/ideas')}>
             <Lightbulb aria-hidden />
-            <span className="dc-w">Ideas</span>
+            <span className="dc-w">{tx("Ideas")}</span>
           </button>
         </div>
       </header>
@@ -90,7 +91,7 @@ export function PlanScreen() {
               })
         }
       >
-        <Plus aria-hidden /> {isIdeas ? 'Idea' : 'Event'}
+        <Plus aria-hidden /> {isIdeas ? tx("Idea") : tx("Event")}
       </button>
     </>
   );
@@ -115,7 +116,7 @@ function DayView({ day, t, onlyMine }: { day: string; t: number; onlyMine: boole
           <div>
             <div className="eyebrow">{fmtDayLong(ms)}</div>
             <h2 className="day-title">
-              {theme?.emoji} {theme?.title ?? 'Free day'}
+              {theme?.emoji} {theme?.title ?? tx("Free day")}
             </h2>
           </div>
           <div className="day-wx">
@@ -128,7 +129,7 @@ function DayView({ day, t, onlyMine }: { day: string; t: number; onlyMine: boole
         <div className="day-head-meta">
           <span className="who">
             <AvatarStack people={present} size="md" />
-            <span>{present.length === 3 ? 'Full crew' : present.length ? present.map((p) => p.name).join(' & ') : 'Nobody here yet'}</span>
+            <span>{present.length === 3 ? tx("Full crew") : present.length ? present.map((p) => p.name).join(` ${tx('&')} `) : tx("Nobody here yet")}</span>
           </span>
           {SUN[day] && (
             <span className="sun">
@@ -139,9 +140,7 @@ function DayView({ day, t, onlyMine }: { day: string; t: number; onlyMine: boole
       </div>
       <div className="card ev-list day-list">
         {events.length === 0 && (
-          <Empty icon={<CalendarPlus />}>
-            Nothing planned{onlyMine ? ' for you' : ''}. Add an event or schedule an idea.
-          </Empty>
+          <Empty icon={<CalendarPlus />}>{tx("Nothing planned")}{onlyMine ? tx(" for you") : ''}{tx(". Add an event or schedule an idea.")}</Empty>
         )}
         {events.map((e, i) => (
           <Fragment key={e.id}>
@@ -151,15 +150,15 @@ function DayView({ day, t, onlyMine }: { day: string; t: number; onlyMine: boole
         ))}
         {isToday && nowIdx === -1 && events.length > 0 && <NowLine />}
       </div>
-      {!onlyMine && <p className="hint">Tentative = not booked yet. Dates in grey are placeholders: edit them when you know more.</p>}
+      {!onlyMine && <p className="hint">{tx("Tentative = not booked yet. Dates in grey are placeholders: edit them when you know more.")}</p>}
     </>
   );
 }
 
 function NowLine() {
   return (
-    <div className="now-line" aria-label="Current time">
-      <span>now</span>
+    <div className="now-line" aria-label={tx("Current time")}>
+      <span>{tx("now")}</span>
     </div>
   );
 }
@@ -179,8 +178,8 @@ function IdeasView() {
   return (
     <>
       <div className="ideas-intro">
-        <h2>Ideas & votes</h2>
-        <p className="muted">Thumbs-up what you’re into. The top ones get a slot in the plan.</p>
+        <h2>{tx("Ideas & votes")}</h2>
+        <p className="muted">{tx("Thumbs-up what you’re into. The top ones get a slot in the plan.")}</p>
       </div>
       <div className="ideas">
         {ideas.map((idea) => {
@@ -201,15 +200,15 @@ function IdeasView() {
                     {place ? `${CAT[place.category]?.emoji ?? ''} ${place.name}` : ''}
                     {idea.cost ? `${place ? ' · ' : ''}${idea.cost}` : ''}
                   </span>
-                  {scheduled && <span className="pill ok">scheduled</span>}
+                  {scheduled && <span className="pill ok">{tx("scheduled")}</span>}
                 </span>
               </button>
               <div className="idea-votes">
-                <button className={`vote ${idea.votes?.[me] === 1 ? 'on' : ''}`} onClick={() => vote(idea, 1)} aria-label="Vote up" aria-pressed={idea.votes?.[me] === 1}>
+                <button className={`vote ${idea.votes?.[me] === 1 ? 'on' : ''}`} onClick={() => vote(idea, 1)} aria-label={tx("Vote up")} aria-pressed={idea.votes?.[me] === 1}>
                   <ThumbsUp />
                 </button>
                 <span className="tnum score">{score > 0 ? `+${score}` : score}</span>
-                <button className={`vote down ${idea.votes?.[me] === -1 ? 'on' : ''}`} onClick={() => vote(idea, -1)} aria-label="Vote down" aria-pressed={idea.votes?.[me] === -1}>
+                <button className={`vote down ${idea.votes?.[me] === -1 ? 'on' : ''}`} onClick={() => vote(idea, -1)} aria-label={tx("Vote down")} aria-pressed={idea.votes?.[me] === -1}>
                   <ThumbsDown />
                 </button>
                 <span className="grow" />
@@ -248,11 +247,11 @@ function Overview({ t, onlyMine }: { t: number; onlyMine: boolean }) {
           <button key={d} className={`card ov-day ${d === today ? 'today' : ''} ${done ? 'done' : ''}`} onClick={() => go(`plan/${d}`)}>
             <div className="ov-head">
               <span className="ov-date">
-                <span className="dc-w">{new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'Europe/Prague' }).format(ms)}</span>
+                <span className="dc-w">{fmtWeekday(ms)}</span>
                 <span className="dc-n tnum">{Number(d.slice(8))}</span>
               </span>
               <span className="grow">
-                <span className="eyebrow">Day {i + 1}{d === today ? ' · today' : done ? ' · done ✓' : ''}</span>
+                <span className="eyebrow">{tx("Day ")}{i + 1}{d === today ? tx(" · today") : done ? tx(" · done ✓") : ''}</span>
                 <span className="ov-title">
                   {theme?.emoji} {theme?.title}
                 </span>
@@ -272,8 +271,8 @@ function Overview({ t, onlyMine }: { t: number; onlyMine: boolean }) {
                   <span className="ov-ev">{e.title}</span>
                 </li>
               ))}
-              {evs.length > key.length && <li className="more muted">+{evs.length - key.length} more</li>}
-              {evs.length === 0 && <li className="muted">Nothing planned yet</li>}
+              {evs.length > key.length && <li className="more muted">+{evs.length - key.length}{tx(" more")}</li>}
+              {evs.length === 0 && <li className="muted">{tx("Nothing planned yet")}</li>}
             </ul>
           </button>
         );

@@ -1,3 +1,4 @@
+import { getLang, t as tx } from '../i18n';
 // Time helpers. The trip lives in Europe/Prague (CET, UTC+1 during 13–22 Nov 2026).
 export const TZ = 'Europe/Prague';
 export const MIN = 60_000;
@@ -8,7 +9,8 @@ export const TRIP_START_DAY = '2026-11-13';
 export const TRIP_END_DAY = '2026-11-22';
 
 const dtfCache = new Map<string, Intl.DateTimeFormat>();
-function dtf(tz: string, opts: Intl.DateTimeFormatOptions, locale = 'en-GB') {
+function dtf(tz: string, opts: Intl.DateTimeFormatOptions, loc?: string) {
+  const locale = loc ?? (getLang() === 'ru' ? 'ru-RU' : 'en-GB');
   const key = tz + locale + JSON.stringify(opts);
   let f = dtfCache.get(key);
   if (!f) {
@@ -22,7 +24,9 @@ export const toMs = (v: string | number | Date) => (typeof v === 'number' ? v : 
 
 /** Offset (minutes) of tz at given UTC instant, e.g. +60 for Prague in Nov */
 export function tzOffsetMin(utcMs: number, tz = TZ): number {
-  const parts = dtf(tz, {
+  const parts = dtf(
+    tz,
+    {
     hourCycle: 'h23',
     year: 'numeric',
     month: '2-digit',
@@ -30,7 +34,9 @@ export function tzOffsetMin(utcMs: number, tz = TZ): number {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-  }).formatToParts(new Date(utcMs));
+    },
+    'en-GB',
+  ).formatToParts(new Date(utcMs));
   const g = (t: string) => Number(parts.find((p) => p.type === t)?.value);
   const asUtc = Date.UTC(g('year'), g('month') - 1, g('day'), g('hour') % 24, g('minute'), g('second'));
   return Math.round((asUtc - Math.floor(utcMs / 1000) * 1000) / MIN);
@@ -63,7 +69,7 @@ export function isoInTz(ms: number, tz = TZ): string {
 
 /** YYYY-MM-DD of instant in tz */
 export function dayKey(ms: number, tz = TZ): string {
-  const p = dtf(tz, { year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date(ms));
+  const p = dtf(tz, { year: 'numeric', month: '2-digit', day: '2-digit' }, 'en-GB').formatToParts(new Date(ms));
   const g = (t: string) => p.find((x) => x.type === t)?.value;
   return `${g('year')}-${g('month')}-${g('day')}`;
 }
@@ -78,6 +84,9 @@ export function fmtDayShort(ms: number, tz = TZ) {
 }
 export function fmtDayLong(ms: number, tz = TZ) {
   return dtf(tz, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(ms));
+}
+export function fmtDayMonth(ms: number, tz = TZ) {
+  return dtf(tz, { day: 'numeric', month: 'short' }).format(new Date(ms));
 }
 export function fmtWeekday(ms: number, tz = TZ) {
   return dtf(tz, { weekday: 'short' }).format(new Date(ms));
@@ -110,28 +119,32 @@ export function tripDays(): string[] {
 export function relTime(targetMs: number, nowMs: number): string {
   const diff = targetMs - nowMs;
   const abs = Math.abs(diff);
+  const ru = getLang() === 'ru';
+  const [uD, uH, uM, uMin] = ru ? ['д', 'ч', 'м', 'мин'] : ['d', 'h', 'm', 'min'];
   let s: string;
-  if (abs < MIN) s = 'now';
-  else if (abs < HOUR) s = `${Math.round(abs / MIN)} min`;
+  if (abs < MIN) return ru ? 'сейчас' : 'now';
+  else if (abs < HOUR) s = `${Math.round(abs / MIN)} ${uMin}`;
   else if (abs < DAY) {
     const h = Math.floor(abs / HOUR);
     const m = Math.round((abs % HOUR) / MIN);
-    s = m && h < 6 ? `${h}h ${m}m` : `${h}h`;
+    s = m && h < 6 ? `${h}${uH} ${m}${uM}` : `${h}${uH}`;
   } else {
     const d = Math.floor(abs / DAY);
     const h = Math.round((abs % DAY) / HOUR);
-    s = h ? `${d}d ${h}h` : `${d}d`;
+    s = h ? `${d}${uD} ${h}${uH}` : `${d}${uD}`;
   }
-  if (s === 'now') return 'now';
+  if (ru) return diff > 0 ? `через ${s}` : `${s} назад`;
   return diff > 0 ? `in ${s}` : `${s} ago`;
 }
 
 export function durationLabel(ms: number): string {
+  const ru = getLang() === 'ru';
   const m = Math.round(ms / MIN);
-  if (m < 60) return `${m} min`;
+  if (m < 60) return `${m} ${ru ? 'мин' : 'min'}`;
   const h = Math.floor(m / 60);
   const r = m % 60;
-  return r ? `${h}h ${r}m` : `${h}h`;
+  const [uh, um] = ru ? ['ч', 'м'] : ['h', 'm'];
+  return r ? `${h}${uh} ${r}${um}` : `${h}${uh}`;
 }
 
 export function countdownParts(targetMs: number, nowMs: number) {
@@ -145,7 +158,7 @@ export function countdownParts(targetMs: number, nowMs: number) {
 }
 
 export const TZ_LABEL: Record<string, string> = {
-  'Europe/Prague': 'Prague',
-  'Asia/Yerevan': 'Yerevan',
-  'Europe/Zurich': 'Zürich',
+  'Europe/Prague': tx('Prague'),
+  'Asia/Yerevan': tx('Yerevan'),
+  'Europe/Zurich': tx('Zürich'),
 };

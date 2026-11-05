@@ -2,6 +2,7 @@
 // the map styles, sprites and fonts into Cache Storage. The service worker serves them offline.
 import { useSyncExternalStore } from 'react';
 import { OFM, pinnedTileTemplate, setPinnedTileTemplate, STYLE_URLS } from './mapstyle';
+import { t as tx } from '../i18n';
 
 export const TILE_CACHE = 'ofm-tiles';
 export const ASSET_CACHE = 'ofm-assets';
@@ -111,7 +112,7 @@ async function cachePut(cache: Cache, url: string, signal: AbortSignal): Promise
 export async function downloadOffline() {
   if (st.running) return;
   if (!('caches' in window)) {
-    set({ error: 'This browser does not support offline storage.' });
+    set({ error: tx('This browser does not support offline storage.') });
     return;
   }
   abort = new AbortController();
@@ -205,7 +206,7 @@ export async function downloadOffline() {
       }
     };
     await Promise.all(Array.from({ length: 6 }, worker));
-    set({ running: false, done, failed, bytes, finishedAt: signal.aborted ? st.finishedAt : Date.now(), error: signal.aborted ? 'Cancelled' : null });
+    set({ running: false, done, failed, bytes, finishedAt: signal.aborted ? st.finishedAt : Date.now(), error: signal.aborted ? tx('Cancelled') : null });
   } catch (e) {
     set({ running: false, error: String((e as Error)?.message || e) });
   }

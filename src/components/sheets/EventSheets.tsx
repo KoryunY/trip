@@ -11,6 +11,7 @@ import { distance } from '../../lib/geo';
 import { useWeather, weatherAt, wmo } from '../../lib/weather';
 import { Avatar, Segmented, Sheet, toast } from '../ui';
 import { PeoplePicker, PlacePicker } from './PlacePicker';
+import { t as tx } from '../../i18n';
 
 export function EventSheet({ id, onClose }: { id: string; onClose: () => void }) {
   const db = useDB();
@@ -19,8 +20,8 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
   const ev = db.event[id];
   if (!ev) {
     return (
-      <Sheet title="Event removed" onClose={onClose}>
-        <p className="muted">This event no longer exists.</p>
+      <Sheet title={tx("Event removed")} onClose={onClose}>
+        <p className="muted">{tx("This event no longer exists.")}</p>
       </Sheet>
     );
   }
@@ -34,24 +35,24 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
   const target = place ?? to;
   const meta = db.meta[`events:${ev.id}`];
   const iAmIn = ev.people.includes(me);
-  const when = now >= e ? 'Done' : now >= s ? `Now · ends ${relTime(e, now)}` : relTime(s, now);
+  const when = now >= e ? tx("Done") : now >= s ? tx('Now · ends {when}', { when: relTime(e, now) }) : relTime(s, now);
   const local = localTimeNote(ev);
   const toggleMe = () => {
     save('events', { ...ev, people: iAmIn ? ev.people.filter((p) => p !== me) : [...ev.people, me] });
-    toast(iAmIn ? 'You’re out of this one' : 'You’re in!');
+    toast(iAmIn ? tx("You’re out of this one") : tx("You’re in!"));
   };
   const del = () => {
     const copy = { ...ev };
     remove('events', ev.id);
     onClose();
-    toast('Event deleted', { label: 'Undo', run: () => save('events', copy) });
+    toast(tx("Event deleted"), { label: tx("Undo"), run: () => save('events', copy) });
   };
   return (
     <Sheet
       title={ev.title}
       onClose={onClose}
       actions={
-        <button className="icon-btn" aria-label="Edit event" onClick={() => replaceSheet({ t: 'eventEdit', id: ev.id })}>
+        <button className="icon-btn" aria-label={tx("Edit event")} onClick={() => replaceSheet({ t: 'eventEdit', id: ev.id })}>
           <Pencil />
         </button>
       }
@@ -72,10 +73,10 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
         </div>
         <div className="evd-pills">
           <EventWeather ev={ev} />
-          <span className={`pill ${ev.status === 'confirmed' ? 'ok' : ev.status === 'cancelled' ? 'danger' : ev.status === 'tentative' ? 'warn' : ''}`}>{ev.status}</span>
+          <span className={`pill ${ev.status === 'confirmed' ? 'ok' : ev.status === 'cancelled' ? 'danger' : ev.status === 'tentative' ? 'warn' : ''}`}>{tx(ev.status)}</span>
           {local && (
             <span className="pill info">
-              <Clock /> {local} · Prague {hhmm(s)}–{hhmm(e)}
+              <Clock /> {local}{tx(" · Prague ")}{hhmm(s)}–{hhmm(e)}
             </span>
           )}
         </div>
@@ -108,30 +109,27 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
           <div className="evd-actions">
             {!['flight', 'train', 'bus'].includes(ev.kind) && distance([db.place.base.lon, db.place.base.lat], [target.lon, target.lat]) < 12_000 && (
               <button className="btn sm" onClick={() => navigateTo(target.lat, target.lon, target.name)}>
-                <Footprints /> Walk route
-              </button>
+                <Footprints />{tx(" Walk route")}</button>
             )}
             <a className="btn sm" href={mapsLink(target.lat, target.lon, 'transit')} target="_blank" rel="noreferrer">
-              <Navigation /> Transit
-            </a>
+              <Navigation />{tx(" Transit")}</a>
             <button className="btn sm" onClick={() => showPlaceOnMap(target)}>
-              <MapIcon /> Map
-            </button>
+              <MapIcon />{tx(" Map")}</button>
           </div>
         )}
 
         <div className="evd-people">
-          <div className="eyebrow">Who</div>
+          <div className="eyebrow">{tx("Who")}</div>
           <div className="evd-people-list">
             {ev.people.map((pid) => (
               <span key={pid} className="evd-person">
                 <Avatar person={db.person[pid]} size="md" /> {db.person[pid]?.name ?? pid}
               </span>
             ))}
-            {!ev.people.length && <span className="muted">Nobody yet</span>}
+            {!ev.people.length && <span className="muted">{tx("Nobody yet")}</span>}
           </div>
           <button className={`btn sm ${iAmIn ? '' : 'accent'}`} onClick={toggleMe}>
-            {iAmIn ? <UserMinus /> : <UserPlus />} {iAmIn ? 'I’m out' : 'I’m in'}
+            {iAmIn ? <UserMinus /> : <UserPlus />} {iAmIn ? tx("I’m out") : tx("I’m in")}
           </button>
         </div>
 
@@ -149,7 +147,7 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
         )}
         {ev.notes && <p className="prose evd-notes">{ev.notes}</p>}
         {ev.links?.map((l) => (
-          <a key={l.url} className="evd-line link" href={l.url} target={l.url.startsWith('#') ? undefined : '_blank'} rel="noreferrer" onClick={() => l.url.startsWith('#') && closeSheet()}>
+          <a key={l.url} className="evd-line link" href={l.url} target={l.url.startsWith('#') ? undefined : tx("_blank")} rel="noreferrer" onClick={() => l.url.startsWith('#') && closeSheet()}>
             <ExternalLink aria-hidden /> {l.label}
           </a>
         ))}
@@ -158,26 +156,21 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
           <button
             className="btn sm"
             onClick={() => {
-              const copy: TripEvent = { ...ev, id: uid('e-'), title: `${ev.title} (copy)` };
+              const copy: TripEvent = { ...ev, id: uid('e-'), title: tx('{title} (copy)', { title: ev.title }) };
               save('events', copy);
               replaceSheet({ t: 'eventEdit', id: copy.id });
             }}
           >
-            <Copy /> Duplicate
-          </button>
+            <Copy />{tx(" Duplicate")}</button>
           <button className="btn sm danger" onClick={del}>
-            <Trash2 /> Delete
-          </button>
+            <Trash2 />{tx(" Delete")}</button>
         </div>
         {meta && (
-          <p className="muted evd-meta">
-            Last edited by {db.person[meta.by]?.name ?? meta.by} · {relTime(meta.u, Date.now())}
+          <p className="muted evd-meta">{tx("Last edited by ")}{db.person[meta.by]?.name ?? meta.by} · {relTime(meta.u, Date.now())}
             {isSeed('events', ev.id) && (
               <>
                 {' · '}
-                <button className="linkish" onClick={() => resetToSeed('events', ev.id)}>
-                  restore original
-                </button>
+                <button className="linkish" onClick={() => resetToSeed('events', ev.id)}>{tx("restore original")}</button>
               </>
             )}
           </p>
@@ -252,21 +245,19 @@ export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Parti
     if (!out.tz || out.tz === TZ) delete out.tz;
     if (!out.endTz || out.endTz === (out.tz ?? TZ)) delete out.endTz;
     save('events', out);
-    toast(existing ? 'Saved' : 'Added to the plan');
+    toast(existing ? tx("Saved") : tx("Added to the plan"));
     onClose();
     if (!existing) openSheet({ t: 'event', id: out.id });
   };
   return (
     <Sheet
-      title={existing ? 'Edit event' : 'New event'}
+      title={existing ? tx("Edit event") : tx("New event")}
       onClose={onClose}
       footer={
         <>
-          <button className="btn" onClick={onClose}>
-            Cancel
-          </button>
+          <button className="btn" onClick={onClose}>{tx("Cancel")}</button>
           <button className="btn primary" style={{ flex: 1 }} disabled={!valid} onClick={submit}>
-            {existing ? 'Save' : 'Add'}
+            {existing ? tx("Save") : tx("Add")}
           </button>
         </>
       }
@@ -279,12 +270,12 @@ export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Parti
         }}
       >
         <div className="field">
-          <label htmlFor="ev-title">Title</label>
-          <input id="ev-title" value={f.title} onChange={(e) => set({ title: e.target.value })} placeholder="e.g. Beer at U Fleků" autoFocus={!existing} />
+          <label htmlFor="ev-title">{tx("Title")}</label>
+          <input id="ev-title" value={f.title} onChange={(e) => set({ title: e.target.value })} placeholder={tx("e.g. Beer at U Fleků")} autoFocus={!existing} />
         </div>
         <div className="grid2">
           <div className="field">
-            <label htmlFor="ev-kind">Type</label>
+            <label htmlFor="ev-kind">{tx("Type")}</label>
             <select id="ev-kind" value={f.kind} onChange={(e) => set({ kind: e.target.value as EventKind })}>
               {KIND_ORDER.map((k) => (
                 <option key={k} value={k}>
@@ -294,7 +285,7 @@ export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Parti
             </select>
           </div>
           <div className="field">
-            <label htmlFor="ev-day">Day</label>
+            <label htmlFor="ev-day">{tx("Day")}</label>
             <select id="ev-day" value={sp.day} onChange={(e) => setStart(e.target.value, sp.time)}>
               {dayOptions.map((d) => (
                 <option key={d} value={d}>
@@ -306,25 +297,23 @@ export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Parti
         </div>
         <div className="grid2">
           <div className="field">
-            <label htmlFor="ev-start">Start ({TZ_LABEL[sTz] ?? sTz})</label>
+            <label htmlFor="ev-start">{tx("Start (")}{TZ_LABEL[sTz] ?? sTz})</label>
             <input id="ev-start" type="time" value={sp.time} onChange={(e) => e.target.value && setStart(sp.day, e.target.value)} />
           </div>
           <div className="field">
-            <label htmlFor="ev-end">End ({TZ_LABEL[eTz] ?? eTz})</label>
+            <label htmlFor="ev-end">{tx("End (")}{TZ_LABEL[eTz] ?? eTz})</label>
             <input id="ev-end" type="time" value={ep.time} onChange={(e) => e.target.value && setEnd(e.target.value)} />
           </div>
         </div>
         <p className="muted" style={{ fontSize: 12.5, marginTop: -6 }}>
           {durationLabel(Math.max(0, dur))}
-          {eventDay(f) !== dayKey(Date.parse(f.end) - 1, eTz) ? ' · ends the next day' : ''}
+          {eventDay(f) !== dayKey(Date.parse(f.end) - 1, eTz) ? tx(" · ends the next day") : ''}
         </p>
         <details>
-          <summary className="muted" style={{ fontSize: 13.5 }}>
-            Time zones (for flights from Yerevan / Zürich)
-          </summary>
+          <summary className="muted" style={{ fontSize: 13.5 }}>{tx("Time zones (for flights from Yerevan / Zürich)")}</summary>
           <div className="grid2" style={{ marginTop: 10 }}>
             <div className="field">
-              <label htmlFor="ev-tz">Start time zone</label>
+              <label htmlFor="ev-tz">{tx("Start time zone")}</label>
               <select id="ev-tz" value={sTz} onChange={(e) => set({ tz: e.target.value })}>
                 {TZ_OPTIONS.map((o) => (
                   <option key={o.v} value={o.v}>
@@ -334,7 +323,7 @@ export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Parti
               </select>
             </div>
             <div className="field">
-              <label htmlFor="ev-etz">End time zone</label>
+              <label htmlFor="ev-etz">{tx("End time zone")}</label>
               <select id="ev-etz" value={eTz} onChange={(e) => set({ endTz: e.target.value })}>
                 {TZ_OPTIONS.map((o) => (
                   <option key={o.v} value={o.v}>
@@ -346,67 +335,65 @@ export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Parti
           </div>
         </details>
         <div className="field">
-          <span className="lbl">Where</span>
+          <span className="lbl">{tx("Where")}</span>
           <Segmented
-            label="Location type"
+            label={tx("Location type")}
             value={mode}
             onChange={setMode}
             options={[
-              { v: 'place', label: 'At a place' },
-              { v: 'travel', label: 'Travel A → B' },
+              { v: 'place', label: tx("At a place") },
+              { v: 'travel', label: tx("Travel A → B") },
             ]}
           />
         </div>
         {mode === 'place' ? (
           <div className="field">
-            <label htmlFor="ev-place">Place</label>
+            <label htmlFor="ev-place">{tx("Place")}</label>
             <PlacePicker id="ev-place" value={f.placeId} onChange={(v) => set({ placeId: v })} />
           </div>
         ) : (
           <div className="grid2">
             <div className="field">
-              <label htmlFor="ev-from">From</label>
+              <label htmlFor="ev-from">{tx("From")}</label>
               <PlacePicker id="ev-from" value={f.fromPlaceId} onChange={(v) => set({ fromPlaceId: v })} />
             </div>
             <div className="field">
-              <label htmlFor="ev-to">To</label>
+              <label htmlFor="ev-to">{tx("To")}</label>
               <PlacePicker id="ev-to" value={f.toPlaceId} onChange={(v) => set({ toPlaceId: v })} />
             </div>
           </div>
         )}
-        <button type="button" className="btn sm ghost" style={{ alignSelf: 'flex-start', marginTop: -6 }} onClick={() => openSheet({ t: 'placeEdit', draft: { category: 'sight', lat: getDB().place.base.lat, lon: getDB().place.base.lon } })}>
-          + New place
-        </button>
+        <button type="button" className="btn sm ghost" style={{ alignSelf: 'flex-start', marginTop: -6 }} onClick={() => openSheet({ t: 'placeEdit', draft: { category: 'sight', lat: getDB().place.base.lat, lon: getDB().place.base.lon } })}>{tx("+ New place")}</button>
         <div className="field">
-          <span className="lbl">Who’s going</span>
+          <span className="lbl">{tx("Who’s going")}</span>
           <PeoplePicker value={f.people} onChange={(v) => set({ people: v })} />
         </div>
         <div className="field">
-          <span className="lbl">Status</span>
+          <span className="lbl">{tx("Status")}</span>
           <Segmented
-            label="Status"
+            label={tx("Status")}
             value={f.status}
             onChange={(v) => set({ status: v as EventStatus })}
             options={[
-              { v: 'planned', label: 'Planned' },
-              { v: 'tentative', label: 'Maybe' },
-              { v: 'confirmed', label: 'Booked' },
-              { v: 'cancelled', label: 'Off' },
+              { v: 'planned', label: tx("Planned") },
+              { v: 'tentative', label: tx("Maybe") },
+              { v: 'confirmed', label: tx("Booked") },
+              { v: 'cancelled', label: tx("Off") },
             ]}
           />
         </div>
         <div className="field">
-          <label htmlFor="ev-notes">Notes</label>
-          <textarea id="ev-notes" value={f.notes ?? ''} onChange={(e) => set({ notes: e.target.value })} placeholder="Tips, what to bring, links…" />
+          <label htmlFor="ev-notes">{tx("Notes")}</label>
+          <textarea id="ev-notes" value={f.notes ?? ''} onChange={(e) => set({ notes: e.target.value })} placeholder={tx("Tips, what to bring, links…")} />
         </div>
         <div className="grid2">
           <div className="field">
-            <label htmlFor="ev-booking">Booking / ticket</label>
-            <input id="ev-booking" value={f.booking ?? ''} onChange={(e) => set({ booking: e.target.value })} placeholder="ref, seat…" />
+            <label htmlFor="ev-booking">{tx("Booking / ticket")}</label>
+            <input id="ev-booking" value={f.booking ?? ''} onChange={(e) => set({ booking: e.target.value })} placeholder={tx("ref, seat…")} />
           </div>
           <div className="field">
-            <label htmlFor="ev-cost">Cost</label>
-            <input id="ev-cost" value={f.cost ?? ''} onChange={(e) => set({ cost: e.target.value })} placeholder="e.g. 430 CZK pp" />
+            <label htmlFor="ev-cost">{tx("Cost")}</label>
+            <input id="ev-cost" value={f.cost ?? ''} onChange={(e) => set({ cost: e.target.value })} placeholder={tx("e.g. 430 CZK pp")} />
           </div>
         </div>
         {existing && (
@@ -417,15 +404,12 @@ export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Parti
               const copy = { ...existing };
               remove('events', existing.id);
               onClose();
-              toast('Event deleted', { label: 'Undo', run: () => save('events', copy) });
+              toast(tx("Event deleted"), { label: tx("Undo"), run: () => save('events', copy) });
             }}
           >
-            <Trash2 /> Delete event
-          </button>
+            <Trash2 />{tx(" Delete event")}</button>
         )}
-        <p className="muted" style={{ fontSize: 12 }}>
-          Signed in as {db.person[me]?.name}. Changes sync to everyone.
-        </p>
+        <p className="muted" style={{ fontSize: 12 }}>{tx("Signed in as ")}{db.person[me]?.name}{tx(". Changes sync to everyone.")}</p>
       </form>
     </Sheet>
   );
@@ -451,25 +435,25 @@ function ShiftRow({ ev }: { ev: TripEvent }) {
       : [];
     const before = [ev, ...later].map((e) => ({ ...e }));
     for (const e of [ev, ...later]) save('events', move(e));
-    toast(`${min > 0 ? '+' : ''}${min} min${later.length ? ` (+${later.length} later events)` : ''}`, {
-      label: 'Undo',
+    toast(`${min > 0 ? '+' : ''}${tx('{n} min', { n: min })}${later.length ? tx(' (+{n} later events)', { n: later.length }) : ''}`, {
+      label: tx("Undo"),
       run: () => before.forEach((e) => save('events', e)),
     });
   };
   return (
     <div className="shift">
-      <div className="eyebrow">Running late / early?</div>
+      <div className="eyebrow">{tx("Running late / early?")}</div>
       <div className="shift-btns">
         {[-15, 15, 30, 60].map((m) => (
           <button key={m} className="btn sm" onClick={() => shift(m)}>
             {m > 0 ? '+' : '−'}
-            {Math.abs(m)}m
+            {Math.abs(m)}
+            {tx('m')}
           </button>
         ))}
       </div>
       <label className="shift-chain">
-        <input type="checkbox" checked={chain} onChange={(e) => setChain(e.target.checked)} /> also move the rest of that day
-      </label>
+        <input type="checkbox" checked={chain} onChange={(e) => setChain(e.target.checked)} />{tx(" also move the rest of that day")}</label>
     </div>
   );
 }
@@ -479,7 +463,7 @@ function EventWeather({ ev }: { ev: TripEvent }) {
   const at = weatherAt(w, Date.parse(ev.start));
   if (!at) return null;
   return (
-    <span className="pill info" title="Forecast at start time">
+    <span className="pill info" title={tx("Forecast at start time")}>
       {wmo(at.code).emoji} {Math.round(at.temp)}°C
     </span>
   );

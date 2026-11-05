@@ -3,6 +3,7 @@ import { distance } from '../lib/geo';
 import { crewTrails } from '../lib/positions';
 import { useDB } from '../lib/store';
 import { Avatar } from './ui';
+import { t as tx } from '../i18n';
 
 const FROM = Date.parse('2026-11-12T20:00:00+01:00');
 const TO = Date.parse('2026-11-22T18:00:00+01:00');
@@ -32,27 +33,27 @@ export function TripNumbers() {
       <div className="numbers-grid">
         <div>
           <b className="tnum">10</b>
-          <span>days</span>
+          <span>{tx("days")}</span>
         </div>
         <div>
           <b className="tnum">{stats.beer}</b>
-          <span>beer stops</span>
+          <span>{tx("beer stops")}</span>
         </div>
         <div>
           <b className="tnum">{stats.sights}</b>
-          <span>sights</span>
+          <span>{tx("sights")}</span>
         </div>
         <div>
           <b className="tnum">{stats.nights}</b>
-          <span>nights out</span>
+          <span>{tx("nights out")}</span>
         </div>
         <div>
           <b className="tnum">1</b>
-          <span>Korn show</span>
+          <span>{tx("Korn show")}</span>
         </div>
         <div>
           <b className="tnum">{stats.gaming}</b>
-          <span>gaming sessions</span>
+          <span>{tx("gaming sessions")}</span>
         </div>
       </div>
       <div className="numbers-km">
@@ -61,12 +62,11 @@ export function TripNumbers() {
             <Avatar person={db.person[p.person]} size="sm" />
             <span className="grow">{db.person[p.person]?.name}</span>
             <span className="tnum muted" style={{ fontSize: 13 }}>
-              {Math.round(p.air / 1000).toLocaleString()} km travelling · {Math.round(p.ground / 1000)} km in Prague
-            </span>
+              {Math.round(p.air / 1000).toLocaleString()}{tx(" km travelling · ")}{Math.round(p.ground / 1000)}{tx(" km in Prague")}</span>
           </div>
         ))}
       </div>
-      <p className="muted" style={{ fontSize: 12 }}>Based on the current plan; updates as you edit it.</p>
+      <p className="muted" style={{ fontSize: 12 }}>{tx("Based on the current plan; updates as you edit it.")}</p>
     </div>
   );
 }

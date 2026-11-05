@@ -10,6 +10,7 @@ import { eventDay } from '../../lib/trip';
 import { crewLine, presenceFresh } from '../CrewList';
 import { EventRow } from '../EventRow';
 import { Avatar, Sheet, toast } from '../ui';
+import { t as tx } from '../../i18n';
 
 export function PersonSheet({ id, onClose }: { id: string; onClose: () => void }) {
   const db = useDB();
@@ -34,7 +35,7 @@ export function PersonSheet({ id, onClose }: { id: string; onClose: () => void }
       label={p.name}
       onClose={onClose}
       actions={
-        <button className="icon-btn" aria-label="Edit person" onClick={() => setEdit((v) => !v)}>
+        <button className="icon-btn" aria-label={tx("Edit person")} onClick={() => setEdit((v) => !v)}>
           <Pencil />
         </button>
       }
@@ -45,32 +46,31 @@ export function PersonSheet({ id, onClose }: { id: string; onClose: () => void }
         <div className="form">
           {line && (
             <div className="card pad">
-              <div className="eyebrow">{live ? 'Right now (planned)' : `At ${fmtDayShort(t)} ${hhmm(t)}`}</div>
+              <div className="eyebrow">{live ? tx("Right now (planned)") : `At ${fmtDayShort(t)} ${hhmm(t)}`}</div>
               <div style={{ fontWeight: 700, fontSize: 17, marginTop: 4 }}>{line.title}</div>
               <div className="muted" style={{ fontSize: 13.5 }}>
                 {line.sub}
               </div>
               {live && presenceFresh(pr, Date.now()) && (
                 <div className="pill live" style={{ marginTop: 8 }}>
-                  <Radio /> live GPS {relTime(pr.ts, Date.now())}
+                  <Radio />{tx(" live GPS ")}{relTime(pr.ts, Date.now())}
                 </div>
               )}
               <button className="btn sm" style={{ marginTop: 10 }} onClick={() => mapIntent({ person: id })}>
-                <MapIcon /> Show on map
-              </button>
+                <MapIcon />{tx(" Show on map")}</button>
             </div>
           )}
           <dl className="kv">
-            <dt>From</dt>
+            <dt>{tx("From")}</dt>
             <dd>{p.from ?? p.homeName}</dd>
-            <dt>In Prague</dt>
+            <dt>{tx("In Prague")}</dt>
             <dd>
               {p.stayFrom ? `${fmtDayShort(Date.parse(p.stayFrom))} ${hhmm(Date.parse(p.stayFrom))}` : '?'} →{' '}
               {p.stayTo ? `${fmtDayShort(Date.parse(p.stayTo))} ${hhmm(Date.parse(p.stayTo))}` : '?'}
             </dd>
             {p.phone && (
               <>
-                <dt>Phone</dt>
+                <dt>{tx("Phone")}</dt>
                 <dd>
                   <a href={`tel:${p.phone}`}>{p.phone}</a>
                 </dd>
@@ -80,13 +80,12 @@ export function PersonSheet({ id, onClose }: { id: string; onClose: () => void }
           {p.note && <p className="prose">{p.note}</p>}
           <div>
             <div className="eyebrow" style={{ margin: '6px 2px 8px' }}>
-              {p.id === me ? 'Your' : `${p.name}’s`} next events
-            </div>
+              {p.id === me ? tx('Your next events') : tx('{name}’s next events', { name: p.name })}</div>
             <div className="card ev-list">
               {upcoming.map((e) => (
                 <EventRow key={e.id} ev={e} t={t} showDay={eventDay(e).slice(8) + '/11'} onClick={() => openSheet({ t: 'event', id: e.id })} />
               ))}
-              {!upcoming.length && <div className="empty">Nothing upcoming</div>}
+              {!upcoming.length && <div className="empty">{tx("Nothing upcoming")}</div>}
             </div>
           </div>
         </div>
@@ -108,68 +107,66 @@ function PersonEditor({ p, onDone }: { p: Person; onDone: () => void }) {
       onSubmit={(e) => {
         e.preventDefault();
         save('people', f);
-        toast('Saved');
+        toast(tx("Saved"));
         onDone();
       }}
     >
       <div className="grid2">
         <div className="field">
-          <label htmlFor="pp-name">Name</label>
+          <label htmlFor="pp-name">{tx("Name")}</label>
           <input id="pp-name" value={f.name} onChange={(e) => set({ name: e.target.value })} />
         </div>
         <div className="field">
-          <label htmlFor="pp-color">Colour</label>
+          <label htmlFor="pp-color">{tx("Colour")}</label>
           <input id="pp-color" type="color" value={f.color} onChange={(e) => set({ color: e.target.value })} style={{ padding: 4 }} />
         </div>
       </div>
       <div className="field">
-        <label htmlFor="pp-from">Coming from</label>
+        <label htmlFor="pp-from">{tx("Coming from")}</label>
         <input id="pp-from" value={f.from ?? ''} onChange={(e) => set({ from: e.target.value })} />
       </div>
       <div className="field">
-        <label htmlFor="pp-home">Home city (label)</label>
+        <label htmlFor="pp-home">{tx("Home city (label)")}</label>
         <input id="pp-home" value={f.homeName} onChange={(e) => set({ homeName: e.target.value })} />
       </div>
       <div className="grid2">
         <div className="field">
-          <label htmlFor="pp-hlat">Home lat</label>
+          <label htmlFor="pp-hlat">{tx("Home lat")}</label>
           <input id="pp-hlat" inputMode="decimal" value={f.home[1]} onChange={(e) => set({ home: [f.home[0], Number(e.target.value)] })} />
         </div>
         <div className="field">
-          <label htmlFor="pp-hlon">Home lon</label>
+          <label htmlFor="pp-hlon">{tx("Home lon")}</label>
           <input id="pp-hlon" inputMode="decimal" value={f.home[0]} onChange={(e) => set({ home: [Number(e.target.value), f.home[1]] })} />
         </div>
       </div>
-      <div className="eyebrow">At the base (Prague time)</div>
+      <div className="eyebrow">{tx("At the base (Prague time)")}</div>
       <div className="grid2">
         <div className="field">
-          <label htmlFor="pp-fd">From day</label>
+          <label htmlFor="pp-fd">{tx("From day")}</label>
           <input id="pp-fd" type="date" value={a.d} onChange={(e) => set({ stayFrom: mk(e.target.value, a.t || '12:00') })} />
         </div>
         <div className="field">
-          <label htmlFor="pp-ft">time</label>
+          <label htmlFor="pp-ft">{tx("time")}</label>
           <input id="pp-ft" type="time" value={a.t} onChange={(e) => set({ stayFrom: mk(a.d, e.target.value) })} />
         </div>
         <div className="field">
-          <label htmlFor="pp-td">Until day</label>
+          <label htmlFor="pp-td">{tx("Until day")}</label>
           <input id="pp-td" type="date" value={b.d} onChange={(e) => set({ stayTo: mk(e.target.value, b.t || '12:00') })} />
         </div>
         <div className="field">
-          <label htmlFor="pp-tt">time</label>
+          <label htmlFor="pp-tt">{tx("time")}</label>
           <input id="pp-tt" type="time" value={b.t} onChange={(e) => set({ stayTo: mk(b.d, e.target.value) })} />
         </div>
       </div>
       <div className="field">
-        <label htmlFor="pp-phone">Phone</label>
+        <label htmlFor="pp-phone">{tx("Phone")}</label>
         <input id="pp-phone" type="tel" value={f.phone ?? ''} onChange={(e) => set({ phone: e.target.value })} />
       </div>
       <div className="field">
-        <label htmlFor="pp-note">Note</label>
+        <label htmlFor="pp-note">{tx("Note")}</label>
         <textarea id="pp-note" value={f.note ?? ''} onChange={(e) => set({ note: e.target.value })} />
       </div>
-      <button className="btn primary" type="submit">
-        Save
-      </button>
+      <button className="btn primary" type="submit">{tx("Save")}</button>
     </form>
   );
 }

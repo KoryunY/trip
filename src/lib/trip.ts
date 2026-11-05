@@ -1,5 +1,6 @@
 import type { Person, Task, TripEvent } from '../../shared/types';
 import { dayKey, dayStart, addDays, TZ, hhmm, TZ_LABEL } from './time';
+import { t as tx } from '../i18n';
 
 export type Phase = 'past' | 'now' | 'soon' | 'future';
 
@@ -75,9 +76,9 @@ export function localTimeNote(e: TripEvent) {
   const a = startTz(e);
   const b = endTz(e);
   if (a === TZ && b === TZ) return null;
-  if (a !== TZ && b !== TZ) return `${TZ_LABEL[a] ?? a} time`;
-  if (a !== TZ) return `departs ${TZ_LABEL[a] ?? a} time`;
-  return `lands ${TZ_LABEL[b] ?? b} time`;
+  if (a !== TZ && b !== TZ) return tx('{city} time', { city: TZ_LABEL[a] ?? a });
+  if (a !== TZ) return tx('departs {city} time', { city: TZ_LABEL[a] ?? a });
+  return tx('lands {city} time', { city: TZ_LABEL[b] ?? b });
 }
 
 export function crossesMidnight(e: TripEvent) {

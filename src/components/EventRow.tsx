@@ -4,6 +4,7 @@ import { KIND } from '../lib/meta';
 import { useDB } from '../lib/store';
 import { endLocal, localTimeNote, phaseOf, progressOf, startLocal } from '../lib/trip';
 import { AvatarStack } from './ui';
+import { t as tx } from '../i18n';
 
 export function EventRow({ ev, t, onClick, showDay }: { ev: TripEvent; t: number; onClick?: () => void; showDay?: string }) {
   const db = useDB();
@@ -38,16 +39,16 @@ export function EventRow({ ev, t, onClick, showDay }: { ev: TripEvent; t: number
           )}
         </span>
         <span className="ev-tags">
-          {phase === 'now' && <span className="pill live">NOW</span>}
-          {phase === 'soon' && <span className="pill warn">SOON</span>}
-          {ev.status === 'tentative' && <span className="pill">tentative</span>}
-          {ev.status === 'confirmed' && phase !== 'past' && <span className="pill ok">confirmed</span>}
-          {ev.status === 'cancelled' && <span className="pill danger">cancelled</span>}
+          {phase === 'now' && <span className="pill live">{tx("NOW")}</span>}
+          {phase === 'soon' && <span className="pill warn">{tx("SOON")}</span>}
+          {ev.status === 'tentative' && <span className="pill">{tx("tentative")}</span>}
+          {ev.status === 'confirmed' && phase !== 'past' && <span className="pill ok">{tx("confirmed")}</span>}
+          {ev.status === 'cancelled' && <span className="pill danger">{tx("cancelled")}</span>}
           {local && <span className="pill info">{local}</span>}
           {!everyone && <AvatarStack people={ev.people.map((id) => db.person[id])} />}
         </span>
         {phase === 'now' && (
-          <span className="progress ev-progress" aria-label="progress">
+          <span className="progress ev-progress" aria-label={tx("progress")}>
             <i style={{ width: `${progressOf(ev, t) * 100}%` }} />
           </span>
         )}

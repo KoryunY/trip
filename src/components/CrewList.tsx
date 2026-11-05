@@ -8,21 +8,22 @@ import { openSheet } from '../lib/ui';
 import { Avatar } from './ui';
 import { KIND } from '../lib/meta';
 import { distance, fmtDistance } from '../lib/geo';
+import { t as tx } from '../i18n';
 
 export function crewLine(pos: PersonPos, db: DB, t: number): { title: string; sub: string } {
   const ev = pos.eventId ? db.event[pos.eventId] : undefined;
   const nxt = nextEventFor(pos.person, db.events, t);
-  const nextTxt = nxt ? `Next: ${nxt.title} · ${relTime(Date.parse(nxt.start), t)}` : 'Nothing else planned';
+  const nextTxt = nxt ? tx('Next: {title} · {when}', { title: nxt.title, when: relTime(Date.parse(nxt.start), t) }) : tx("Nothing else planned");
   switch (pos.mode) {
     case 'travel':
       return {
         title: ev?.title ?? pos.label,
-        sub: `${Math.round((pos.progress ?? 0) * 100)}% · arrives ${ev ? hhmm(Date.parse(ev.end)) : ''}${ev?.tz && ev.kind === 'flight' ? ' Prague time' : ''}`,
+        sub: tx('{pct}% · arrives {time}', { pct: Math.round((pos.progress ?? 0) * 100), time: ev ? hhmm(Date.parse(ev.end)) : '' }) + (ev?.tz && ev.kind === 'flight' ? tx(" Prague time") : ''),
       };
     case 'moving':
-      return { title: pos.label, sub: nxt ? `${nxt.title} at ${hhmm(Date.parse(nxt.start))}` : '' };
+      return { title: pos.label, sub: nxt ? tx('{title} at {time}', { title: nxt.title, time: hhmm(Date.parse(nxt.start)) }) : '' };
     case 'event':
-      return { title: ev?.title ?? pos.label, sub: ev ? `Until ${hhmm(Date.parse(ev.end))} · ${db.place[ev.placeId ?? '']?.name ?? ''}` : nextTxt };
+      return { title: ev?.title ?? pos.label, sub: ev ? tx('Until {time} · {place}', { time: hhmm(Date.parse(ev.end)), place: db.place[ev.placeId ?? '']?.name ?? '' }) : nextTxt };
     default:
       return { title: pos.label, sub: nextTxt };
   }
@@ -35,14 +36,14 @@ export function liveLabel(pr: Presence, db: DB): string {
     const d = distance([pr.lon, pr.lat], [pl.lon, pl.lat]);
     if (!best || d < best.d) best = { name: pl.name, d };
   }
-  if (best && best.d < 120) return `At ${best.name}`;
-  if (best && best.d < 400) return `Near ${best.name}`;
+  if (best && best.d < 120) return tx('At {place}', { place: best.name });
+  if (best && best.d < 400) return tx('Near {place}', { place: best.name });
   const base = db.place.base;
   if (base) {
     const d = distance([pr.lon, pr.lat], [base.lon, base.lat]);
-    return d < 60_000 ? `${fmtDistance(d)} from the base` : `${fmtDistance(d)} away`;
+    return d < 60_000 ? tx('{dist} from the base', { dist: fmtDistance(d) }) : tx('{dist} away', { dist: fmtDistance(d) });
   }
-  return 'Live location';
+  return tx('Live location');
 }
 
 export function presenceFresh(p: Presence | undefined, t: number) {
@@ -66,8 +67,8 @@ export function groupCrew(crew: PersonPos[]) {
 
 export function namesOf(people: (Person | undefined)[], total: number) {
   const n = people.filter(Boolean).map((p) => p!.name);
-  if (n.length === total && total > 2) return 'Everyone';
-  return n.length <= 1 ? n.join('') : `${n.slice(0, -1).join(', ')} & ${n[n.length - 1]}`;
+  if (n.length === total && total > 2) return tx('Everyone');
+  return n.length <= 1 ? n.join('') : `${n.slice(0, -1).join(', ')} ${tx('&')} ${n[n.length - 1]}`;
 }
 
 export function CrewList({ t, live, onPick }: { t: number; live: boolean; onPick?: (pid: string) => void }) {
@@ -105,12 +106,11 @@ export function CrewList({ t, live, onPick }: { t: number; live: boolean; onPick
             <span className="grow">
               <span className="t crew-name">
                 {solo ? people[0].name : namesOf(people, db.people.length)}
-                {solo && pos.person === me && <span className="muted"> (you)</span>}
-                {!solo && <span className="muted"> together</span>}
+                {solo && pos.person === me && <span className="muted">{tx(" (you)")}</span>}
+                {!solo && <span className="muted">{tx(" together")}</span>}
                 {liveOnes.length > 0 && (
                   <span className="pill live crew-live">
-                    <Radio /> live
-                  </span>
+                    <Radio />{tx(" live")}</span>
                 )}
               </span>
               <span className="crew-status">

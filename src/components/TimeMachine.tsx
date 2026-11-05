@@ -1,19 +1,20 @@
 import { FastForward, Pause, Play, RotateCcw } from 'lucide-react';
 import { useMemo } from 'react';
 import { rangeBounds, SPEEDS, timeMachine, useNow, useTimeState } from '../lib/clock';
-import { addDays, dayKey, fmtDayShort, hhmm, tripDays, zonedToUtc, fmtWeekday } from '../lib/time';
+import { addDays, dayKey, fmtDayMonth, fmtDayShort, hhmm, tripDays, zonedToUtc, fmtWeekday } from '../lib/time';
+import { t as tx } from '../i18n';
 
 const MOMENTS: { label: string; at: string }[] = [
-  { label: 'Takeoff EVN', at: '2026-11-13T02:30:00+01:00' },
-  { label: 'Landing', at: '2026-11-13T06:50:00+01:00' },
-  { label: 'Crew complete', at: '2026-11-14T10:45:00+01:00' },
-  { label: 'Castle', at: '2026-11-14T13:00:00+01:00' },
-  { label: 'KORN', at: '2026-11-16T19:45:00+01:00' },
-  { label: '17 Nov', at: '2026-11-17T11:30:00+01:00' },
-  { label: 'Plzeň', at: '2026-11-18T11:00:00+01:00' },
-  { label: 'GTA VI', at: '2026-11-19T00:05:00+01:00' },
-  { label: 'Farewell', at: '2026-11-21T19:00:00+01:00' },
-  { label: 'Flight home', at: '2026-11-22T08:30:00+01:00' },
+  { label: tx('Takeoff EVN'), at: '2026-11-13T02:30:00+01:00' },
+  { label: tx('Landing'), at: '2026-11-13T06:50:00+01:00' },
+  { label: tx('Crew complete'), at: '2026-11-14T10:45:00+01:00' },
+  { label: tx('Castle'), at: '2026-11-14T13:00:00+01:00' },
+  { label: tx('KORN'), at: '2026-11-16T19:45:00+01:00' },
+  { label: tx('17 Nov'), at: '2026-11-17T11:30:00+01:00' },
+  { label: tx('Plzeň'), at: '2026-11-18T11:00:00+01:00' },
+  { label: tx('GTA VI'), at: '2026-11-19T00:05:00+01:00' },
+  { label: tx('Farewell'), at: '2026-11-21T19:00:00+01:00' },
+  { label: tx('Flight home'), at: '2026-11-22T08:30:00+01:00' },
 ];
 
 export function TimeMachine({ compact }: { compact?: boolean }) {
@@ -40,34 +41,32 @@ export function TimeMachine({ compact }: { compact?: boolean }) {
   return (
     <div className={`tm ${compact ? 'compact' : ''}`}>
       <div className="tm-row">
-        <button className="tm-play" onClick={() => timeMachine.toggle()} aria-label={ts.playing ? 'Pause timelapse' : 'Play timelapse'}>
+        <button className="tm-play" onClick={() => timeMachine.toggle()} aria-label={ts.playing ? tx("Pause timelapse") : tx("Play timelapse")}>
           {ts.playing ? <Pause /> : <Play />}
         </button>
         <div className="tm-label">
           <span className="tm-time tnum">
-            {hhmm(t)} <span className="tm-date">{fmtWeekday(t)} {fmtDayShort(t).replace(/^\w+,? /, '')}</span>
+            {hhmm(t)} <span className="tm-date">{fmtWeekday(t)} {fmtDayMonth(t)}</span>
           </span>
           <span className="tm-sub">
             {live ? (
-              <span className="pill live">● LIVE</span>
+              <span className="pill live">{tx("● LIVE")}</span>
             ) : (
-              <span className="pill info">{ts.playing ? 'Playing timelapse' : 'Time travel'}</span>
+              <span className="pill info">{ts.playing ? tx("Playing timelapse") : tx("Time travel")}</span>
             )}
           </span>
         </div>
         <button
           className="tm-speed"
           onClick={() => timeMachine.setSpeed(SPEEDS[(speedIdx + 1) % SPEEDS.length].v)}
-          aria-label="Change playback speed"
+          aria-label={tx("Change playback speed")}
         >
           <FastForward aria-hidden />
           {SPEEDS[speedIdx >= 0 ? speedIdx : 2].label}
         </button>
         {!live && (
-          <button className="tm-live" onClick={() => timeMachine.goLive()} aria-label="Back to live">
-            <RotateCcw aria-hidden />
-            Live
-          </button>
+          <button className="tm-live" onClick={() => timeMachine.goLive()} aria-label={tx("Back to live")}>
+            <RotateCcw aria-hidden />{tx("Live")}</button>
         )}
       </div>
       <div className="tm-track">
@@ -77,7 +76,7 @@ export function TimeMachine({ compact }: { compact?: boolean }) {
           max={b}
           step={60_000}
           value={Math.max(a, Math.min(b, t))}
-          aria-label="Scrub through the trip"
+          aria-label={tx("Scrub through the trip")}
           aria-valuetext={`${fmtDayShort(t)} ${hhmm(t)}`}
           onChange={(e) => {
             timeMachine.pause();

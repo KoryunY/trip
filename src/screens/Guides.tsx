@@ -23,10 +23,12 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { GUIDES, type GuideSection } from '../data/guides';
+import { guides } from '../i18n/guides';
 import { go } from '../lib/router';
 import { useDB, useMe } from '../lib/store';
 import { SubBar } from './More';
 import { Avatar } from '../components/ui';
+import { t as tx } from '../i18n';
 
 export const GUIDE_ICON: Record<string, LucideIcon> = {
   'plane-landing': PlaneLanding,
@@ -50,8 +52,9 @@ export const GUIDE_ICON: Record<string, LucideIcon> = {
 export function GuidesList() {
   const me = useMe()!;
   const db = useDB();
-  const mine = GUIDES.filter((g) => g.for?.includes(me));
-  const rest = GUIDES.filter((g) => !g.for?.includes(me));
+  const all = guides();
+  const mine = all.filter((g) => g.for?.includes(me));
+  const rest = all.filter((g) => !g.for?.includes(me));
   const Row = ({ g }: { g: (typeof GUIDES)[number] }) => {
     const Icon = GUIDE_ICON[g.icon] ?? BookOpen;
     return (
@@ -70,12 +73,12 @@ export function GuidesList() {
   };
   return (
     <>
-      <SubBar title="Guides" sub="Researched Nov 2026; prices can change" />
+      <SubBar title={tx("Guides")} sub="Researched Nov 2026; prices can change" />
       <div className="wrap">
         {mine.length > 0 && (
           <section className="section" style={{ marginTop: 8 }}>
             <div className="section-h">
-              <h2>For you</h2>
+              <h2>{tx("For you")}</h2>
             </div>
             <div className="card list">
               {mine.map((g) => (
@@ -86,7 +89,7 @@ export function GuidesList() {
         )}
         <section className="section">
           <div className="section-h">
-            <h2>Everyone</h2>
+            <h2>{tx("Everyone")}</h2>
           </div>
           <div className="card list">
             {rest.map((g) => (
@@ -159,8 +162,8 @@ function Section({ s }: { s: GuideSection }) {
 }
 
 export function GuideView({ id }: { id: string }) {
-  const g = GUIDES.find((x) => x.id === id);
-  if (!g) return <SubBar title="Guide not found" />;
+  const g = guides().find((x) => x.id === id);
+  if (!g) return <SubBar title={tx("Guide not found")} />;
   const Icon = GUIDE_ICON[g.icon] ?? BookOpen;
   return (
     <>
@@ -177,7 +180,7 @@ export function GuideView({ id }: { id: string }) {
         ))}
         {g.sources && (
           <div className="g-sources">
-            <div className="eyebrow">Sources</div>
+            <div className="eyebrow">{tx("Sources")}</div>
             {g.sources.map((s) => (
               <a key={s.url} href={s.url} target="_blank" rel="noreferrer">
                 <ExternalLink aria-hidden /> {s.label}

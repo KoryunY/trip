@@ -16,6 +16,11 @@ Trip companion PWA for **Koryun, Alexey & Arto**, Prague, **13–22 Nov 2026**.
 
 Login = pick your name. Everyone sees and edits everything.
 
+**Languages & theme:** English by default, Russian via the EN/RU switch (top of Now/More/login, or Settings). The 🌙/☀️ button switches dark/light mode (Settings also has Auto).
+- UI strings: `src/i18n/ru.ts`, used through `t()`/`tx()` in `src/i18n/index.ts`.
+- Seed content: `src/i18n/content.ru.ts`, `places.ru.ts` and `guides.ru.ts`. It's shown in Russian only while the text is unedited.
+- Saving maps Russian seed text back to English, so a Russian edit never changes what English users see. Text a person writes is shown as written.
+
 ### Offline
 
 * The app itself is cached by a service worker, so it opens without internet.

@@ -1,7 +1,7 @@
 import { BookOpen, ExternalLink, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { Task, TaskCategory } from '../../../shared/types';
-import { GUIDES } from '../../data/guides';
+import { guides } from '../../i18n/guides';
 import { TASK_CAT, TASK_CAT_ORDER } from '../../lib/meta';
 import { go } from '../../lib/router';
 import { remove, save, uid, useDB, useMe } from '../../lib/store';
@@ -11,6 +11,7 @@ import { closeAllSheets, replaceSheet } from '../../lib/ui';
 import { toggleTask } from '../../screens/Prep';
 import { Avatar, CheckBox, Segmented, Sheet, toast } from '../ui';
 import { PeoplePicker } from './PlacePicker';
+import { t as tx, locale } from '../../i18n';
 
 export function TaskSheet({ id, onClose }: { id: string; onClose: () => void }) {
   const db = useDB();
@@ -18,19 +19,19 @@ export function TaskSheet({ id, onClose }: { id: string; onClose: () => void }) 
   const task = db.tasks.find((t) => t.id === id);
   if (!task) {
     return (
-      <Sheet title="Task removed" onClose={onClose}>
-        <p className="muted">This task no longer exists.</p>
+      <Sheet title={tx("Task removed")} onClose={onClose}>
+        <p className="muted">{tx("This task no longer exists.")}</p>
       </Sheet>
     );
   }
-  const guide = task.guide ? GUIDES.find((g) => g.id === task.guide) : undefined;
+  const guide = task.guide ? guides().find((g) => g.id === task.guide) : undefined;
   const complete = taskComplete(task);
   return (
     <Sheet
       title={task.title}
       onClose={onClose}
       actions={
-        <button className="icon-btn" aria-label="Edit task" onClick={() => replaceSheet({ t: 'taskEdit', id: task.id })}>
+        <button className="icon-btn" aria-label={tx("Edit task")} onClick={() => replaceSheet({ t: 'taskEdit', id: task.id })}>
           <Pencil />
         </button>
       }
@@ -38,9 +39,9 @@ export function TaskSheet({ id, onClose }: { id: string; onClose: () => void }) 
       <div className="form">
         <div className="evd-pills">
           <span className="pill">{TASK_CAT[task.category]?.label}</span>
-          {task.priority === 'high' && <span className="pill danger">important</span>}
-          {complete ? <span className="pill ok">done</span> : <span className="pill warn">open</span>}
-          {task.due && <span className="pill info">by {new Date(task.due).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>}
+          {task.priority === 'high' && <span className="pill danger">{tx("important")}</span>}
+          {complete ? <span className="pill ok">{tx("done")}</span> : <span className="pill warn">{tx("open")}</span>}
+          {task.due && <span className="pill info">{tx("by ")}{new Date(task.due).toLocaleDateString(locale(), { day: 'numeric', month: 'short' })}</span>}
         </div>
         {task.details && <p className="prose">{task.details}</p>}
         <div className="card list">
@@ -50,11 +51,11 @@ export function TaskSheet({ id, onClose }: { id: string; onClose: () => void }) 
             const at = task.done?.[pid];
             return (
               <div key={pid} className="row">
-                <CheckBox on={done} label={`${p?.name} done`} onChange={() => toggleTask(task, pid)} />
+                <CheckBox on={done} label={tx('{name} done', { name: p?.name ?? '' })} onChange={() => toggleTask(task, pid)} />
                 <Avatar person={p} size="md" />
                 <span className="grow">
-                  <span className="t">{task.mode === 'any' ? 'Anyone of us' : p?.name}</span>
-                  <span className="s">{done ? (at ? `done ${relTime(at, Date.now())}` : 'done') : 'not yet'}</span>
+                  <span className="t">{task.mode === 'any' ? tx("Anyone of us") : p?.name}</span>
+                  <span className="s">{done ? (at ? `done ${relTime(at, Date.now())}` : 'done') : tx("not yet")}</span>
                 </span>
               </div>
             );
@@ -68,13 +69,12 @@ export function TaskSheet({ id, onClose }: { id: string; onClose: () => void }) 
               go(`guide/${guide.id}`);
             }}
           >
-            <BookOpen /> Guide: {guide.title}
+            <BookOpen />{tx(" Guide: ")}{guide.title}
           </button>
         )}
         {task.link && (
           <a className="btn" href={task.link} target="_blank" rel="noreferrer">
-            <ExternalLink /> Open link
-          </a>
+            <ExternalLink />{tx(" Open link")}</a>
         )}
       </div>
     </Sheet>
@@ -91,21 +91,17 @@ export function TaskEditor({ id, draft, onClose }: { id?: string; draft?: Partia
   const submit = () => {
     if (!valid) return;
     save('tasks', { ...f, title: f.title.trim() });
-    toast(existing ? 'Task saved' : 'Task added');
+    toast(existing ? tx("Task saved") : tx("Task added"));
     onClose();
   };
   return (
     <Sheet
-      title={existing ? 'Edit task' : 'New task'}
+      title={existing ? tx("Edit task") : tx("New task")}
       onClose={onClose}
       footer={
         <>
-          <button className="btn" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="btn primary" style={{ flex: 1 }} disabled={!valid} onClick={submit}>
-            Save
-          </button>
+          <button className="btn" onClick={onClose}>{tx("Cancel")}</button>
+          <button className="btn primary" style={{ flex: 1 }} disabled={!valid} onClick={submit}>{tx("Save")}</button>
         </>
       }
     >
@@ -117,16 +113,16 @@ export function TaskEditor({ id, draft, onClose }: { id?: string; draft?: Partia
         }}
       >
         <div className="field">
-          <label htmlFor="tk-title">Task</label>
+          <label htmlFor="tk-title">{tx("Task")}</label>
           <input id="tk-title" value={f.title} onChange={(e) => set({ title: e.target.value })} autoFocus={!existing} />
         </div>
         <div className="field">
-          <label htmlFor="tk-details">Details</label>
+          <label htmlFor="tk-details">{tx("Details")}</label>
           <textarea id="tk-details" value={f.details ?? ''} onChange={(e) => set({ details: e.target.value })} />
         </div>
         <div className="grid2">
           <div className="field">
-            <label htmlFor="tk-cat">Category</label>
+            <label htmlFor="tk-cat">{tx("Category")}</label>
             <select id="tk-cat" value={f.category} onChange={(e) => set({ category: e.target.value as TaskCategory })}>
               {TASK_CAT_ORDER.map((c) => (
                 <option key={c} value={c}>
@@ -136,41 +132,41 @@ export function TaskEditor({ id, draft, onClose }: { id?: string; draft?: Partia
             </select>
           </div>
           <div className="field">
-            <label htmlFor="tk-due">Due</label>
+            <label htmlFor="tk-due">{tx("Due")}</label>
             <input id="tk-due" type="date" value={f.due ?? ''} onChange={(e) => set({ due: e.target.value || null })} />
           </div>
         </div>
         <div className="field">
-          <span className="lbl">Who</span>
+          <span className="lbl">{tx("Who")}</span>
           <PeoplePicker value={f.assignees} onChange={(v) => set({ assignees: v })} />
         </div>
         <div className="field">
-          <span className="lbl">Done when</span>
+          <span className="lbl">{tx("Done when")}</span>
           <Segmented
-            label="Completion mode"
+            label={tx("Completion mode")}
             value={f.mode}
             onChange={(v) => set({ mode: v })}
             options={[
-              { v: 'each', label: 'Each person ticks' },
-              { v: 'any', label: 'Anyone does it' },
+              { v: 'each', label: tx("Each person ticks") },
+              { v: 'any', label: tx("Anyone does it") },
             ]}
           />
         </div>
         <div className="field">
-          <span className="lbl">Priority</span>
+          <span className="lbl">{tx("Priority")}</span>
           <Segmented
-            label="Priority"
+            label={tx("Priority")}
             value={f.priority ?? 'normal'}
             onChange={(v) => set({ priority: v })}
             options={[
-              { v: 'high', label: 'Important' },
-              { v: 'normal', label: 'Normal' },
-              { v: 'low', label: 'Low' },
+              { v: 'high', label: tx("Important") },
+              { v: 'normal', label: tx("Normal") },
+              { v: 'low', label: tx("Low") },
             ]}
           />
         </div>
         <div className="field">
-          <label htmlFor="tk-link">Link</label>
+          <label htmlFor="tk-link">{tx("Link")}</label>
           <input id="tk-link" type="url" value={f.link ?? ''} onChange={(e) => set({ link: e.target.value || null })} />
         </div>
         {existing && (
@@ -181,11 +177,10 @@ export function TaskEditor({ id, draft, onClose }: { id?: string; draft?: Partia
               const copy = { ...existing };
               remove('tasks', existing.id);
               onClose();
-              toast('Task deleted', { label: 'Undo', run: () => save('tasks', copy) });
+              toast(tx("Task deleted"), { label: tx("Undo"), run: () => save('tasks', copy) });
             }}
           >
-            <Trash2 /> Delete task
-          </button>
+            <Trash2 />{tx(" Delete task")}</button>
         )}
       </form>
     </Sheet>

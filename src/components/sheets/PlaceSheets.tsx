@@ -9,6 +9,7 @@ import { fmtDayShort, hhmm, relTime } from '../../lib/time';
 import { mapsLink, uberLink, voteScore } from '../../lib/trip';
 import { navigateTo, openSheet, replaceSheet, showPlaceOnMap } from '../../lib/ui';
 import { Avatar, Sheet, toast } from '../ui';
+import { t as tx } from '../../i18n';
 
 export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void }) {
   const db = useDB();
@@ -17,8 +18,8 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
   const p = db.place[id];
   if (!p) {
     return (
-      <Sheet title="Place removed" onClose={onClose}>
-        <p className="muted">This place no longer exists.</p>
+      <Sheet title={tx("Place removed")} onClose={onClose}>
+        <p className="muted">{tx("This place no longer exists.")}</p>
       </Sheet>
     );
   }
@@ -39,7 +40,7 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
       title={p.name}
       onClose={onClose}
       actions={
-        <button className="icon-btn" aria-label="Edit place" onClick={() => replaceSheet({ t: 'placeEdit', id: p.id })}>
+        <button className="icon-btn" aria-label={tx("Edit place")} onClick={() => replaceSheet({ t: 'placeEdit', id: p.id })}>
           <Pencil />
         </button>
       }
@@ -55,8 +56,8 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
               {p.area ? ` · ${p.area}` : ''}
             </div>
             <div className="muted" style={{ fontSize: 13.5 }}>
-              {fmtDistance(d)} from {loc.fix ? 'you' : 'the base'}
-              {d < 6000 ? ` · ~${walkMinutes(d)} min walk` : ''}
+              {loc.fix ? tx('{dist} from you', { dist: fmtDistance(d) }) : tx('{dist} from the base', { dist: fmtDistance(d) })}
+              {d < 6000 ? tx(' · ~{n} min walk', { n: walkMinutes(d) }) : ''}
             </div>
           </div>
         </div>
@@ -64,23 +65,21 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
         <dl className="kv">
           {p.address && (
             <>
-              <dt>Address</dt>
+              <dt>{tx("Address")}</dt>
               <dd>{p.address}</dd>
             </>
           )}
           {p.hours && (
             <>
               <dt>
-                <Clock className="kv-ico" /> Hours
-              </dt>
+                <Clock className="kv-ico" />{tx(" Hours")}</dt>
               <dd>{p.hours}</dd>
             </>
           )}
           {p.price && (
             <>
               <dt>
-                <Wallet className="kv-ico" /> Price
-              </dt>
+                <Wallet className="kv-ico" />{tx(" Price")}</dt>
               <dd>{p.price}</dd>
             </>
           )}
@@ -88,29 +87,23 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
         {p.approx && (
           <div className="banner" style={{ fontSize: 13 }}>
             <TriangleAlert aria-hidden />
-            <span>Pin position is approximate. Double-check the address in Google Maps.</span>
+            <span>{tx("Pin position is approximate. Double-check the address in Google Maps.")}</span>
           </div>
         )}
         <div className="pl-actions">
           <button className="btn sm primary" onClick={() => navigateTo(p.lat, p.lon, p.name)}>
-            <Footprints /> Walk here
-          </button>
+            <Footprints />{tx(" Walk here")}</button>
           <a className="btn sm" href={mapsLink(p.lat, p.lon, 'transit', loc.fix ? [loc.fix.lon, loc.fix.lat] : undefined)} target="_blank" rel="noreferrer">
-            <Navigation /> Transit
-          </a>
+            <Navigation />{tx(" Transit")}</a>
           <a className="btn sm" href={uberLink(p.lat, p.lon, p.name)} target="_blank" rel="noreferrer">
-            <Car /> Uber
-          </a>
+            <Car />{tx(" Uber")}</a>
           <button className="btn sm" onClick={() => openSheet({ t: 'compass', target: { lat: p.lat, lon: p.lon, name: p.name } })}>
-            <Compass /> Compass
-          </button>
+            <Compass />{tx(" Compass")}</button>
           <button className="btn sm" onClick={() => showPlaceOnMap(p)}>
-            <MapIcon /> Map
-          </button>
+            <MapIcon />{tx(" Map")}</button>
           {p.url && (
             <a className="btn sm" href={p.url} target="_blank" rel="noreferrer">
-              <Globe /> Website
-            </a>
+              <Globe />{tx(" Website")}</a>
           )}
         </div>
         {['sight', 'viewpoint', 'museum', 'beer', 'daytrip', 'venue', 'nightlife'].includes(p.category) && (
@@ -123,10 +116,10 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
                 if (visited[me]) delete visited[me];
                 else visited[me] = Date.now();
                 save('places', { ...p, visited });
-                if (!p.visited?.[me]) toast('Ticked off ✓');
+                if (!p.visited?.[me]) toast(tx("Ticked off ✓"));
               }}
             >
-              <CheckCheck /> {p.visited?.[me] ? 'Been here' : 'Mark as been here'}
+              <CheckCheck /> {p.visited?.[me] ? tx("Been here") : tx("Mark as been here")}
             </button>
             {Object.keys(p.visited ?? {}).map((pid) => (
               <Avatar key={pid} person={db.person[pid]} size="sm" done />
@@ -134,10 +127,10 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
           </div>
         )}
         <div className="pl-votes">
-          <button className={`vote ${myVote === 1 ? 'on' : ''}`} onClick={() => vote(1)} aria-label="I want to go" aria-pressed={myVote === 1}>
+          <button className={`vote ${myVote === 1 ? 'on' : ''}`} onClick={() => vote(1)} aria-label={tx("I want to go")} aria-pressed={myVote === 1}>
             <ThumbsUp />
           </button>
-          <button className={`vote down ${myVote === -1 ? 'on' : ''}`} onClick={() => vote(-1)} aria-label="Not for me" aria-pressed={myVote === -1}>
+          <button className={`vote down ${myVote === -1 ? 'on' : ''}`} onClick={() => vote(-1)} aria-label={tx("Not for me")} aria-pressed={myVote === -1}>
             <ThumbsDown />
           </button>
           <span className="tnum score">{voteScore(p.votes) > 0 ? `+${voteScore(p.votes)}` : voteScore(p.votes)}</span>
@@ -158,12 +151,11 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
               })
             }
           >
-            <CalendarPlus /> Add to plan
-          </button>
+            <CalendarPlus />{tx(" Add to plan")}</button>
         </div>
         {events.length > 0 && (
           <div className="pl-events">
-            <div className="eyebrow">In the plan</div>
+            <div className="eyebrow">{tx("In the plan")}</div>
             {events.map((e) => (
               <button key={e.id} className="link-row" onClick={() => replaceSheet({ t: 'event', id: e.id })}>
                 <span className="tnum muted">
@@ -180,9 +172,7 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
           {db.meta[`places:${p.id}`] && isSeed('places', p.id) && (
             <>
               {' · '}
-              <button className="linkish" onClick={() => resetToSeed('places', p.id)}>
-                restore original
-              </button>
+              <button className="linkish" onClick={() => resetToSeed('places', p.id)}>{tx("restore original")}</button>
             </>
           )}
         </p>
@@ -222,21 +212,17 @@ export function PlaceEditor({ id, draft, onClose }: { id?: string; draft?: Parti
   const submit = () => {
     if (!valid) return;
     save('places', { ...f, name: f.name.trim() });
-    toast(existing ? 'Place saved' : 'Place added');
+    toast(existing ? tx("Place saved") : tx("Place added"));
     onClose();
   };
   return (
     <Sheet
-      title={existing ? 'Edit place' : 'New place'}
+      title={existing ? tx("Edit place") : tx("New place")}
       onClose={onClose}
       footer={
         <>
-          <button className="btn" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="btn primary" style={{ flex: 1 }} disabled={!valid} onClick={submit}>
-            Save
-          </button>
+          <button className="btn" onClick={onClose}>{tx("Cancel")}</button>
+          <button className="btn primary" style={{ flex: 1 }} disabled={!valid} onClick={submit}>{tx("Save")}</button>
         </>
       }
     >
@@ -248,11 +234,11 @@ export function PlaceEditor({ id, draft, onClose }: { id?: string; draft?: Parti
         }}
       >
         <div className="field">
-          <label htmlFor="pl-name">Name</label>
+          <label htmlFor="pl-name">{tx("Name")}</label>
           <input id="pl-name" value={f.name} onChange={(e) => set({ name: e.target.value })} autoFocus={!existing} />
         </div>
         <div className="field">
-          <label htmlFor="pl-cat">Category</label>
+          <label htmlFor="pl-cat">{tx("Category")}</label>
           <select id="pl-cat" value={f.category} onChange={(e) => set({ category: e.target.value as PlaceCategory })}>
             {CAT_ORDER.map((c) => (
               <option key={c} value={c}>
@@ -262,28 +248,28 @@ export function PlaceEditor({ id, draft, onClose }: { id?: string; draft?: Parti
           </select>
         </div>
         <div className="field">
-          <label htmlFor="pl-paste">Location: paste a Google/Mapy link or “lat, lon”</label>
+          <label htmlFor="pl-paste">{tx("Location: paste a Google/Mapy link or “lat, lon”")}</label>
           <input
             id="pl-paste"
             value={paste}
-            placeholder="https://maps.google.com/…@50.08,14.42…"
+            placeholder={tx("https://maps.google.com/…@50.08,14.42…")}
             onChange={(e) => {
               setPaste(e.target.value);
               const c = parseCoords(e.target.value);
               if (c) {
                 set({ lat: Number(c.lat.toFixed(5)), lon: Number(c.lon.toFixed(5)), approx: false });
-                toast('Coordinates found');
+                toast(tx("Coordinates found"));
               }
             }}
           />
         </div>
         <div className="grid2">
           <div className="field">
-            <label htmlFor="pl-lat">Latitude</label>
+            <label htmlFor="pl-lat">{tx("Latitude")}</label>
             <input id="pl-lat" inputMode="decimal" value={f.lat} onChange={(e) => set({ lat: Number(e.target.value) })} />
           </div>
           <div className="field">
-            <label htmlFor="pl-lon">Longitude</label>
+            <label htmlFor="pl-lon">{tx("Longitude")}</label>
             <input id="pl-lon" inputMode="decimal" value={f.lon} onChange={(e) => set({ lon: Number(e.target.value) })} />
           </div>
         </div>
@@ -294,34 +280,31 @@ export function PlaceEditor({ id, draft, onClose }: { id?: string; draft?: Parti
           onClick={async () => {
             const fix = await locateOnce();
             if (fix) set({ lat: Number(fix.lat.toFixed(5)), lon: Number(fix.lon.toFixed(5)), approx: false });
-            else toast('No GPS fix');
+            else toast(tx("No GPS fix"));
           }}
         >
-          <LocateFixed /> Use my current location
-        </button>
-        <p className="muted" style={{ fontSize: 12.5, marginTop: -6 }}>
-          Tip: long-press anywhere on the map to add a place exactly there.
-        </p>
+          <LocateFixed />{tx(" Use my current location")}</button>
+        <p className="muted" style={{ fontSize: 12.5, marginTop: -6 }}>{tx("Tip: long-press anywhere on the map to add a place exactly there.")}</p>
         <div className="field">
-          <label htmlFor="pl-addr">Address</label>
+          <label htmlFor="pl-addr">{tx("Address")}</label>
           <input id="pl-addr" value={f.address ?? ''} onChange={(e) => set({ address: e.target.value })} />
         </div>
         <div className="field">
-          <label htmlFor="pl-blurb">Why go / notes</label>
+          <label htmlFor="pl-blurb">{tx("Why go / notes")}</label>
           <textarea id="pl-blurb" value={f.blurb ?? ''} onChange={(e) => set({ blurb: e.target.value })} />
         </div>
         <div className="grid2">
           <div className="field">
-            <label htmlFor="pl-hours">Hours</label>
+            <label htmlFor="pl-hours">{tx("Hours")}</label>
             <input id="pl-hours" value={f.hours ?? ''} onChange={(e) => set({ hours: e.target.value })} />
           </div>
           <div className="field">
-            <label htmlFor="pl-price">Price</label>
+            <label htmlFor="pl-price">{tx("Price")}</label>
             <input id="pl-price" value={f.price ?? ''} onChange={(e) => set({ price: e.target.value })} />
           </div>
         </div>
         <div className="field">
-          <label htmlFor="pl-url">Website</label>
+          <label htmlFor="pl-url">{tx("Website")}</label>
           <input id="pl-url" type="url" value={f.url ?? ''} onChange={(e) => set({ url: e.target.value })} />
         </div>
         {existing && existing.id !== 'base' && (
@@ -332,16 +315,14 @@ export function PlaceEditor({ id, draft, onClose }: { id?: string; draft?: Parti
               const copy = { ...existing };
               remove('places', existing.id);
               onClose();
-              toast('Place deleted', { label: 'Undo', run: () => save('places', copy) });
+              toast(tx("Place deleted"), { label: tx("Undo"), run: () => save('places', copy) });
             }}
           >
-            <Trash2 /> Delete place
-          </button>
+            <Trash2 />{tx(" Delete place")}</button>
         )}
         {existing && (
           <a className="muted" style={{ fontSize: 12.5 }} href={mapsLink(f.lat, f.lon, 'walking')} target="_blank" rel="noreferrer">
-            <ExternalLink style={{ display: 'inline', width: 12 }} /> Check this position in Google Maps
-          </a>
+            <ExternalLink style={{ display: 'inline', width: 12 }} />{tx(" Check this position in Google Maps")}</a>
         )}
       </form>
     </Sheet>

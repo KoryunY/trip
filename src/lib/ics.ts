@@ -1,4 +1,5 @@
 import type { Place, TripEvent } from '../../shared/types';
+import { t as tx } from '../i18n';
 
 const esc = (s: string) => s.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\;');
 const utc = (ms: number) => new Date(ms).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
@@ -24,7 +25,7 @@ export function buildICS(events: TripEvent[], places: Record<string, Place>, nam
       `SUMMARY:${esc((e.status === 'tentative' ? '(?) ' : '') + e.title)}`,
     );
     if (p) lines.push(`LOCATION:${esc(from ? `${from.name} → ${p.name}` : `${p.name}${p.address ? ', ' + p.address : ''}`)}`, `GEO:${p.lat};${p.lon}`);
-    const desc = [e.notes, e.booking ? `Booking: ${e.booking}` : '', e.cost ? `Cost: ${e.cost}` : ''].filter(Boolean).join('\n');
+    const desc = [e.notes, e.booking ? `${tx('Booking')}: ${e.booking}` : '', e.cost ? `${tx('Cost')}: ${e.cost}` : ''].filter(Boolean).join('\n');
     if (desc) lines.push(`DESCRIPTION:${esc(desc)}`);
     lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${esc(e.title)}`, `TRIGGER:-PT${['flight', 'concert', 'train'].includes(e.kind) ? 120 : 30}M`, 'END:VALARM', 'END:VEVENT');
   }

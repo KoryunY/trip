@@ -3,6 +3,7 @@ import { useDB } from '../lib/store';
 import { openSheet } from '../lib/ui';
 import { SubBar } from './More';
 import { Avatar } from '../components/ui';
+import { t as tx } from '../i18n';
 
 export function NotesView() {
   const db = useDB();
@@ -10,10 +11,10 @@ export function NotesView() {
   return (
     <>
       <SubBar
-        title="Shared notes"
+        title={tx("Shared notes")}
         sub="Everyone can edit"
         right={
-          <button className="icon-btn" onClick={() => openSheet({ t: 'noteEdit' })} aria-label="New note">
+          <button className="icon-btn" onClick={() => openSheet({ t: 'noteEdit' })} aria-label={tx("New note")}>
             <Plus />
           </button>
         }

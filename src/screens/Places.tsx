@@ -10,6 +10,7 @@ import { openSheet } from '../lib/ui';
 
 const BUCKET: PlaceCategory[] = ['sight', 'viewpoint', 'museum'];
 import { SubBar } from './More';
+import { t as tx } from '../i18n';
 
 export function PlacesView() {
   const db = useDB();
@@ -32,10 +33,10 @@ export function PlacesView() {
   return (
     <>
       <SubBar
-        title="Places"
-        sub={`Sorted by distance from ${loc.fix ? 'you' : 'the base'}`}
+        title={tx("Places")}
+        sub={loc.fix ? tx('Sorted by distance from you') : tx('Sorted by distance from the base')}
         right={
-          <button className="icon-btn" onClick={() => openSheet({ t: 'placeEdit', draft: { category: 'sight', lat: origin[1], lon: origin[0] } })} aria-label="Add place">
+          <button className="icon-btn" onClick={() => openSheet({ t: 'placeEdit', draft: { category: 'sight', lat: origin[1], lon: origin[0] } })} aria-label={tx("Add place")}>
             <Plus />
           </button>
         }
@@ -43,14 +44,11 @@ export function PlacesView() {
       <div className="wrap">
         <label className="search">
           <Search aria-hidden />
-          <input className="input" placeholder="Search places, areas, tags…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search places" />
+          <input className="input" placeholder={tx("Search places, areas, tags…")} value={q} onChange={(e) => setQ(e.target.value)} aria-label={tx("Search places")} />
         </label>
         <div className="chips" style={{ margin: '10px -16px 4px' }}>
-          <button className="chip" aria-pressed={cat === 'all'} onClick={() => setCat('all')}>
-            All
-          </button>
-          <button className="chip" aria-pressed={cat === 'bucket'} onClick={() => setCat('bucket')}>
-            ✅ Bucket list {bucketDone}/{bucketTotal}
+          <button className="chip" aria-pressed={cat === 'all'} onClick={() => setCat('all')}>{tx("All")}</button>
+          <button className="chip" aria-pressed={cat === 'bucket'} onClick={() => setCat('bucket')}>{tx("✅ Bucket list ")}{bucketDone}/{bucketTotal}
           </button>
           {cats.map((c) => (
             <button key={c} className="chip" aria-pressed={cat === c} onClick={() => setCat(c)}>
@@ -69,7 +67,7 @@ export function PlacesView() {
               <span className="grow">
                 <span className="t">
                   {p.name}
-                  {Object.keys(p.visited ?? {}).length > 0 && <span className="pill ok" style={{ marginLeft: 6 }}>✓ been</span>}
+                  {Object.keys(p.visited ?? {}).length > 0 && <span className="pill ok" style={{ marginLeft: 6 }}>{tx("✓ been")}</span>}
                 </span>
                 <span className="s">
                   {fmtDistance(d)} · {p.area ?? CAT[p.category]?.label}
@@ -79,7 +77,7 @@ export function PlacesView() {
               <ChevronRight className="chev" />
             </button>
           ))}
-          {!list.length && <div className="empty">No places match.</div>}
+          {!list.length && <div className="empty">{tx("No places match.")}</div>}
         </div>
       </div>
     </>

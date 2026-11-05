@@ -16,6 +16,8 @@ import { setActivityProvider, onSkip } from './lib/clock';
 import { getDB } from './lib/store';
 import { toast } from './components/ui';
 import { fmtDayShort, hhmm } from './lib/time';
+import { t as tx } from './i18n';
+import { closeAllSheets } from './lib/ui';
 
 // MapLibre is heavy: load the map screen on demand (still precached for offline by the service worker)
 const MapScreen = lazy(() => import('./screens/MapScreen').then((m) => ({ default: m.MapScreen })));
@@ -53,11 +55,15 @@ export default function App() {
       }
       return best;
     });
-    return onSkip((_from, to) => toast(`⏩ Skipped quiet hours → ${fmtDayShort(to)} ${hhmm(to)}`, undefined, 1800));
+    return onSkip((_from, to) => toast(tx('⏩ Skipped quiet hours → {when}', { when: `${fmtDayShort(to)} ${hhmm(to)}` }), undefined, 1800));
   }, []);
   useEffect(() => {
     setVisited((v) => (v.has(route.tab) ? v : new Set([...v, route.tab])));
   }, [route.tab]);
+  // navigating (tab bar, back button, links) closes any open sheet
+  useEffect(() => {
+    closeAllSheets();
+  }, [route.raw]);
 
   if (!me) return <Login />;
   const t = route.tab;
@@ -67,7 +73,7 @@ export default function App() {
         <Screen active={t === 'now'}>{visited.has('now') && <NowScreen />}</Screen>
         <Screen active={t === 'map'} full>
           {visited.has('map') && (
-            <Suspense fallback={<div className="map-loading">Loading map…</div>}>
+            <Suspense fallback={<div className="map-loading">{tx("Loading map…")}</div>}>
               <MapScreen active={t === 'map'} />
             </Suspense>
           )}
@@ -77,7 +83,7 @@ export default function App() {
         <Screen active={t === 'more'}>{visited.has('more') && <MoreScreen />}</Screen>
       </main>
       <TabBar />
-      <ErrorBoundary label="this sheet">
+      <ErrorBoundary label={tx("this sheet")}>
         <SheetHost />
       </ErrorBoundary>
       <Toasts />

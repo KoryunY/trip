@@ -8,6 +8,7 @@ import { go } from '../lib/router';
 import { save, useDB, useMe } from '../lib/store';
 import { taskComplete, taskDoneFor, taskStats } from '../lib/trip';
 import { openSheet } from '../lib/ui';
+import { t as tx, locale } from '../i18n';
 
 export function toggleTask(task: Task, pid: string) {
   const done = { ...(task.done ?? {}) };
@@ -30,8 +31,8 @@ export function PrepScreen() {
       <header className="appbar">
         <div className="appbar-inner">
           <div className="appbar-title">
-            <h1>Prep</h1>
-            <div className="sub">Checklist for all three of us</div>
+            <h1>{tx("Prep")}</h1>
+            <div className="sub">{tx("Checklist for all three of us")}</div>
           </div>
           <SyncBadge />
         </div>
@@ -56,13 +57,13 @@ export function PrepScreen() {
         </div>
         <div style={{ margin: '14px 0 4px' }}>
           <Segmented
-            label="Which tasks"
+            label={tx("Which tasks")}
             value={scope}
             onChange={setScope}
             options={[
-              { v: 'mine', label: 'Mine' },
-              { v: 'open', label: 'Open' },
-              { v: 'all', label: 'Everything' },
+              { v: 'mine', label: tx("Mine") },
+              { v: 'open', label: tx("Open") },
+              { v: 'all', label: tx("Everything") },
             ]}
           />
         </div>
@@ -86,14 +87,12 @@ export function PrepScreen() {
             </section>
           );
         })}
-        {groups.length === 0 && <div className="empty">Nothing here. Nice work! 🎉</div>}
+        {groups.length === 0 && <div className="empty">{tx("Nothing here. Nice work! 🎉")}</div>}
         <button className="btn block" style={{ marginTop: 22 }} onClick={() => go('guides')}>
-          <BookOpen /> Read the guides (baggage, eSIM, airport…)
-        </button>
+          <BookOpen />{tx(" Read the guides (baggage, eSIM, airport…)")}</button>
       </div>
       <button className="fab" onClick={() => openSheet({ t: 'taskEdit', draft: { assignees: [me] } })}>
-        <Plus aria-hidden /> Task
-      </button>
+        <Plus aria-hidden />{tx(" Task")}</button>
     </>
   );
 }
@@ -107,21 +106,21 @@ export function TaskRow({ task }: { task: Task }) {
   return (
     <div className={`row task ${complete ? 'complete' : ''}`}>
       {mineToDo ? (
-        <CheckBox on={doneMe} onChange={() => toggleTask(task, me)} label={`Mark “${task.title}” ${doneMe ? 'not done' : 'done'}`} />
+        <CheckBox on={doneMe} onChange={() => toggleTask(task, me)} label={doneMe ? tx('Mark “{title}” not done', { title: task.title }) : tx('Mark “{title}” done', { title: task.title })} />
       ) : (
         <span className="check ghost" aria-hidden />
       )}
       <button className="grow task-main" onClick={() => openSheet({ t: 'task', id: task.id })}>
         <span className="t">
           {task.title}
-          {task.priority === 'high' && !complete && <span className="task-prio" role="img" aria-label="important" title="Important" />}
+          {task.priority === 'high' && !complete && <span className="task-prio" role="img" aria-label={tx("important")} title={tx("Important")} />}
         </span>
         <span className="task-who">
           {task.assignees.map((pid) => (
             <Avatar key={pid} person={db.person[pid]} size="sm" done={task.mode === 'any' ? complete : Boolean(task.done?.[pid])} />
           ))}
-          {task.mode === 'any' && <span className="s">anyone</span>}
-          {task.due && <span className="s">· by {new Date(task.due).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>}
+          {task.mode === 'any' && <span className="s">{tx("anyone")}</span>}
+          {task.due && <span className="s">{tx("· by ")}{new Date(task.due).toLocaleDateString(locale(), { day: 'numeric', month: 'short' })}</span>}
         </span>
       </button>
       <ChevronRight className="chev" aria-hidden />

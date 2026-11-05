@@ -1,6 +1,7 @@
 // Live clock + "time machine" (timelapse) state.
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { HOUR, zonedToUtc } from './time';
+import { t as tx } from '../i18n';
 
 export interface TimeState {
   mode: 'live' | 'sim';
@@ -11,11 +12,11 @@ export interface TimeState {
 }
 
 export const SPEEDS = [
-  { label: '1 min/s', v: 60_000 },
-  { label: '10 min/s', v: 600_000 },
-  { label: '1 h/s', v: HOUR },
-  { label: '3 h/s', v: 3 * HOUR },
-  { label: '12 h/s', v: 12 * HOUR },
+  { label: tx('1 min/s'), v: 60_000 },
+  { label: tx('10 min/s'), v: 600_000 },
+  { label: tx('1 h/s'), v: HOUR },
+  { label: tx('3 h/s'), v: 3 * HOUR },
+  { label: tx('12 h/s'), v: 12 * HOUR },
 ];
 
 // Allow ?now=2026-11-16T18:00 for demos/testing

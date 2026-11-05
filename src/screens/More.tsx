@@ -13,12 +13,15 @@ import { NotesView } from './Notes';
 import { SettingsView } from './Settings';
 import { openSheet } from '../lib/ui';
 import { TripNumbers } from '../components/TripNumbers';
+import { t as tx } from '../i18n';
+import { guides } from '../i18n/guides';
+import { QuickToggles } from '../components/QuickToggles';
 
 export function SubBar({ title, sub, right }: { title: string; sub?: string; right?: ReactNode }) {
   return (
     <header className="appbar">
       <div className="appbar-inner">
-        <button className="icon-btn" onClick={() => back('more')} aria-label="Back">
+        <button className="icon-btn" onClick={() => back('more')} aria-label={tx("Back")}>
           <ArrowLeft />
         </button>
         <div className="appbar-title">
@@ -50,26 +53,27 @@ function MoreMenu() {
       <header className="appbar">
         <div className="appbar-inner">
           <div className="appbar-title">
-            <h1>More</h1>
-            <div className="sub">Guides, places, money, notes, settings</div>
+            <h1>{tx("More")}</h1>
+            <div className="sub">{tx("Guides, places, money, notes, settings")}</div>
           </div>
+          <QuickToggles />
           <SyncBadge />
         </div>
       </header>
       <div className="wrap">
         <div className="card list" style={{ marginTop: 8 }}>
-          <MenuRow icon={<BookOpen />} title="Guides" sub={`${GUIDES.length} practical guides: airport, baggage, eSIM, money…`} onClick={() => go('guides')} />
-          <MenuRow icon={<MapPin />} title="Places" sub={`${db.places.length} places: beer, sights, food, transport`} onClick={() => go('places')} />
-          <MenuRow icon={<Lightbulb />} title="Ideas & votes" sub="Decide what to do together" onClick={() => go('plan/ideas')} />
-          <MenuRow icon={<Receipt />} title="Expenses & split" sub="Who paid what, who owes whom" onClick={() => go('expenses')} />
-          <MenuRow icon={<StickyNote />} title="Shared notes" sub="Apartment info, contacts, bookings" onClick={() => go('notes')} />
-          <MenuRow icon={<SettingsIcon />} title="Settings & offline" sub="Offline map, sync, theme, backup" onClick={() => go('settings')} />
+          <MenuRow icon={<BookOpen />} title={tx("Guides")} sub={tx('{n} practical guides: airport, baggage, eSIM, money…', { n: GUIDES.length })} onClick={() => go('guides')} />
+          <MenuRow icon={<MapPin />} title={tx("Places")} sub={tx('{n} places: beer, sights, food, transport', { n: db.places.length })} onClick={() => go('places')} />
+          <MenuRow icon={<Lightbulb />} title={tx("Ideas & votes")} sub="Decide what to do together" onClick={() => go('plan/ideas')} />
+          <MenuRow icon={<Receipt />} title={tx("Expenses & split")} sub="Who paid what, who owes whom" onClick={() => go('expenses')} />
+          <MenuRow icon={<StickyNote />} title={tx("Shared notes")} sub="Apartment info, contacts, bookings" onClick={() => go('notes')} />
+          <MenuRow icon={<SettingsIcon />} title={tx("Settings & offline")} sub="Offline map, sync, theme, backup" onClick={() => go('settings')} />
           <MenuRow
             icon={<Share2 />}
-            title="Send the app to the crew"
+            title={tx("Send the app to the crew")}
             sub={location.host}
             onClick={async () => {
-              if ((await shareApp()) === 'copied') toast('Link copied');
+              if ((await shareApp()) === 'copied') toast(tx("Link copied"));
             }}
           />
         </div>
@@ -77,8 +81,7 @@ function MoreMenu() {
         <section className="section">
           <div className="section-h">
             <h2>
-              <Users style={{ display: 'inline', width: 18, verticalAlign: '-3px' }} /> Crew
-            </h2>
+              <Users style={{ display: 'inline', width: 18, verticalAlign: '-3px' }} />{tx(" Crew")}</h2>
           </div>
           <div className="card list">
             {db.people.map((p) => (
@@ -96,17 +99,17 @@ function MoreMenu() {
 
         <section className="section">
           <div className="section-h">
-            <h2>Trip in numbers</h2>
+            <h2>{tx("Trip in numbers")}</h2>
           </div>
           <TripNumbers />
         </section>
 
         <section className="section">
           <div className="section-h">
-            <h2>Popular guides</h2>
+            <h2>{tx("Popular guides")}</h2>
           </div>
           <div className="guide-grid">
-            {GUIDES.slice(0, 6).map((g) => (
+            {guides().slice(0, 6).map((g) => (
               <button key={g.id} className="card guide-card" onClick={() => go(`guide/${g.id}`)}>
                 <span className="t">{g.title}</span>
                 <span className="s">{g.summary}</span>
@@ -114,9 +117,7 @@ function MoreMenu() {
             ))}
           </div>
         </section>
-        <p className="hint" style={{ textAlign: 'center', marginTop: 28 }}>
-          Prague Crew · built for Koryun, Alexey & Arto · 13–22 Nov 2026
-        </p>
+        <p className="hint" style={{ textAlign: 'center', marginTop: 28 }}>{tx("Prague Crew · built for Koryun, Alexey & Arto · 13–22 Nov 2026")}</p>
       </div>
     </>
   );
