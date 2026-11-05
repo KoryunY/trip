@@ -122,10 +122,10 @@ const DAY_THEMES_EN: Record<string, { title: string; emoji: string }> = {
   '2026-11-15': { title: 'Views, beer halls & Arto arrives', emoji: '🍺' },
   '2026-11-16': { title: 'Castle together · Korn for Koryun & Alexey', emoji: '🏰' },
   '2026-11-17': { title: 'Louvre, Letná & 17 November', emoji: '🕯️' },
-  '2026-11-18': { title: 'Plzeň beer pilgrimage', emoji: '🚆' },
-  '2026-11-19': { title: 'Prague walk, GTA VI & Czech dinner', emoji: '🌉' },
-  '2026-11-20': { title: 'Flexible morning · Arto flies home', emoji: '✈️' },
-  '2026-11-21': { title: 'Last full day', emoji: '🥨' },
+  '2026-11-18': { title: 'Brewery together · late-start Plzeň', emoji: '🍺' },
+  '2026-11-19': { title: 'Prague walk & Czech dinner together', emoji: '🌉' },
+  '2026-11-20': { title: 'Arto flies home · GTA for Koryun & Alexey', emoji: '✈️' },
+  '2026-11-21': { title: 'Koryun & Alexey · GTA, dinner & packing', emoji: '🎮' },
   '2026-11-22': { title: 'Goodbye Prague', emoji: '👋' },
 };
 

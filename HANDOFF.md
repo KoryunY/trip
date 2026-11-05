@@ -47,10 +47,12 @@ These hosts are blocked by its proxy: real OpenFreeMap tiles/styles, Open-Meteo 
 - Apartment door code, Wi-Fi and host in Notes.
 
 ## Shared sightseeing revision
-- Must-do events carry `mustDo: true`: Castle on 16 Nov; Korzo Národní, Louvre, Letná and the 17:11 ceremony on 17 Nov; Old Town, bridge/Malá Strana/Kampa, Lokál dinner and the night bridge crossing on 19 Nov. All include Koryun, Alexey and Arto. Korn remains Koryun + Alexey only.
+- Must-do events carry `mustDo: true`: Castle on 16 Nov; Korzo Národní, Louvre, Letná and the 17:11 ceremony on 17 Nov; Pilsner Urquell brewery on 18 Nov; Old Town, bridge/Malá Strana/Kampa, Lokál dinner and the night bridge crossing on 19 Nov. All include Koryun, Alexey and Arto. Shared days start at 10:30 or later; Castle is 10:30–14:30. Korn remains Koryun + Alexey only, with preparation moved to 16:30.
+- The 18 Nov brewery target is now 14:00 (not confirmed), with provisional late-morning outbound and early-evening return train windows. Book the afternoon English tour before selecting real train services; do not silently restore an early departure.
+- No GTA sessions or chores are assigned to Arto. Setup is 20 Nov 21:00, play 22:00–00:30 and 21 Nov 14:30–16:15, Koryun + Alexey only, after Arto’s 20:15 departure. The midnight launch and Friday club placeholder were removed. Shared Thursday afternoon is free.
 - Friday 20 is flexible before Arto’s 17:15 estimated airport transfer. The Kutná Hora day trip is now an unscheduled idea; Jewish Quarter and Prague Sounds are optional alternatives.
 - Booking instructions are in the `must-do` guide, event notes/links and Prep. No tickets or reservations were purchased. Louvre’s linked booking page currently blocks reservations through 10 Jan 2027; recheck before visiting.
-- The live state previously saved seed records at revision 5. Seven exact envelopes in `src/data/seedRevisions.ts` follow the new seed through `rebaseLegacySeedRecord`; changed/newer edits and tombstones are preserved. This handles older saved copies without changing their timestamps or issuing sync writes.
+- The live state previously saved seed records at revision 5. Nine exact envelopes in `src/data/seedRevisions.ts` follow the new seed through `rebaseLegacySeedRecord`; changed/newer edits and tombstones are preserved. This handles older saved copies without changing their timestamps or issuing sync writes.
 - Production sync returned persistent Vercel Blob ETag conflicts on the concert edit. That edit was published through the existing deployment branch. Do not bypass `ifMatch` or overwrite unrelated server data to work around this.
 - PWA update fix: with `injectRegister: false`, explicitly set Workbox `skipWaiting` and `clientsClaim`. Without these, the prior worker kept serving an old plan even after a normal reload. The virtual registration uses `autoUpdate`; verify the generated worker activates immediately after deployment.
 

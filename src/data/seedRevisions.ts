@@ -143,5 +143,44 @@ export const LEGACY_SEED_RECORDS: readonly LegacySeedRecord[] = [
       ],
       "status": "planned"
     }
+  },
+  {
+    "col": "events",
+    "id": "fri-night",
+    "u": 1793888072562,
+    "by": "arto",
+    "data": {
+      "id": "fri-night",
+      "title": "Friday night out: Karlovy Lázně (5 floors) or Lucerna",
+      "kind": "party",
+      "start": "2026-11-20T22:00:00+01:00",
+      "end": "2026-11-21T02:00:00+01:00",
+      "placeId": "karlovy-lazne",
+      "people": [
+        "koryun",
+        "alexey"
+      ],
+      "status": "tentative"
+    }
+  },
+  {
+    "col": "events",
+    "id": "souvenirs",
+    "u": 1793888072565,
+    "by": "arto",
+    "data": {
+      "id": "souvenirs",
+      "title": "Souvenirs & beer to take home: Havelské market, Old Town",
+      "kind": "shopping",
+      "start": "2026-11-21T14:00:00+01:00",
+      "end": "2026-11-21T16:00:00+01:00",
+      "placeId": "havelske-trziste",
+      "people": [
+        "koryun",
+        "alexey"
+      ],
+      "status": "planned",
+      "notes": "Supermarkets are cheapest for beer/Becherovka to take home. Liquids go in checked baggage only!"
+    }
   }
 ];

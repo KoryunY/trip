@@ -12,8 +12,8 @@ export const MOMENTS: { label: string; emoji: string; at: string }[] = [
   { label: tx('Castle'), emoji: '🏰', at: '2026-11-16T10:30:00+01:00' },
   { label: tx('KORN'), emoji: '🎸', at: '2026-11-16T19:45:00+01:00' },
   { label: tx('17 Nov'), emoji: '🕯️', at: '2026-11-17T11:30:00+01:00' },
-  { label: tx('Plzeň'), emoji: '🍺', at: '2026-11-18T11:00:00+01:00' },
-  { label: tx('GTA VI'), emoji: '🎮', at: '2026-11-19T00:05:00+01:00' },
+  { label: tx('Plzeň'), emoji: '🍺', at: '2026-11-18T14:30:00+01:00' },
+  { label: tx('GTA VI'), emoji: '🎮', at: '2026-11-20T22:15:00+01:00' },
   { label: tx('Farewell'), emoji: '🥂', at: '2026-11-21T19:00:00+01:00' },
   { label: tx('Flight home'), emoji: '✈️', at: '2026-11-22T08:30:00+01:00' },
 ];

@@ -16,7 +16,7 @@ Trip companion PWA for **Koryun, Alexey & Arto**, Prague, **13–22 Nov 2026**.
 
 Login = pick your name. Everyone sees and edits everything.
 
-**Shared essentials:** star-labelled **Must do together** events are scheduled for all three on **16, 17 and 19 Nov**, during Arto’s stay. The label can be changed in the event editor and is included in calendar exports. **More → Guides → Must do together & booking plan** contains the dated overview, official booking links, walk-in rules and optional alternatives; matching booking actions are in **Prep**. Planned visits are not reservations or purchased tickets.
+**Shared essentials:** star-labelled **Must do together** events are scheduled for all three on **16–19 Nov**, during Arto’s stay. Shared sightseeing days start at **10:30 or later**; the brewery on the 18th targets an afternoon English tour, subject to booking. **GTA is for Koryun and Alexey only, after Arto’s departure on 20 Nov.** The label can be changed in the event editor and is included in calendar exports. **More → Guides → Must do together & booking plan** contains the dated overview, official booking links, walk-in rules and optional alternatives; matching booking actions are in **Prep**. Planned visits are not reservations or purchased tickets.
 
 **Languages & theme:** English by default, Russian via the EN/RU switch (top of Now/More/login, or Settings). The 🌙/☀️ button switches dark/light mode (Settings also has Auto).
 - UI strings: `src/i18n/ru.ts`, used through `t()`/`tx()` in `src/i18n/index.ts`.

@@ -230,7 +230,7 @@ export const TASKS: Task[] = [
   {
     id: 't-gta-preorder',
     title: 'Pre-order GTA VI (digital) and PRE-LOAD at home',
-    details: 'Rockstar’s latest release-time notice: Xbox Series X|S preload opens 10 Nov at 01:00 CET; allow up to 212 GB. Download on home internet before travelling. The game unlocks at 00:00 local time on 19 Nov. Save the official release-time page and check for updates.',
+    details: 'For Alexey and Koryun’s gaming after Arto leaves. Download on Alexey’s home internet before travelling if possible; allow up to 212 GB. Rockstar lists release at 00:00 local time on 19 Nov, but our Prague play sessions start Friday 20 Nov at 22:00. Save the official release-time page and check for updates.',
     category: 'gta',
     assignees: ['alexey'],
     mode: 'each',
@@ -250,11 +250,14 @@ export const TASKS: Task[] = [
   },
   {
     id: 't-gta-supplies',
-    title: 'GTA night supplies: beer, snacks, energy drinks (Wed 18 Nov)',
+    title: 'GTA night supplies for Koryun & Alexey · Fri 20 Nov',
+    details: 'For the guys’ Friday-night and Saturday-afternoon sessions after Arto leaves Prague. No game setup or supplies run is assigned to Arto or scheduled into the shared sightseeing days.',
     category: 'gta',
-    assignees: ALL,
+    assignees: ['koryun', 'alexey'],
     mode: 'any',
     priority: 'normal',
+    due: '2026-11-20',
+    guide: 'gta',
   },
 
   // ── Concert ──
@@ -282,12 +285,12 @@ export const TASKS: Task[] = [
   // ── Bookings ──
   {
     id: 't-pilsner-book',
-    title: 'Book the optional Pilsner Urquell tour for 3 · Wed 18 Nov',
-    details: 'Book ahead if we keep the Plzeň day trip. On the official tour page choose Buy tour, 18 Nov, English and 3 people; target 11:00 only if offered. Published duration 100 min, adult admission 430 CZK each (1,290 CZK for 3 adults); check discounts and the final price before paying. Save the confirmation, then choose trains with at least 30–45 min between Plzeň arrival and the booked tour. The itinerary time is provisional until booked.',
+    title: 'Book the shared Pilsner Urquell tour for 3 · Wed 18 Nov afternoon',
+    details: 'This is our shared must-do for 18 Nov, with a later morning start. On the official tour page choose Buy tour, 18 Nov, English and 3 people; target 14:00 only if offered. Published duration 100 min, adult admission 430 CZK each (1,290 CZK for 3 adults); check discounts and the final price before paying. Save the tour confirmation before buying trains. The 11:15 outbound/17:45 return train windows are placeholders, not verified services. Choose a real train with time for lunch and tour check-in. If no afternoon English slot works, rearrange a shared day instead of forcing an early departure.',
     category: 'bookings',
     assignees: ALL,
     mode: 'any',
-    priority: 'normal',
+    priority: 'high',
     due: '2026-11-10',
     guide: 'must-do',
     link: 'https://www.prazdrojvisit.cz/en/tours/pilsner-urquell-brewery-tour/',
@@ -316,7 +319,7 @@ export const TASKS: Task[] = [
   {
     id: 't-castle-tickets',
     title: 'Buy or plan Castle main-circuit tickets for 3 · Mon 16 Nov',
-    details: 'Use the official Prague Castle Tickets page. It links to GetYourGuide for online main-circuit tickets, or buy from the Castle information centres on arrival. Reference on-site adult admission: 450 CZK; reduced 300 CZK subject to eligibility. Compare the online product’s actual price and redemption instructions. Main circuit includes St. Vitus, Old Royal Palace, St. George’s Basilica and Golden Lane; valid for 2 consecutive days, one entry per included building. Aim to arrive 08:45 for our 09:00–13:00 visit. Tickets are not purchased.',
+    details: 'Use the official Prague Castle Tickets page. It links to GetYourGuide for online main-circuit tickets, or buy from the Castle information centres on arrival. Reference on-site adult admission: 450 CZK; reduced 300 CZK subject to eligibility. Compare the online product’s actual price and redemption instructions. Main circuit includes St. Vitus, Old Royal Palace, St. George’s Basilica and Golden Lane; valid for 2 consecutive days, one entry per included building. Aim to arrive 10:15 for our later 10:30–14:30 visit. Tickets are not purchased.',
     category: 'bookings',
     assignees: ALL,
     mode: 'any',

@@ -29,16 +29,16 @@ export const GUIDES: Guide[] = [
     for: ['koryun', 'alexey', 'arto'],
     sections: [
       {
-        body: 'Our shared window is Sun 15 Nov evening → Fri 20 Nov afternoon. Keep the essential visits together on 16, 17 and 19 November. All times below are Prague local time (CET). These are plans; the bookings below are not yet made.',
+        body: 'Our shared window is Sun 15 Nov evening → Fri 20 Nov afternoon. Keep the essential visits together on 16, 17, 18 and 19 November, with daytime activities starting at 10:30 or later. GTA is for Koryun + Alexey after Arto leaves Prague on Fri 20. All times below are Prague local time (CET). These are plans; the bookings below are not yet made.',
         table: {
           head: ['Day', 'Together'],
           rows: [
             ['Sun 15', 'Arto lands 17:00; estimated base arrival 18:30, welcome dinner 18:45. Keep the evening easy.'],
-            ['Mon 16', 'Castle 09:00–13:00 (arrive 08:45), Strahov lunch 13:15–14:15, short downhill stroll 14:30–15:15. Korn in the evening is for Koryun + Alexey.'],
-            ['Tue 17', 'Korzo Národní 10:00–11:45; Café Louvre 12:00–13:15; Letná viewpoint 14:00–15:15; back to Národní 16:30–17:30 for Modlitba pro Martu at 17:11. Optional celebration/concert wandering 18:00–21:00.'],
-            ['Wed 18', 'Optional Plzeň day trip: target an English brewery tour at 11:00 only if offered and booked. Check train times around the confirmed tour.'],
-            ['Thu 19', 'Old Town Square 10:30–11:30, clock at 11:00; Charles Bridge → Malá Strana → Lennon Wall → Kampa 11:30–13:30; lunch at base 14:15; GTA VI 15:00–18:00; Lokál dinner 18:45–21:00; bridge after dark 21:15–22:00.'],
-            ['Fri 20', 'Choose one easy morning: Vyšehrad + riverside, Jewish Quarter or a Louvre retry. Arto packs 14:30–16:15, leaves for the airport 17:15, flies at 20:15.'],
+            ['Mon 16', 'Castle 10:30–14:30 (arrive 10:15), Strahov lunch 14:45–15:45. Arto can stroll downhill alone 16:00–16:30; Koryun + Alexey return for Korn preparation at 16:30 and the concert in the evening.'],
+            ['Tue 17', 'Korzo Národní 10:30–11:45; Café Louvre 12:00–13:15; Letná viewpoint 14:00–15:15; back to Národní 16:30–17:30 for Modlitba pro Martu at 17:11. Optional celebration/concert wandering 18:00–21:00.'],
+            ['Wed 18', 'Plzeň brewery together: leave base 10:30; provisional train 11:15–12:40; lunch 13:00; target English tour 14:00–15:50, including exit buffer. The brewery is a shared must-do, but the slot and trains need confirmation. Dusk centre walk 16:15–17:15; provisional return train 17:45–19:10; easy dinner together 20:00.'],
+            ['Thu 19', 'Old Town Square 10:30–11:30, clock at 11:00; Charles Bridge → Malá Strana → Lennon Wall → Kampa 11:30–13:30; lunch at base 14:15; free afternoon for rest or an optional visit; Lokál dinner 18:45–21:00; bridge after dark 21:15–22:00. No GTA while Arto is here.'],
+            ['Fri 20', 'Choose one easy morning from 10:30: Vyšehrad 10:30–12:00 + riverside 12:15–13:00, Jewish Quarter or a Louvre retry. Arto packs 14:30–16:15, leaves for the airport 17:15, flies at 20:15. Gaming for Koryun + Alexey starts later that night.'],
           ],
         },
       },
@@ -47,9 +47,9 @@ export const GUIDES: Guide[] = [
         table: {
           head: ['Visit', 'Action'],
           rows: [
-            ['Castle · Mon 16, 09:00', 'Buy 3 main-circuit tickets via the official Castle page’s GetYourGuide link or on-site information centres. Current adult admission 450 CZK; check reduced eligibility and online price before paying. Arrive 08:45 for security and queues. Tower ticket separate.'],
+            ['Castle · Mon 16, 10:30', 'Buy 3 main-circuit tickets via the official Castle page’s GetYourGuide link or on-site information centres. Current adult admission 450 CZK; check reduced eligibility and online price before paying. Arrive 10:15 for security and queues. Tower ticket separate.'],
             ['Lokál Dlouhááá · Thu 19, 18:45', 'Request a table for 3 through the official restaurant reservation link. Save the confirmation and check the table time limit; if unavailable, choose another evening before Arto leaves.'],
-            ['Pilsner Urquell · Wed 18, target 11:00', 'Optional: select 18 Nov, English and 3 people in the official booking calendar (100 min, currently 430 CZK each). Time is provisional until confirmed. Then buy the trains to fit; allow 30–45 min between Plzeň station arrival and the tour.'],
+            ['Pilsner Urquell · Wed 18, target 14:00', 'Shared priority: select 18 Nov, English and 3 people in the official booking calendar (100 min, currently 430 CZK each). The 14:00 slot is unconfirmed; winter visitor-centre hours 10:00–18:00 do not guarantee an English tour then. Book the tour before choosing real trains; allow at least 45 min after station arrival, plus lunch time. If unavailable, rearrange a shared day instead of leaving early.'],
             ['Café Louvre · Tue 17, 12:00', 'Walk-in for 3: the current official notice says no reservations are accepted through 10 Jan 2027. Allow a queue and keep Friday morning as a retry. Recheck the notice before going; no table is held.'],
             ['Old Town, clock exterior, bridges, Kampa, Letná, Korzo street programme', 'No advance ticket or general reservation. Paid interiors, festival brunch/afterparty and capacity-limited activities are optional extras.'],
           ],
@@ -67,8 +67,8 @@ export const GUIDES: Guide[] = [
       {
         h: 'Optional alternatives — choose, do not stack',
         bullets: [
-          'Jewish Quarter interiors are a good Friday-morning alternative: allow 2–3 h. November museum hours are 09:00–16:30; Old-New Synagogue 09:00–17:00, with an earlier Friday closure before Shabbat. Closed Saturdays and Jewish holidays. Check ticket inclusions in the official museum shop.',
-          'Prague Sounds: Paul Hillier & Theatre of Voices, Wed 18 Nov 20:00, Divadlo X10 (doors 19:00). Ticketed alternative to the relaxed evening after Plzeň, if everyone has energy.',
+          'Jewish Quarter interiors are a good Friday alternative from 10:30: allow 2–3 h and return before Arto’s 14:30 packing time. November museum opening hours are 09:00–16:30; Old-New Synagogue 09:00–17:00, with an earlier Friday closure before Shabbat. Closed Saturdays and Jewish holidays. Check ticket inclusions in the official museum shop.',
+          'Prague Sounds: Paul Hillier & Theatre of Voices, Wed 18 Nov 20:00, Divadlo X10 (doors 19:00). Ticketed alternative to the dinner at base; timing is tight after the provisional 19:10 train arrival from Plzeň. Choose only if the confirmed trains and everyone’s energy allow it.',
           'Prague Sounds: Steve Reich: 90, Thu 19 Nov 20:00, Rudolfinum (doors 19:00). This conflicts with our shared dinner/bridge plan: only choose it if all three agree to move those together. No concert tickets are booked.',
         ],
       },
@@ -78,6 +78,8 @@ export const GUIDES: Guide[] = [
       { label: 'Prague Castle · opening hours', url: 'https://www.hrad.cz/en/prague-castle-for-visitors/opening-hours' },
       { label: 'Lokál Dlouhááá · official reservations', url: 'https://lokal-dlouha.ambi.cz/en/' },
       { label: 'Pilsner Urquell · tours and booking', url: 'https://www.prazdrojvisit.cz/en/tours/pilsner-urquell-brewery-tour/' },
+      { label: 'Pilsen visitor centre · winter opening hours', url: 'https://www.prazdrojvisit.cz/en/contact?place=pilsen' },
+      { label: 'ČD · actual train times and tickets', url: 'https://www.cd.cz/en/spojeni-a-jizdenka/' },
       { label: 'Café Louvre · current reservation notice', url: 'https://cafelouvre.apetee.com/en' },
       { label: 'Korzo Národní · 2026 programme', url: 'https://www.korzonarodni.cz/cs/program' },
       { label: 'Korzo Národní · visitor information', url: 'https://www.korzonarodni.cz/cs/pro-navstevniky' },
@@ -123,6 +125,7 @@ export const GUIDES: Guide[] = [
           'Arto: easyJet EZS1563, Geneva T1 15:25 → Prague T2 17:00 (CET). Schengen flight, no passport control for Swiss.',
           'From T2: AE bus to Hlavní nádraží (200 CZK) or trolleybus 59 + metro A (46 CZK in the app).',
           'Allow ~17:30–18:30 for airport → base (estimate), then join the full crew for dinner at Vinohradský pivovar at 18:45.',
+          '21:00: relaxed cards, beer and catch-up at the base. Shared day plans start at 10:30 or later; GTA waits until after Arto leaves Prague on Fri 20.',
         ],
         bullets: ['If Arto lands late: join the crew at the base for the 21:00 chill night instead.'],
       },
@@ -435,10 +438,10 @@ export const GUIDES: Guide[] = [
   },
   {
     id: 'gta',
-    title: 'GTA VI: pre-load & shared sessions',
+    title: 'GTA VI: Koryun & Alexey only',
     icon: 'gamepad-2',
-    summary: 'Xbox ready before travel; Thu 19 afternoon gaming after the shared Prague walk.',
-    for: ['alexey'],
+    summary: 'Play only after Arto leaves Prague: Friday night and Saturday afternoon.',
+    for: ['koryun', 'alexey'],
     sections: [
       {
         h: 'Checklist',
@@ -446,9 +449,10 @@ export const GUIDES: Guide[] = [
           'Xbox Series X|S digital pre-load starts Tue 10 Nov at 00:00 GMT (01:00 CET). Download at home before travelling; allow up to 212 GB free space.',
           'Bring: Xbox, power cable, HDMI cable, controllers, batteries/charger.',
           'Ask the host: TV with free HDMI? Wi-Fi speed (for the day-one patch)?',
-          'Wed 18 Nov evening: set up, update, test sign-in, buy supplies.',
-          '00:00 Thu 19 Nov: Rockstar confirms local-midnight release for Xbox Series X|S and PS5. The midnight session is optional; leave energy for the 10:30 shared Prague walk.',
-          'Main shared gaming block: Thu 19 Nov 15:00–18:00, after sightseeing and lunch. Stop in time for Lokál at 18:45 and the bridge after dark. Another session from 22:45 is optional.',
+          'Release fact: Rockstar confirms 00:00 local time on Thu 19 Nov for Xbox Series X|S and PS5. This is not our play date: no launch-night or daytime GTA while Arto is in Prague.',
+          'Fri 20 Nov, 21:00–21:45: Koryun + Alexey set up the Xbox, test sign-in, check controllers and buy supplies. Arto’s flight leaves Prague at 20:15.',
+          'Fri 20 Nov, 22:00 → Sat 21 Nov, 00:30: GTA night for Koryun + Alexey only, after Arto’s scheduled Geneva arrival at 21:50.',
+          'Sat 21 Nov, 14:30–16:15: another optional GTA session for Koryun + Alexey. Stop in time for Koryun’s packing/check-in at 16:30; souvenirs move to Friday afternoon.',
         ],
       },
       {
@@ -593,7 +597,7 @@ export const GUIDES: Guide[] = [
           'Fri 13: Friday the 13th arrival. Fitting for a Korn trip.',
           'Mon 16: KORN + Architects + Pixel Grip, O2 arena, 19:30.',
           'Tue 17: Public holiday (Velvet Revolution). Korzo Národní 10:00–20:00, Modlitba pro Martu 17:11, then optional Concert for the Future on Wenceslas Square (programme until 22:00). Keep the afternoon/evening flexible together.',
-          'Thu 19: GTA VI release day.',
+          'Thu 19: GTA VI release day, but no gaming during Arto’s stay. Koryun + Alexey play Fri 20 from 22:00 and optionally Sat 21 afternoon, after Arto leaves Prague.',
           '~19–25 Nov: French Film Festival (cinemas).',
           'National Gallery (Trade Fair Palace): “NGP 230 Years” exhibition.',
           'Christmas markets open Sat 28 Nov, after the trip. Some decorations will already be up.',
