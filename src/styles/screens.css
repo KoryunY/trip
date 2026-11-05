@@ -2157,3 +2157,53 @@ details[open] > summary::before {
   flex-direction: column;
   gap: 8px;
 }
+
+.setup {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.setup-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.setup-h b {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 16px;
+}
+.setup-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14.5px;
+}
+.setup-item.done {
+  color: var(--ink-3);
+  text-decoration: line-through;
+  text-decoration-color: var(--line-2);
+}
+.setup-ico {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  flex: none;
+}
+.setup-item.done .setup-ico {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.setup-ico svg {
+  width: 17px;
+  height: 17px;
+}
