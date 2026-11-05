@@ -78,5 +78,6 @@ export default defineConfig({
     target: 'es2022',
     chunkSizeWarningLimit: 1500,
   },
-  server: { host: true },
+  server: { host: true, proxy: process.env.API_PROXY ? { '/api': process.env.API_PROXY } : undefined },
+  preview: { proxy: process.env.API_PROXY ? { '/api': process.env.API_PROXY } : undefined },
 });

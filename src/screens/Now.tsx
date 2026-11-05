@@ -22,7 +22,7 @@ import { TimeMachine } from '../components/TimeMachine';
 import { useTripTime } from '../lib/clock';
 import { DAY_THEMES, SUN } from '../lib/meta';
 import { go } from '../lib/router';
-import { useActivity, useDB, useMe } from '../lib/store';
+import { isSeed, useActivity, useDB, useMe } from '../lib/store';
 import { countdownParts, dayKey, fmtDayLong, relTime, tripDays, hhmm } from '../lib/time';
 import { eventsOnDay, myOpenTasks, taskStats, TRIP_START_MS, TRIP_END_MS, evEnd, evStart } from '../lib/trip';
 import { openSheet, mapIntent } from '../lib/ui';
@@ -290,7 +290,7 @@ export function NowScreen() {
                     <Avatar person={db.person[a.by]} size="md" />
                     <span className="grow">
                       <span className="t" style={{ fontWeight: 500 }}>
-                        <b>{db.person[a.by]?.name ?? a.by}</b> {a.act === 'add' ? 'added' : a.act === 'del' ? 'removed' : 'updated'}{' '}
+                        <b>{db.person[a.by]?.name ?? a.by}</b> {a.act === 'del' ? 'removed' : a.act === 'add' && !isSeed(a.col, a.id) ? 'added' : 'updated'}{' '}
                         {a.title}
                       </span>
                       <span className="s">

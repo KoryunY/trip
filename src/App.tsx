@@ -1,16 +1,18 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
 import { TabBar } from './components/TabBar';
 import { SheetHost } from './components/SheetHost';
 import { Toasts } from './components/ui';
 import { Login } from './screens/Login';
 import { NowScreen } from './screens/Now';
-import { MapScreen } from './screens/MapScreen';
 import { PlanScreen } from './screens/Plan';
 import { PrepScreen } from './screens/Prep';
 import { MoreScreen } from './screens/More';
 import { useRoute, type Tab } from './lib/router';
 import { useMe, useSettings } from './lib/store';
 import { startSync } from './lib/sync';
+
+// MapLibre is heavy: load the map screen on demand (still precached for offline by the service worker)
+const MapScreen = lazy(() => import('./screens/MapScreen').then((m) => ({ default: m.MapScreen })));
 
 function useTheme() {
   const { theme } = useSettings();
@@ -56,7 +58,11 @@ export default function App() {
       <main className="screens">
         <Screen active={t === 'now'}>{visited.has('now') && <NowScreen />}</Screen>
         <Screen active={t === 'map'} full>
-          {visited.has('map') && <MapScreen active={t === 'map'} />}
+          {visited.has('map') && (
+            <Suspense fallback={<div className="map-loading">Loading map…</div>}>
+              <MapScreen active={t === 'map'} />
+            </Suspense>
+          )}
         </Screen>
         <Screen active={t === 'plan'}>{visited.has('plan') && <PlanScreen />}</Screen>
         <Screen active={t === 'prep'}>{visited.has('prep') && <PrepScreen />}</Screen>

@@ -265,6 +265,7 @@ p {
   font-weight: 600;
   letter-spacing: 0.01em;
   position: relative;
+  text-decoration: none;
 }
 .tab svg {
   width: 23px;
@@ -542,6 +543,10 @@ p {
 }
 .row .t {
   font-weight: 600;
+}
+.row .grow > .t,
+.row .grow > .s {
+  display: block;
 }
 .row .s {
   font-size: 13px;

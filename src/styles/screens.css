@@ -1461,7 +1461,8 @@ details[open] > summary::before {
   position: absolute;
   inset: 0;
 }
-.map {
+.map-screen .map.maplibregl-map,
+.map-screen .map {
   position: absolute;
   inset: 0;
 }
@@ -1651,6 +1652,9 @@ details[open] > summary::before {
   border: 3px solid #fff;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
+.crew-marker.grouped .cm-label {
+  display: none;
+}
 .crew-marker.me .cm-av {
   box-shadow: 0 0 0 3px var(--c), 0 4px 14px rgba(0, 0, 0, 0.35);
 }
@@ -1781,4 +1785,13 @@ details[open] > summary::before {
 .crew-cluster.n3 .avatar:nth-child(3) {
   right: 0;
   bottom: 0;
+}
+
+.map-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  font-weight: 600;
 }

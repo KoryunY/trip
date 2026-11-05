@@ -1,8 +1,9 @@
 import maplibregl, { type GeoJSONSource, type Map as MLMap } from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { Compass, Crosshair, Layers, Navigation, Route as RouteIcon, Users, X, Footprints, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { LngLat, PlaceCategory } from '../../shared/types';
-import { crewLine, presenceFresh } from '../components/CrewList';
+import { crewLine, groupCrew, namesOf, presenceFresh } from '../components/CrewList';
 import { TimeMachine } from '../components/TimeMachine';
 import { toast } from '../components/ui';
 import { useTimeState, useNow } from '../lib/clock';
@@ -300,13 +301,15 @@ export function MapScreen({ active }: { active: boolean }) {
       const grp = groups.get(key)!;
       const idx = grp.indexOf(pos.person);
       const n = grp.length;
-      const off: [number, number] = n > 1 ? [Math.cos((idx / n) * Math.PI * 2 - Math.PI / 2) * 20, Math.sin((idx / n) * Math.PI * 2 - Math.PI / 2) * 20] : [0, 0];
+      const R = n > 2 ? 25 : 22;
+      const off: [number, number] = n > 1 ? [Math.cos((idx / n) * Math.PI * 2 - Math.PI / 2) * R, Math.sin((idx / n) * Math.PI * 2 - Math.PI / 2) * R] : [0, 0];
       entry.m.setLngLat(pos.p);
       entry.m.setOffset(off);
       const moving = pos.mode === 'travel' || pos.mode === 'moving';
       const icon = pos.mode === 'travel' ? (db.event[pos.eventId ?? '']?.kind === 'flight' ? '✈️' : '🚆') : pos.mode === 'moving' ? '🚶' : '';
       entry.el.style.setProperty('--c', person.color);
       entry.el.dataset.mode = pos.mode;
+      entry.el.classList.toggle('grouped', n > 1);
       entry.el.innerHTML = `<span class="cm-av">${person.name[0]}</span>${moving ? `<span class="cm-badge">${icon}</span>` : ''}<span class="cm-label">${person.name}</span>`;
       entry.el.setAttribute('aria-label', `${person.name}: ${pos.label}`);
       entry.el.title = `${person.name}: ${pos.label}`;
@@ -581,24 +584,29 @@ export function MapScreen({ active }: { active: boolean }) {
             </button>
             {panel && (
               <div className="map-crew">
-                {crew.map((pos) => {
-                  const person = db.person[pos.person];
-                  if (!person) return null;
+                {groupCrew(crew).map((grp) => {
+                  const pos = grp[0];
+                  const people = grp.map((g) => db.person[g.person]).filter(Boolean);
+                  if (!people.length) return null;
                   const line = crewLine(pos, db, t);
                   return (
                     <button
-                      key={pos.person}
+                      key={grp.map((g) => g.person).join('-')}
                       className="map-crew-row"
                       onClick={() => {
                         setFollow(false);
                         mapRef.current?.flyTo({ center: pos.p, zoom: Math.max(14, mapRef.current.getZoom()) });
                       }}
                     >
-                      <span className="avatar sm" style={{ ['--c' as string]: person.color }}>
-                        {person.name[0]}
+                      <span className="stack">
+                        {people.map((person) => (
+                          <span key={person.id} className="avatar sm" style={{ ['--c' as string]: person.color }}>
+                            {person.name[0]}
+                          </span>
+                        ))}
                       </span>
                       <span className="map-crew-t">
-                        <b>{person.name}</b> {line.title}
+                        <b>{people.length > 1 ? namesOf(people, db.people.length) : people[0].name}</b> {line.title}
                       </span>
                     </button>
                   );
