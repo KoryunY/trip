@@ -46,6 +46,13 @@ These hosts are blocked by its proxy: real OpenFreeMap tiles/styles, Open-Meteo 
 - The outbound flight number (W6 7859 likely).
 - Apartment door code, Wi-Fi and host in Notes.
 
+## Shared sightseeing revision
+- Must-do events carry `mustDo: true`: Castle on 16 Nov; Korzo Národní, Louvre, Letná and the 17:11 ceremony on 17 Nov; Old Town, bridge/Malá Strana/Kampa, Lokál dinner and the night bridge crossing on 19 Nov. All include Koryun, Alexey and Arto. Korn remains Koryun + Alexey only.
+- Friday 20 is flexible before Arto’s 17:15 estimated airport transfer. The Kutná Hora day trip is now an unscheduled idea; Jewish Quarter and Prague Sounds are optional alternatives.
+- Booking instructions are in the `must-do` guide, event notes/links and Prep. No tickets or reservations were purchased. Louvre’s linked booking page currently blocks reservations through 10 Jan 2027; recheck before visiting.
+- The live state previously saved seed records at revision 5. Seven exact envelopes in `src/data/seedRevisions.ts` follow the new seed through `rebaseLegacySeedRecord`; changed/newer edits and tombstones are preserved. This handles older saved copies without changing their timestamps or issuing sync writes.
+- Production sync returned persistent Vercel Blob ETag conflicts on the concert edit. That edit was published through the existing deployment branch. Do not bypass `ifMatch` or overwrite unrelated server data to work around this.
+
 ## Free-tier budget (Vercel Hobby)
 Blob allows ~100K simple / 10K advanced ops a month. The app polls at 20 s, the server memo lasts 6 s, CDN `s-maxage` is 5, edits are batched (1.2 s), and GPS is shared at most every 90 s when moving. Expected trip usage is ~20K reads and ~3–5K writes.
 

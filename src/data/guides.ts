@@ -22,6 +22,73 @@ export interface Guide {
 
 export const GUIDES: Guide[] = [
   {
+    id: 'must-do',
+    title: 'Must do together & booking plan',
+    icon: 'users',
+    summary: 'All three: Castle, Old Town, bridges, Czech dinner, Louvre, Letná and 17 November.',
+    for: ['koryun', 'alexey', 'arto'],
+    sections: [
+      {
+        body: 'Our shared window is Sun 15 Nov evening → Fri 20 Nov afternoon. Keep the essential visits together on 16, 17 and 19 November. All times below are Prague local time (CET). These are plans; the bookings below are not yet made.',
+        table: {
+          head: ['Day', 'Together'],
+          rows: [
+            ['Sun 15', 'Arto lands 17:00; estimated base arrival 18:30, welcome dinner 18:45. Keep the evening easy.'],
+            ['Mon 16', 'Castle 09:00–13:00 (arrive 08:45), Strahov lunch 13:15–14:15, short downhill stroll 14:30–15:15. Korn in the evening is for Koryun + Alexey.'],
+            ['Tue 17', 'Korzo Národní 10:00–11:45; Café Louvre 12:00–13:15; Letná viewpoint 14:00–15:15; back to Národní 16:30–17:30 for Modlitba pro Martu at 17:11. Optional celebration/concert wandering 18:00–21:00.'],
+            ['Wed 18', 'Optional Plzeň day trip: target an English brewery tour at 11:00 only if offered and booked. Check train times around the confirmed tour.'],
+            ['Thu 19', 'Old Town Square 10:30–11:30, clock at 11:00; Charles Bridge → Malá Strana → Lennon Wall → Kampa 11:30–13:30; lunch at base 14:15; GTA VI 15:00–18:00; Lokál dinner 18:45–21:00; bridge after dark 21:15–22:00.'],
+            ['Fri 20', 'Choose one easy morning: Vyšehrad + riverside, Jewish Quarter or a Louvre retry. Arto packs 14:30–16:15, leaves for the airport 17:15, flies at 20:15.'],
+          ],
+        },
+      },
+      {
+        h: 'Booking actions — not booked',
+        table: {
+          head: ['Visit', 'Action'],
+          rows: [
+            ['Castle · Mon 16, 09:00', 'Buy 3 main-circuit tickets via the official Castle page’s GetYourGuide link or on-site information centres. Current adult admission 450 CZK; check reduced eligibility and online price before paying. Arrive 08:45 for security and queues. Tower ticket separate.'],
+            ['Lokál Dlouhááá · Thu 19, 18:45', 'Request a table for 3 through the official restaurant reservation link. Save the confirmation and check the table time limit; if unavailable, choose another evening before Arto leaves.'],
+            ['Pilsner Urquell · Wed 18, target 11:00', 'Optional: select 18 Nov, English and 3 people in the official booking calendar (100 min, currently 430 CZK each). Time is provisional until confirmed. Then buy the trains to fit; allow 30–45 min between Plzeň station arrival and the tour.'],
+            ['Café Louvre · Tue 17, 12:00', 'Walk-in for 3: the current official notice says no reservations are accepted through 10 Jan 2027. Allow a queue and keep Friday morning as a retry. Recheck the notice before going; no table is held.'],
+            ['Old Town, clock exterior, bridges, Kampa, Letná, Korzo street programme', 'No advance ticket or general reservation. Paid interiors, festival brunch/afterparty and capacity-limited activities are optional extras.'],
+          ],
+        },
+        tip: 'A confirmed reservation belongs in the event’s booking field, with any changed time. “Planned” or “must do” does not mean paid or reserved.',
+      },
+      {
+        h: '17 November: leave room for the atmosphere',
+        bullets: [
+          'Korzo’s published 2026 main programme runs 10:00–20:00. Return to Palác Metro before 17:00 for Modlitba pro Martu at 17:11–17:15; expect the busiest crowds then.',
+          'Afterwards, optionally pass the light installation in the courtyard of Our Lady of the Snows (16:30–22:00) and continue to Concert for the Future on lower Wenceslas Square.',
+          'The concert’s published KPB 2026 timetable runs from the 16:36 opening to 22:00. Our 18:00–21:00 window is flexible: join or leave when we want and find dinner nearby.',
+        ],
+      },
+      {
+        h: 'Optional alternatives — choose, do not stack',
+        bullets: [
+          'Jewish Quarter interiors are a good Friday-morning alternative: allow 2–3 h. November museum hours are 09:00–16:30; Old-New Synagogue 09:00–17:00, with an earlier Friday closure before Shabbat. Closed Saturdays and Jewish holidays. Check ticket inclusions in the official museum shop.',
+          'Prague Sounds: Paul Hillier & Theatre of Voices, Wed 18 Nov 20:00, Divadlo X10 (doors 19:00). Ticketed alternative to the relaxed evening after Plzeň, if everyone has energy.',
+          'Prague Sounds: Steve Reich: 90, Thu 19 Nov 20:00, Rudolfinum (doors 19:00). This conflicts with our shared dinner/bridge plan: only choose it if all three agree to move those together. No concert tickets are booked.',
+        ],
+      },
+    ],
+    sources: [
+      { label: 'Prague Castle · official tickets', url: 'https://www.hrad.cz/en/prague-castle-for-visitors/tickets' },
+      { label: 'Prague Castle · opening hours', url: 'https://www.hrad.cz/en/prague-castle-for-visitors/opening-hours' },
+      { label: 'Lokál Dlouhááá · official reservations', url: 'https://lokal-dlouha.ambi.cz/en/' },
+      { label: 'Pilsner Urquell · tours and booking', url: 'https://www.prazdrojvisit.cz/en/tours/pilsner-urquell-brewery-tour/' },
+      { label: 'Café Louvre · current reservation notice', url: 'https://cafelouvre.apetee.com/en' },
+      { label: 'Korzo Národní · 2026 programme', url: 'https://www.korzonarodni.cz/cs/program' },
+      { label: 'Korzo Národní · visitor information', url: 'https://www.korzonarodni.cz/cs/pro-navstevniky' },
+      { label: 'Concert for the Future · current KPB 2026 timetable', url: 'https://koncertprobudoucnost.cz/' },
+      { label: 'Jewish Museum · hours', url: 'https://www.jewishmuseum.cz/en/info/visit/opening-hours/' },
+      { label: 'Jewish Museum · admission and official booking', url: 'https://www.jewishmuseum.cz/en/info/visit/admission/' },
+      { label: 'Prague Sounds · Paul Hillier and booking', url: 'https://praguesounds.cz/en/event/paul-hillier-theatre-of-voices-6aGvb0' },
+      { label: 'Prague Sounds · Steve Reich and booking', url: 'https://praguesounds.cz/cs/event/steve-reich-90-4HUsSU' },
+    ],
+  },
+  {
     id: 'firstdays',
     title: 'First days: solo, duo, trio',
     icon: 'users',
@@ -45,7 +112,8 @@ export const GUIDES: Guide[] = [
         steps: [
           'Alexey: Kožlany → Plzeň (bus) → train to Praha hl.n. (~1 h 15), or Rakovník + bus 404 to Zličín. Check idos.cz the evening before.',
           'Bring the Xbox in hand luggage; a backpack-sized bag is fine on buses/trains.',
-          '10:45 breakfast with Koryun + Alexey, then Prague Castle → Strahov brewery → sunset → Malá Strana → Lokál.',
+          '10:45 breakfast with Koryun + Alexey, optional Žižkov TV Tower, Naše maso lunch and the Strahov sunset. Eska or Cross Club are optional duo plans.',
+          'Keep the main Castle visit for Mon 16 and the proper Lokál dinner for Thu 19, when all three can go together.',
         ],
         tip: 'Whoever arrives first gets the keys from the host and shares the door code in Notes.',
       },
@@ -62,7 +130,7 @@ export const GUIDES: Guide[] = [
         h: 'If plans shift',
         bullets: [
           'If Arto’s Sunday flight is delayed, adjust the airport transfer and dinner plans in Plan.',
-          'Alexey arrives later on Sat: start with Old Town/Josefov instead of the Castle so he can join midway (Castle area is far from Zličín).',
+          'If Alexey arrives later on Sat, shorten the optional duo stops. The essential Castle and Old Town walks are saved for the shared days.',
           'Everyone edits their own travel events in Plan, and the map/timelapse update automatically.',
         ],
       },
@@ -339,7 +407,8 @@ export const GUIDES: Guide[] = [
     id: 'korn',
     title: 'Korn night (Mon 16 Nov)',
     icon: 'guitar',
-    summary: 'O2 arena · with Architects + Pixel Grip · show 19:30.',
+    summary: 'Koryun + Alexey · O2 arena · Architects + Pixel Grip · show 19:30.',
+    for: ['koryun', 'alexey'],
     sections: [
       {
         bullets: [
@@ -366,19 +435,20 @@ export const GUIDES: Guide[] = [
   },
   {
     id: 'gta',
-    title: 'GTA VI night (19 Nov)',
+    title: 'GTA VI: pre-load & shared sessions',
     icon: 'gamepad-2',
-    summary: 'Release day on Xbox Series X. Pre-load, unlock at midnight, snacks.',
+    summary: 'Xbox ready before travel; Thu 19 afternoon gaming after the shared Prague walk.',
     for: ['alexey'],
     sections: [
       {
         h: 'Checklist',
         steps: [
-          'Pre-order digital, pre-load from 12 Nov on home internet (~200+ GB).',
+          'Xbox Series X|S digital pre-load starts Tue 10 Nov at 00:00 GMT (01:00 CET). Download at home before travelling; allow up to 212 GB free space.',
           'Bring: Xbox, power cable, HDMI cable, controllers, batteries/charger.',
           'Ask the host: TV with free HDMI? Wi-Fi speed (for the day-one patch)?',
           'Wed 18 Nov evening: set up, update, test sign-in, buy supplies.',
-          '00:00 Thu 19 Nov: unlock (midnight local, rolling by region).',
+          '00:00 Thu 19 Nov: Rockstar confirms local-midnight release for Xbox Series X|S and PS5. The midnight session is optional; leave energy for the 10:30 shared Prague walk.',
+          'Main shared gaming block: Thu 19 Nov 15:00–18:00, after sightseeing and lunch. Stop in time for Lokál at 18:45 and the bridge after dark. Another session from 22:45 is optional.',
         ],
       },
       {
@@ -386,6 +456,10 @@ export const GUIDES: Guide[] = [
         bullets: ['Beer (Pilsner, Kozel, Budvar, cheapest in Albert/Billa/Lidl)', 'Chips, nuts, energy drinks', 'Pizza/burgers via Wolt or Foodora'],
         tip: 'House rule: pass the controller after every mission. Whoever fails a mission buys the next round.',
       },
+    ],
+    sources: [
+      { label: 'Rockstar · regional release and pre-load times (updated 3 Nov 2026)', url: 'https://support.rockstargames.com/articles/29jV3Cv2cCgvwM1XgtMO5o/grand-theft-auto-vi-regional-pre-load-and-release-times-on-playstation-5-and-xbox-series-x-or-s' },
+      { label: 'Rockstar · pre-load FAQ and disk space', url: 'https://support.rockstargames.com/articles/7nPqOA2uCbpEQHXx7KVrYd/grand-theft-auto-vi-pre-load-faq' },
     ],
   },
   {
@@ -518,7 +592,7 @@ export const GUIDES: Guide[] = [
         bullets: [
           'Fri 13: Friday the 13th arrival. Fitting for a Korn trip.',
           'Mon 16: KORN + Architects + Pixel Grip, O2 arena, 19:30.',
-          'Tue 17: Public holiday (Velvet Revolution). Korzo Národní street festival with ~160 free events. Shops open normally.',
+          'Tue 17: Public holiday (Velvet Revolution). Korzo Národní 10:00–20:00, Modlitba pro Martu 17:11, then optional Concert for the Future on Wenceslas Square (programme until 22:00). Keep the afternoon/evening flexible together.',
           'Thu 19: GTA VI release day.',
           '~19–25 Nov: French Film Festival (cinemas).',
           'National Gallery (Trade Fair Palace): “NGP 230 Years” exhibition.',

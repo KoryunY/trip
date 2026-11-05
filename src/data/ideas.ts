@@ -8,7 +8,7 @@ export const IDEAS: Idea[] = [
     durationMin: 240,
     cost: '~1,500–3,000 CZK pp',
     notes:
-      'Several Prague brewpubs and beer tour companies run “brew your own beer” sessions (you mash, hop and taste, and some post the bottles later). Search “Prague beer brewing workshop” and book a few days ahead. Fits Fri 20 or Sat 21 if we skip Kutná Hora.',
+      'Optional extra for a future vote, not part of the shared essentials. Search official Prague brewery workshop listings and check the real date, language and price before booking. Friday 20 is kept flexible for Arto’s airport departure; Saturday 21 is Koryun and Alexey only.',
   },
   {
     id: 'i-tasting',
@@ -25,7 +25,30 @@ export const IDEAS: Idea[] = [
     placeId: 'sedlec-ossuary',
     durationMin: 6 * 60,
     cost: 'Train ~1 h each way; ossuary ~200 CZK',
-    notes: 'Tentatively on Fri 20 Nov. UNESCO silver-mining town. The Sedlec Ossuary is decorated with ~40,000 skeletons.',
+    notes: 'Optional alternative, currently unscheduled. Removed from Arto’s departure day so there is no long-distance return before his flight. If all three want this, swap the optional Plzeň day trip on Wed 18 only after checking tickets and train times; otherwise Koryun and Alexey can consider it after Arto leaves.',
+  },
+  {
+    id: 'i-jewish-quarter',
+    title: 'Optional: Jewish Quarter, synagogues & Old Jewish Cemetery',
+    kind: 'sight',
+    placeId: 'josefov-old-jewish-cemetery',
+    durationMin: 150,
+    cost: 'Current adult admission 600 CZK; eligible student under 26: 400 CZK',
+    notes: 'A worthwhile additional Prague classic if interested in Jewish history; use Friday 20 morning instead of Vyšehrad/riverside, not on top of both. Allow 2–3 h. November museum hours are 09:00–16:30, closed Saturdays and Jewish holidays; the Old-New Synagogue has separate hours and closes earlier before Friday Shabbat. Check exactly which sites the selected ticket includes. Book through the official museum e-shop or buy at its ticket offices. Keep the afternoon free for airport packing.\nOfficial hours: https://www.jewishmuseum.cz/en/info/visit/opening-hours/\nTickets: https://www.jewishmuseum.cz/en/info/visit/admission/',
+  },
+  {
+    id: 'i-prague-sounds-18',
+    title: 'Optional: Prague Sounds — Paul Hillier & Theatre of Voices (18 Nov)',
+    kind: 'concert',
+    durationMin: 150,
+    notes: 'Official festival event: Wed 18 Nov at Divadlo X10, performance 20:00, doors 19:00. An optional cultural alternative after Plzeň if everyone has energy and the game is already downloaded; replace the GTA setup evening rather than doubling the schedule. Check availability and price on the organiser’s ticket link before buying. Not booked.\nhttps://praguesounds.cz/en/event/paul-hillier-theatre-of-voices-6aGvb0',
+  },
+  {
+    id: 'i-prague-sounds-19',
+    title: 'Optional: Prague Sounds — Steve Reich: 90 (19 Nov)',
+    kind: 'concert',
+    durationMin: 180,
+    notes: 'Official festival event: Thu 19 Nov at Rudolfinum, performance 20:00, doors 19:00. This conflicts with our must-do Czech dinner and night bridge walk. Consider it only if all three choose to move those essentials to another shared evening first. Check the organiser’s ticket link for availability and price. Not booked.\nhttps://praguesounds.cz/cs/event/steve-reich-90-4HUsSU',
   },
   {
     id: 'i-hockey',

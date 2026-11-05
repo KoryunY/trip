@@ -118,13 +118,13 @@ export const TASK_CAT_ORDER = Object.keys(TASK_CAT) as TaskCategory[];
 
 const DAY_THEMES_EN: Record<string, { title: string; emoji: string }> = {
   '2026-11-13': { title: 'Arrival · Friday the 13th', emoji: '🛬' },
-  '2026-11-14': { title: 'Castle day', emoji: '🏰' },
+  '2026-11-14': { title: 'Optional exploring · Koryun & Alexey', emoji: '🏙️' },
   '2026-11-15': { title: 'Views, beer halls & Arto arrives', emoji: '🍺' },
-  '2026-11-16': { title: 'KORN night', emoji: '🎸' },
-  '2026-11-17': { title: 'Velvet Revolution Day', emoji: '🕯️' },
+  '2026-11-16': { title: 'Castle together · Korn for Koryun & Alexey', emoji: '🏰' },
+  '2026-11-17': { title: 'Louvre, Letná & 17 November', emoji: '🕯️' },
   '2026-11-18': { title: 'Plzeň beer pilgrimage', emoji: '🚆' },
-  '2026-11-19': { title: 'GTA VI release day', emoji: '🎮' },
-  '2026-11-20': { title: 'Kutná Hora + Friday night', emoji: '💀' },
+  '2026-11-19': { title: 'Prague walk, GTA VI & Czech dinner', emoji: '🌉' },
+  '2026-11-20': { title: 'Flexible morning · Arto flies home', emoji: '✈️' },
   '2026-11-21': { title: 'Last full day', emoji: '🥨' },
   '2026-11-22': { title: 'Goodbye Prague', emoji: '👋' },
 };

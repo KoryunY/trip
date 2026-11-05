@@ -17,6 +17,8 @@ import type {
 } from '../../shared/types';
 import { itemKey, newer } from '../../shared/merge.js';
 import { SEED } from '../data/seed';
+import { LEGACY_SEED_RECORDS } from '../data/seedRevisions';
+import { rebaseLegacySeedRecord } from './seedRevision';
 import { CONTENT_RU } from '../i18n/content.ru';
 import { PLACES_RU } from '../i18n/places.ru';
 
@@ -128,7 +130,7 @@ function resolveItem(key: string): SyncItem | undefined {
     const it = layer.get(key);
     if (it && newer(it, best)) best = it;
   }
-  return best;
+  return rebaseLegacySeedRecord(best, seedLayer.get(key), LEGACY_SEED_RECORDS);
 }
 
 // ---------- content translation (seed texts only; edited texts stay as written) ----------

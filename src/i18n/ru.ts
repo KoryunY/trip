@@ -315,6 +315,8 @@ export const RU: Record<string, string> = {
   To: 'Куда',
   '+ New place': '+ Новое место',
   'Who’s going': 'Кто идёт',
+  'Must do together': 'Обязательно вместе',
+  'A shared priority for the selected people.': 'Общий приоритет для выбранных участников.',
   Status: 'Статус',
   Planned: 'В плане',
   Maybe: 'Под вопросом',

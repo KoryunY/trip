@@ -8,8 +8,8 @@ import { t as tx } from '../i18n';
 export const MOMENTS: { label: string; emoji: string; at: string }[] = [
   { label: tx('Takeoff EVN'), emoji: '🛫', at: '2026-11-13T02:30:00+01:00' },
   { label: tx('Landing'), emoji: '🛬', at: '2026-11-13T06:50:00+01:00' },
-  { label: tx('Crew complete'), emoji: '🤝', at: '2026-11-14T10:45:00+01:00' },
-  { label: tx('Castle'), emoji: '🏰', at: '2026-11-14T13:00:00+01:00' },
+  { label: tx('Crew complete'), emoji: '🤝', at: '2026-11-15T18:45:00+01:00' },
+  { label: tx('Castle'), emoji: '🏰', at: '2026-11-16T10:30:00+01:00' },
   { label: tx('KORN'), emoji: '🎸', at: '2026-11-16T19:45:00+01:00' },
   { label: tx('17 Nov'), emoji: '🕯️', at: '2026-11-17T11:30:00+01:00' },
   { label: tx('Plzeň'), emoji: '🍺', at: '2026-11-18T11:00:00+01:00' },

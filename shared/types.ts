@@ -96,6 +96,8 @@ export interface TripEvent {
   toPlaceId?: string | null;
   people: PersonId[];
   status: EventStatus;
+  /** Shared priority to do together; independent of booking status. */
+  mustDo?: boolean;
   notes?: string | null;
   cost?: string | null;
   booking?: string | null;

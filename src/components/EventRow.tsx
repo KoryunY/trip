@@ -1,4 +1,4 @@
-import { Check, MapPin } from 'lucide-react';
+import { Check, MapPin, Star } from 'lucide-react';
 import type { TripEvent } from '../../shared/types';
 import { KIND } from '../lib/meta';
 import { useDB } from '../lib/store';
@@ -39,6 +39,7 @@ export function EventRow({ ev, t, onClick, showDay }: { ev: TripEvent; t: number
           )}
         </span>
         <span className="ev-tags">
+          {ev.mustDo && <span className="pill must-do"><Star aria-hidden />{tx("Must do together")}</span>}
           {phase === 'now' && <span className="pill live">{tx("NOW")}</span>}
           {phase === 'soon' && <span className="pill warn">{tx("SOON")}</span>}
           {ev.status === 'tentative' && <span className="pill">{tx("tentative")}</span>}

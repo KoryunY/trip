@@ -1,4 +1,4 @@
-import { ArrowRight, Clock, Copy, ExternalLink, Footprints, MapPin, Pencil, Ticket, Trash2, UserMinus, UserPlus, Wallet, Map as MapIcon, Navigation } from 'lucide-react';
+import { ArrowRight, Clock, Copy, ExternalLink, Footprints, MapPin, Pencil, Star, Ticket, Trash2, UserMinus, UserPlus, Wallet, Map as MapIcon, Navigation } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { EventKind, EventStatus, TripEvent } from '../../../shared/types';
 import { useNow } from '../../lib/clock';
@@ -73,6 +73,7 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
           </div>
         </div>
         <div className="evd-pills">
+          {ev.mustDo && <span className="pill must-do"><Star aria-hidden />{tx("Must do together")}</span>}
           <EventWeather ev={ev} />
           <span className={`pill ${ev.status === 'confirmed' ? 'ok' : ev.status === 'cancelled' ? 'danger' : ev.status === 'tentative' ? 'warn' : ''}`}>{tx(ev.status)}</span>
           {local && (
@@ -369,6 +370,13 @@ export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Parti
           <span className="lbl">{tx("Who’s going")}</span>
           <PeoplePicker value={f.people} onChange={(v) => set({ people: v })} />
         </div>
+        <label className="ev-priority-toggle">
+          <input id="ev-must-do" type="checkbox" checked={Boolean(f.mustDo)} onChange={(e) => set({ mustDo: e.target.checked })} />
+          <span>
+            <span className="pill must-do"><Star aria-hidden />{tx("Must do together")}</span>
+            <span className="muted d-block">{tx("A shared priority for the selected people.")}</span>
+          </span>
+        </label>
         <div className="field">
           <span className="lbl">{tx("Status")}</span>
           <Segmented

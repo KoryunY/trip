@@ -16,6 +16,8 @@ Trip companion PWA for **Koryun, Alexey & Arto**, Prague, **13–22 Nov 2026**.
 
 Login = pick your name. Everyone sees and edits everything.
 
+**Shared essentials:** star-labelled **Must do together** events are scheduled for all three on **16, 17 and 19 Nov**, during Arto’s stay. The label can be changed in the event editor and is included in calendar exports. **More → Guides → Must do together & booking plan** contains the dated overview, official booking links, walk-in rules and optional alternatives; matching booking actions are in **Prep**. Planned visits are not reservations or purchased tickets.
+
 **Languages & theme:** English by default, Russian via the EN/RU switch (top of Now/More/login, or Settings). The 🌙/☀️ button switches dark/light mode (Settings also has Auto).
 - UI strings: `src/i18n/ru.ts`, used through `t()`/`tx()` in `src/i18n/index.ts`.
 - Seed content: `src/i18n/content.ru.ts`, `places.ru.ts` and `guides.ru.ts`. It's shown in Russian only while the text is unedited.
@@ -51,6 +53,7 @@ API_PROXY=http://localhost:8787 npm run dev
 * `src/data/events.ts`: the itinerary. Times are ISO with offsets; Yerevan legs carry `tz`.
 * `src/data/places.ts`: 97 researched places (`approx: true` = pin not double-checked). Regenerate with `node scripts/build-places.mjs scripts/places.research.json`.
 * `src/data/tasks.ts`, `ideas.ts`, `guides.ts`, `people.ts`.
+* `src/data/seedRevisions.ts`: exact historical saved records that follow the current shared itinerary; newer edits and deletions remain untouched.
 
 Arto's flights are confirmed from the calendar: **15 Nov, Geneva → Prague 15:25–17:00 (easyJet EZS1563)**; **20 Nov, Prague → Geneva 20:15–21:50 (EZS1564)**, all CET. Airport transfers and apartment arrival/departure remain estimates.
 
