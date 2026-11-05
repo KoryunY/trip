@@ -1,0 +1,425 @@
+import { ArrowRight, Clock, Copy, ExternalLink, Footprints, MapPin, Pencil, Ticket, Trash2, UserMinus, UserPlus, Wallet, Map as MapIcon, Navigation } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import type { EventKind, EventStatus, TripEvent } from '../../../shared/types';
+import { useNow } from '../../lib/clock';
+import { KIND, KIND_ORDER, CAT } from '../../lib/meta';
+import { isSeed, remove, resetToSeed, save, uid, useDB, useMe, getDB } from '../../lib/store';
+import { durationLabel, fmtDayLong, isoInTz, relTime, tripDays, zonedToUtc, dayKey, hhmm, TZ, TZ_LABEL, fmtDayShort, addDays } from '../../lib/time';
+import { endLocal, endTz, localTimeNote, startLocal, startTz, mapsLink, eventDay } from '../../lib/trip';
+import { openSheet, replaceSheet, closeSheet, showPlaceOnMap, navigateTo } from '../../lib/ui';
+import { Avatar, Segmented, Sheet, toast } from '../ui';
+import { PeoplePicker, PlacePicker } from './PlacePicker';
+
+export function EventSheet({ id, onClose }: { id: string; onClose: () => void }) {
+  const db = useDB();
+  const me = useMe()!;
+  const now = useNow(30_000);
+  const ev = db.event[id];
+  if (!ev) {
+    return (
+      <Sheet title="Event removed" onClose={onClose}>
+        <p className="muted">This event no longer exists.</p>
+      </Sheet>
+    );
+  }
+  const k = KIND[ev.kind] ?? KIND.other;
+  const Icon = k.icon;
+  const s = Date.parse(ev.start);
+  const e = Date.parse(ev.end);
+  const place = ev.placeId ? db.place[ev.placeId] : undefined;
+  const from = ev.fromPlaceId ? db.place[ev.fromPlaceId] : undefined;
+  const to = ev.toPlaceId ? db.place[ev.toPlaceId] : undefined;
+  const target = place ?? to;
+  const meta = db.meta[`events:${ev.id}`];
+  const iAmIn = ev.people.includes(me);
+  const when = now >= e ? 'Done' : now >= s ? `Now · ends ${relTime(e, now)}` : relTime(s, now);
+  const local = localTimeNote(ev);
+  const toggleMe = () => {
+    save('events', { ...ev, people: iAmIn ? ev.people.filter((p) => p !== me) : [...ev.people, me] });
+    toast(iAmIn ? 'You’re out of this one' : 'You’re in!');
+  };
+  const del = () => {
+    const copy = { ...ev };
+    remove('events', ev.id);
+    onClose();
+    toast('Event deleted', { label: 'Undo', run: () => save('events', copy) });
+  };
+  return (
+    <Sheet
+      title={ev.title}
+      onClose={onClose}
+      actions={
+        <button className="icon-btn" aria-label="Edit event" onClick={() => replaceSheet({ t: 'eventEdit', id: ev.id })}>
+          <Pencil />
+        </button>
+      }
+    >
+      <div className="ev-detail">
+        <div className="evd-top">
+          <span className="ico-tile" style={{ background: k.color, color: '#fff' }}>
+            <Icon />
+          </span>
+          <div className="grow">
+            <div className="evd-when">
+              {fmtDayLong(Date.parse(ev.start))} · {startLocal(ev)}–{endLocal(ev)}
+            </div>
+            <div className="muted" style={{ fontSize: 13.5 }}>
+              {k.label} · {durationLabel(e - s)} · <b className={now >= s && now < e ? 'live-txt' : ''}>{when}</b>
+            </div>
+          </div>
+        </div>
+        <div className="evd-pills">
+          <span className={`pill ${ev.status === 'confirmed' ? 'ok' : ev.status === 'cancelled' ? 'danger' : ev.status === 'tentative' ? 'warn' : ''}`}>{ev.status}</span>
+          {local && (
+            <span className="pill info">
+              <Clock /> {local} · Prague {hhmm(s)}–{hhmm(e)}
+            </span>
+          )}
+        </div>
+
+        {(from || place) && (
+          <div className="evd-where card">
+            {from && to ? (
+              <div className="evd-route">
+                <button className="link-row" onClick={() => openSheet({ t: 'place', id: from.id })}>
+                  <MapPin aria-hidden /> {from.name}
+                </button>
+                <ArrowRight className="muted" aria-hidden />
+                <button className="link-row" onClick={() => openSheet({ t: 'place', id: to.id })}>
+                  <MapPin aria-hidden /> {to.name}
+                </button>
+              </div>
+            ) : place ? (
+              <button className="link-row" onClick={() => openSheet({ t: 'place', id: place.id })}>
+                <span aria-hidden>{CAT[place.category]?.emoji}</span>
+                <span className="grow">
+                  <b>{place.name}</b>
+                  {place.address && <span className="muted block">{place.address}</span>}
+                </span>
+              </button>
+            ) : null}
+          </div>
+        )}
+
+        {target && (
+          <div className="evd-actions">
+            <button className="btn sm" onClick={() => navigateTo(target.lat, target.lon, target.name)}>
+              <Footprints /> Walk route
+            </button>
+            <a className="btn sm" href={mapsLink(target.lat, target.lon, 'transit')} target="_blank" rel="noreferrer">
+              <Navigation /> Transit
+            </a>
+            <button className="btn sm" onClick={() => showPlaceOnMap(target)}>
+              <MapIcon /> Map
+            </button>
+          </div>
+        )}
+
+        <div className="evd-people">
+          <div className="eyebrow">Who</div>
+          <div className="evd-people-list">
+            {ev.people.map((pid) => (
+              <span key={pid} className="evd-person">
+                <Avatar person={db.person[pid]} size="md" /> {db.person[pid]?.name ?? pid}
+              </span>
+            ))}
+            {!ev.people.length && <span className="muted">Nobody yet</span>}
+          </div>
+          <button className={`btn sm ${iAmIn ? '' : 'accent'}`} onClick={toggleMe}>
+            {iAmIn ? <UserMinus /> : <UserPlus />} {iAmIn ? 'I’m out' : 'I’m in'}
+          </button>
+        </div>
+
+        {ev.booking && (
+          <div className="evd-line">
+            <Ticket aria-hidden /> {ev.booking}
+          </div>
+        )}
+        {ev.cost && (
+          <div className="evd-line">
+            <Wallet aria-hidden /> {ev.cost}
+          </div>
+        )}
+        {ev.notes && <p className="prose evd-notes">{ev.notes}</p>}
+        {ev.links?.map((l) => (
+          <a key={l.url} className="evd-line link" href={l.url} target={l.url.startsWith('#') ? undefined : '_blank'} rel="noreferrer" onClick={() => l.url.startsWith('#') && closeSheet()}>
+            <ExternalLink aria-hidden /> {l.label}
+          </a>
+        ))}
+
+        <div className="evd-foot">
+          <button
+            className="btn sm"
+            onClick={() => {
+              const copy: TripEvent = { ...ev, id: uid('e-'), title: `${ev.title} (copy)` };
+              save('events', copy);
+              replaceSheet({ t: 'eventEdit', id: copy.id });
+            }}
+          >
+            <Copy /> Duplicate
+          </button>
+          <button className="btn sm danger" onClick={del}>
+            <Trash2 /> Delete
+          </button>
+        </div>
+        {meta && (
+          <p className="muted evd-meta">
+            Last edited by {db.person[meta.by]?.name ?? meta.by} · {relTime(meta.u, Date.now())}
+            {isSeed('events', ev.id) && (
+              <>
+                {' · '}
+                <button className="linkish" onClick={() => resetToSeed('events', ev.id)}>
+                  restore original
+                </button>
+              </>
+            )}
+          </p>
+        )}
+      </div>
+    </Sheet>
+  );
+}
+
+const TZ_OPTIONS = [
+  { v: 'Europe/Prague', label: 'Prague' },
+  { v: 'Asia/Yerevan', label: 'Yerevan' },
+  { v: 'Europe/Zurich', label: 'Zürich' },
+];
+
+function toLocalParts(iso: string, tz: string) {
+  const ms = Date.parse(iso);
+  return { day: dayKey(ms, tz), time: hhmm(ms, tz) };
+}
+
+export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Partial<TripEvent>; onClose: () => void }) {
+  const db = useDB();
+  const me = useMe()!;
+  const existing = id ? db.event[id] : undefined;
+  const base: TripEvent = useMemo(
+    () =>
+      existing ?? {
+        id: uid('e-'),
+        title: '',
+        kind: 'sight',
+        start: draft?.start ?? `${tripDays()[0]}T12:00:00+01:00`,
+        end: draft?.end ?? `${tripDays()[0]}T13:00:00+01:00`,
+        people: db.people.map((p) => p.id),
+        status: 'planned',
+        ...draft,
+      },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+  const [f, setF] = useState<TripEvent>(base);
+  const [mode, setMode] = useState<'place' | 'travel'>(base.fromPlaceId ? 'travel' : 'place');
+  const sTz = startTz(f);
+  const eTz = endTz(f);
+  const sp = toLocalParts(f.start, sTz);
+  const ep = toLocalParts(f.end, eTz);
+  const dur = Date.parse(f.end) - Date.parse(f.start);
+  const days = tripDays();
+  const dayOptions = Array.from(new Set([addDays(days[0], -1), ...days, sp.day])).sort();
+
+  const set = (p: Partial<TripEvent>) => setF((x) => ({ ...x, ...p }));
+  const setStart = (day: string, time: string, tz = sTz) => {
+    const ms = zonedToUtc(day, time, tz);
+    set({ start: isoInTz(ms, tz), end: isoInTz(ms + Math.max(dur, 0), eTz) });
+  };
+  const setEnd = (time: string) => {
+    let ms = zonedToUtc(ep.day === sp.day ? sp.day : ep.day, time, eTz);
+    // assume the end is after start: roll into next day if needed
+    const st = Date.parse(f.start);
+    if (ms <= st) ms = zonedToUtc(addDays(dayKey(st, eTz), 1), time, eTz);
+    if (ms - st > 36 * 3600_000) ms = zonedToUtc(dayKey(st, eTz), time, eTz);
+    if (ms <= st) ms = zonedToUtc(addDays(dayKey(st, eTz), 1), time, eTz);
+    set({ end: isoInTz(ms, eTz) });
+  };
+  const valid = f.title.trim().length > 0 && Date.parse(f.end) >= Date.parse(f.start);
+  const submit = () => {
+    if (!valid) return;
+    const out: TripEvent = { ...f, title: f.title.trim() };
+    if (mode === 'place') {
+      out.fromPlaceId = null;
+      out.toPlaceId = null;
+    } else out.placeId = null;
+    if (!out.tz || out.tz === TZ) delete out.tz;
+    if (!out.endTz || out.endTz === (out.tz ?? TZ)) delete out.endTz;
+    save('events', out);
+    toast(existing ? 'Saved' : 'Added to the plan');
+    onClose();
+    if (!existing) openSheet({ t: 'event', id: out.id });
+  };
+  return (
+    <Sheet
+      title={existing ? 'Edit event' : 'New event'}
+      onClose={onClose}
+      footer={
+        <>
+          <button className="btn" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="btn primary" style={{ flex: 1 }} disabled={!valid} onClick={submit}>
+            {existing ? 'Save' : 'Add'}
+          </button>
+        </>
+      }
+    >
+      <form
+        className="form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          submit();
+        }}
+      >
+        <div className="field">
+          <label htmlFor="ev-title">Title</label>
+          <input id="ev-title" value={f.title} onChange={(e) => set({ title: e.target.value })} placeholder="e.g. Beer at U Fleků" autoFocus={!existing} />
+        </div>
+        <div className="grid2">
+          <div className="field">
+            <label htmlFor="ev-kind">Type</label>
+            <select id="ev-kind" value={f.kind} onChange={(e) => set({ kind: e.target.value as EventKind })}>
+              {KIND_ORDER.map((k) => (
+                <option key={k} value={k}>
+                  {KIND[k].label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="ev-day">Day</label>
+            <select id="ev-day" value={sp.day} onChange={(e) => setStart(e.target.value, sp.time)}>
+              {dayOptions.map((d) => (
+                <option key={d} value={d}>
+                  {fmtDayShort(Date.parse(`${d}T12:00:00+01:00`))}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="grid2">
+          <div className="field">
+            <label htmlFor="ev-start">Start ({TZ_LABEL[sTz] ?? sTz})</label>
+            <input id="ev-start" type="time" value={sp.time} onChange={(e) => e.target.value && setStart(sp.day, e.target.value)} />
+          </div>
+          <div className="field">
+            <label htmlFor="ev-end">End ({TZ_LABEL[eTz] ?? eTz})</label>
+            <input id="ev-end" type="time" value={ep.time} onChange={(e) => e.target.value && setEnd(e.target.value)} />
+          </div>
+        </div>
+        <p className="muted" style={{ fontSize: 12.5, marginTop: -6 }}>
+          {durationLabel(Math.max(0, dur))}
+          {eventDay(f) !== dayKey(Date.parse(f.end) - 1, eTz) ? ' · ends the next day' : ''}
+        </p>
+        <details>
+          <summary className="muted" style={{ fontSize: 13.5 }}>
+            Time zones (for flights from Yerevan / Zürich)
+          </summary>
+          <div className="grid2" style={{ marginTop: 10 }}>
+            <div className="field">
+              <label htmlFor="ev-tz">Start time zone</label>
+              <select id="ev-tz" value={sTz} onChange={(e) => set({ tz: e.target.value })}>
+                {TZ_OPTIONS.map((o) => (
+                  <option key={o.v} value={o.v}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="field">
+              <label htmlFor="ev-etz">End time zone</label>
+              <select id="ev-etz" value={eTz} onChange={(e) => set({ endTz: e.target.value })}>
+                {TZ_OPTIONS.map((o) => (
+                  <option key={o.v} value={o.v}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </details>
+        <div className="field">
+          <span className="lbl">Where</span>
+          <Segmented
+            label="Location type"
+            value={mode}
+            onChange={setMode}
+            options={[
+              { v: 'place', label: 'At a place' },
+              { v: 'travel', label: 'Travel A → B' },
+            ]}
+          />
+        </div>
+        {mode === 'place' ? (
+          <div className="field">
+            <label htmlFor="ev-place">Place</label>
+            <PlacePicker id="ev-place" value={f.placeId} onChange={(v) => set({ placeId: v })} />
+          </div>
+        ) : (
+          <div className="grid2">
+            <div className="field">
+              <label htmlFor="ev-from">From</label>
+              <PlacePicker id="ev-from" value={f.fromPlaceId} onChange={(v) => set({ fromPlaceId: v })} />
+            </div>
+            <div className="field">
+              <label htmlFor="ev-to">To</label>
+              <PlacePicker id="ev-to" value={f.toPlaceId} onChange={(v) => set({ toPlaceId: v })} />
+            </div>
+          </div>
+        )}
+        <button type="button" className="btn sm ghost" style={{ alignSelf: 'flex-start', marginTop: -6 }} onClick={() => openSheet({ t: 'placeEdit', draft: { category: 'sight', lat: getDB().place.base.lat, lon: getDB().place.base.lon } })}>
+          + New place
+        </button>
+        <div className="field">
+          <span className="lbl">Who’s going</span>
+          <PeoplePicker value={f.people} onChange={(v) => set({ people: v })} />
+        </div>
+        <div className="field">
+          <span className="lbl">Status</span>
+          <Segmented
+            label="Status"
+            value={f.status}
+            onChange={(v) => set({ status: v as EventStatus })}
+            options={[
+              { v: 'planned', label: 'Planned' },
+              { v: 'tentative', label: 'Maybe' },
+              { v: 'confirmed', label: 'Booked' },
+              { v: 'cancelled', label: 'Off' },
+            ]}
+          />
+        </div>
+        <div className="field">
+          <label htmlFor="ev-notes">Notes</label>
+          <textarea id="ev-notes" value={f.notes ?? ''} onChange={(e) => set({ notes: e.target.value })} placeholder="Tips, what to bring, links…" />
+        </div>
+        <div className="grid2">
+          <div className="field">
+            <label htmlFor="ev-booking">Booking / ticket</label>
+            <input id="ev-booking" value={f.booking ?? ''} onChange={(e) => set({ booking: e.target.value })} placeholder="ref, seat…" />
+          </div>
+          <div className="field">
+            <label htmlFor="ev-cost">Cost</label>
+            <input id="ev-cost" value={f.cost ?? ''} onChange={(e) => set({ cost: e.target.value })} placeholder="e.g. 430 CZK pp" />
+          </div>
+        </div>
+        {existing && (
+          <button
+            type="button"
+            className="btn danger"
+            onClick={() => {
+              const copy = { ...existing };
+              remove('events', existing.id);
+              onClose();
+              toast('Event deleted', { label: 'Undo', run: () => save('events', copy) });
+            }}
+          >
+            <Trash2 /> Delete event
+          </button>
+        )}
+        <p className="muted" style={{ fontSize: 12 }}>
+          Signed in as {db.person[me]?.name}. Changes sync to everyone.
+        </p>
+      </form>
+    </Sheet>
+  );
+}

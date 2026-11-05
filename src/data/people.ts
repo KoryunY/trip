@@ -1,0 +1,40 @@
+import type { Person } from '../../shared/types';
+
+export const PEOPLE: Person[] = [
+  {
+    id: 'koryun',
+    name: 'Koryun',
+    color: '#F97316',
+    emoji: '🦁',
+    homeName: 'Yerevan',
+    home: [44.5126, 40.1776],
+    from: 'Flying in from Yerevan',
+    stayFrom: '2026-11-13T08:40:00+01:00',
+    stayTo: '2026-11-22T04:35:00+01:00',
+    note: 'Lands Fri 13 Nov 06:45, flies home Sun 22 Nov 07:20 (W6 7860).',
+  },
+  {
+    id: 'alexey',
+    name: 'Alexey',
+    color: '#14B8A6',
+    emoji: '🎮',
+    homeName: 'Kožlany',
+    home: [13.5398, 49.9937],
+    from: 'Coming from Kožlany (bringing the Xbox Series X)',
+    stayFrom: '2026-11-14T10:15:00+01:00',
+    stayTo: '2026-11-22T11:30:00+01:00',
+    note: 'Joins Sat 14 Nov morning. Departure TBD.',
+  },
+  {
+    id: 'arto',
+    name: 'Arto',
+    color: '#E11D48',
+    emoji: '🏔️',
+    homeName: 'Switzerland',
+    home: [8.5402, 47.3782],
+    from: 'Coming from Switzerland',
+    stayFrom: '2026-11-13T20:40:00+01:00',
+    stayTo: '2026-11-22T10:30:00+01:00',
+    note: 'Arrival/departure times are placeholders — Arto, please edit your travel events.',
+  },
+];
