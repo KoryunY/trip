@@ -33,7 +33,7 @@ export const GUIDES: Guide[] = [
         table: {
           head: ['Day', 'Together'],
           rows: [
-            ['Sun 15', 'Choose one arrival plan: A — meet at Klášterní šenk in Břevnov for dinner 18:30–20:00, then base around 20:30–21:00; B — base first around 18:30, bag drop until 19:05, U Slovanské lípy dinner 19:15–20:30. The timeline currently keeps B as a provisional draft. Neither dinner is reserved.'],
+            ['Sun 15', 'Choose one arrival plan: A — Klášterní šenk dinner 18:30–20:00, estimated return to base 20:00–20:50 and bag drop 20:50–21:00; B — base around 18:30, bag drop until 19:05, U Slovanské lípy dinner 19:15–20:30. The timetable compares both options; B remains the provisional itinerary until we choose. Neither dinner is reserved.'],
             ['Mon 16', 'Castle 10:30–14:30 (arrive 10:15), Strahov lunch 14:45–15:45. Koryun + Alexey return for Korn preparation at 16:30. Arto returns to shower, then has a tentative solo salsa class 18:00–19:30 and social dancing from 21:00; see Arrival Plan A/B & Monday dancing.'],
             ['Tue 17', 'Korzo Národní 10:30–11:45; Café Louvre 12:00–13:15; Letná viewpoint 14:00–15:15; back to Národní 16:30–17:30 for Modlitba pro Martu at 17:11. Optional celebration/concert wandering 18:00–21:00.'],
             ['Wed 18', 'Plzeň brewery together: leave base 10:30; provisional train 11:15–12:40; lunch 13:00; target English tour 14:00–15:50, including exit buffer. The brewery is a shared must-do, but the slot and trains need confirmation. Dusk centre walk 16:15–17:15; provisional return train 17:45–19:10; easy dinner together 20:00.'],
@@ -104,13 +104,13 @@ export const GUIDES: Guide[] = [
           '17:00 landing; aim to leave T2 around 17:30. Allow roughly 20–30 min by taxi, or 40–60 min by public transport, including waiting and the walk. These are estimates.',
           'Public transport: bus 191 towards Na Knížecí → Vypich, then tram 22 or 25 two stops to Břevnovský klášter, followed by a short walk. Check departures for 15 Nov in PID before travelling.',
           'Koryun + Alexey meet Arto at the restaurant; no airport pickup is needed. For Plan A, they skip the optional Wenceslas Square stop and leave enough time to reach Břevnov for 18:30.',
-          '18:30–20:00: dinner together at Klášterní šenk, open daily 11:30–23:00. Afterwards go to the apartment, arriving roughly 20:30–21:00, then catch up at base from 21:00.',
+          '18:30–20:00: dinner together at Klášterní šenk, open daily 11:30–23:00. Allow roughly 20:00–20:50 to reach the apartment and 20:50–21:00 for Arto to drop his bag; these are planning estimates. Both plans finish with catch-up at base from 21:00.',
         ],
         tip: 'If choosing A, request a table for 3 on Sun 15 Nov at 18:30 and mention the 17:00 flight arrival. The official form needs at least 24 h notice and the booking is valid only after staff confirmation. For same-day arrangements, or if the flight is late, call +420 220 406 294. No reservation has been made.',
       },
       {
         h: 'Plan B: base first, then dinner nearby',
-        body: 'B is the provisional plan currently shown in the timeline. Drop the bag and freshen up, then have a Czech pub dinner within walking distance of the apartment. Choose A or B before reserving a table.',
+        body: 'The timetable compares both options; B remains the provisional itinerary until we choose. Drop the bag and freshen up, then have a Czech pub dinner within walking distance of the apartment. Choose A or B before reserving a table.',
         steps: [
           '17:30–18:30: estimated airport → base transfer. Save a 59 + metro A route or use Uber Airport for the door-to-door option.',
           '18:30–19:05: drop bags, freshen up and meet Koryun + Alexey.',
@@ -200,7 +200,7 @@ export const GUIDES: Guide[] = [
         h: '3 · Trio from Sunday 15 evening',
         steps: [
           'Arto: easyJet EZS1563, Geneva T1 15:25 → Prague T2 17:00 (CET). Schengen flight, no passport control for Swiss.',
-          'Choose one Sunday arrival plan: A — Arto goes straight from T2 to Klášterní šenk for dinner with the crew at 18:30; B — airport → base around 17:30–18:30, bag drop, then U Slovanské lípy at 19:15. Neither table is reserved; the timeline currently keeps B as a provisional draft.',
+          'Choose one Sunday arrival plan: A — Arto goes straight from T2 to Klášterní šenk for dinner with the crew at 18:30; B — airport → base around 17:30–18:30, bag drop, then U Slovanské lípy at 19:15. The timetable compares both options; B remains the provisional itinerary until we choose. Neither table is reserved.',
           'For A, Koryun + Alexey skip the optional Wenceslas stop and meet at the restaurant; no airport pickup is needed. For B, use trolleybus 59 + metro A or AE + a walk to the base. Full routes, booking rules and the Vinohradský alternative are in Arrival Plan A/B & Monday dancing.',
           '21:00: relaxed cards, beer and catch-up at the base. Shared day plans start at 10:30 or later; GTA waits until after Arto leaves Prague on Fri 20.',
         ],

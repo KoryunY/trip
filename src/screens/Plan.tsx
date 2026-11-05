@@ -1,6 +1,6 @@
 import { CalendarPlus, CalendarRange, Users, Lightbulb, Plus, Sunrise, Sunset, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Fragment, useEffect, useRef } from 'react';
-import type { Idea } from '../../shared/types';
+import type { Idea, TripEvent } from '../../shared/types';
 import { EventRow } from '../components/EventRow';
 import { SyncBadge } from '../components/SyncBadge';
 import { Avatar, AvatarStack, Empty } from '../components/ui';
@@ -97,6 +97,17 @@ export function PlanScreen() {
   );
 }
 
+const ARRIVAL_PLAN_B_IDS = new Set(['wenceslas', 'arto-to-base', 'arto-settle-in', 'vinohradsky']);
+
+// Presentation-only alternatives. These are never saved or passed to event consumers.
+const ARRIVAL_PLAN_A_STEPS = [
+  { id: 'airport', time: '17:30–18:30', title: 'Arto: airport → Břevnov', people: ['arto'], estimated: true },
+  { id: 'meet', time: '17:30–18:30', title: 'Koryun & Alexey: to Klášterní šenk', people: ['koryun', 'alexey'], note: 'Skip the Wenceslas Square stop.' },
+  { id: 'dinner', time: '18:30–20:00', title: 'Dinner together at Klášterní šenk', people: ['koryun', 'alexey', 'arto'] },
+  { id: 'base', time: '20:00–20:50', title: 'Together: Břevnov → base', people: ['koryun', 'alexey', 'arto'], estimated: true },
+  { id: 'settle', time: '20:50–21:00', title: 'Arto: bag drop & freshen up', people: ['arto'] },
+];
+
 function DayView({ day, t, onlyMine }: { day: string; t: number; onlyMine: boolean }) {
   const db = useDB();
   const me = useMe()!;
@@ -109,8 +120,21 @@ function DayView({ day, t, onlyMine }: { day: string; t: number; onlyMine: boole
   const accent = lead ? KIND_HEX[lead.kind] : '#f2a007';
   const w = weather?.days?.[day];
   const ms = Date.parse(`${day}T12:00:00+01:00`);
-  const nowIdx = events.findIndex((e) => evStart(e) > t);
+  const nextEventId = events.find((e) => evStart(e) > t)?.id;
   const isToday = dayKey(t) === day;
+  const isArrivalDay = day === '2026-11-15';
+  const arrivalSplit = Date.parse('2026-11-15T17:30:00+01:00');
+  const beforeArrival = events.filter((e) => !ARRIVAL_PLAN_B_IDS.has(e.id) && evStart(e) < arrivalSplit);
+  const planB = events.filter((e) => ARRIVAL_PLAN_B_IDS.has(e.id));
+  const afterArrival = events.filter((e) => !ARRIVAL_PLAN_B_IDS.has(e.id) && evStart(e) >= arrivalSplit);
+  const planA = ARRIVAL_PLAN_A_STEPS.filter((step) => !onlyMine || step.people.includes(me));
+  const showEndLine = isToday && !nextEventId && events.length > 0;
+  const renderEvent = (e: TripEvent) => (
+    <Fragment key={e.id}>
+      {isToday && e.id === nextEventId && <NowLine />}
+      <EventRow ev={e} t={t} onClick={() => openSheet({ t: 'event', id: e.id })} />
+    </Fragment>
+  );
   return (
     <>
       <div className="day-head card" style={{ ['--dc' as string]: accent }}>
@@ -140,35 +164,73 @@ function DayView({ day, t, onlyMine }: { day: string; t: number; onlyMine: boole
           )}
         </div>
       </div>
-      {day === '2026-11-15' && (
-        <section className="card pad form" aria-labelledby="arrival-plans-title" style={{ marginBottom: 14 }}>
-          <h3 id="arrival-plans-title">{tx("Arrival plans")}</h3>
-          <p className="muted">{tx("Choose one arrival plan; times are provisional.")}</p>
-          <div>
-            <b>{tx("Plan A: Břevnov dinner")}</b>
-            <p>{tx("Meet at Klášterní šenk at 18:30, then go to the base.")}</p>
-          </div>
-          <div>
-            <b>{tx("Plan B: Base first")}</b>
-            <p>{tx("Drop your bag, then U Slovanské lípy at 19:15. Vinohradský pivovar is an alternative.")}</p>
-          </div>
-          <button className="btn sm" onClick={() => go('guide/arrival-social')}>
-            {tx("Travel & booking details")}
-          </button>
-        </section>
+      {isArrivalDay ? (
+        <>
+          {beforeArrival.length > 0 && <div className="card ev-list day-list">{beforeArrival.map(renderEvent)}</div>}
+          <section className="arrival-options" aria-labelledby="arrival-plans-title">
+            <div className="arrival-options-heading">
+              <div>
+                <h3 id="arrival-plans-title">{tx("Arrival timetable · choose A or B")}</h3>
+                <p className="muted">{tx("Choose one arrival plan; times are provisional.")}</p>
+              </div>
+              <button className="btn sm" onClick={() => go('guide/arrival-social')}>
+                {tx("Travel & booking details")}
+              </button>
+            </div>
+            <div className="arrival-options-grid">
+              <section className="card arrival-option" aria-labelledby="arrival-plan-a-title">
+                <div className="arrival-option-header">
+                  <span className="pill">{tx("Alternative preview")}</span>
+                  <h4 id="arrival-plan-a-title">{tx("Plan A: Břevnov dinner")}</h4>
+                  <p>{tx("Preview only; replaces Plan B if chosen.")}</p>
+                </div>
+                <ol className="arrival-option-steps">
+                  {planA.map((step) => (
+                    <li className="arrival-step" key={step.id}>
+                      <div className="arrival-step-time tnum">
+                        <span>{step.time}</span>
+                        {step.estimated && <span className="arrival-step-estimate">{tx("Estimated")}</span>}
+                      </div>
+                      <div className="arrival-step-main">
+                        <div className="arrival-step-title">{tx(step.title)}</div>
+                        {step.note && <p className="arrival-step-note">{tx(step.note)}</p>}
+                        <div className="arrival-step-people">
+                          <AvatarStack people={step.people.map((id) => db.person[id])} />
+                          <span>{step.people.map((id) => db.person[id]?.name ?? id).join(', ')}</span>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                {planA.length === 0 && <p className="arrival-option-empty muted">{tx("No steps for you in this option.")}</p>}
+              </section>
+              <section className="card arrival-option" aria-labelledby="arrival-plan-b-title">
+                <div className="arrival-option-header">
+                  <span className="pill info">{tx("Current provisional draft")}</span>
+                  <h4 id="arrival-plan-b-title">{tx("Plan B: Base first")}</h4>
+                  <p>{tx("Draft events below can be edited.")}</p>
+                </div>
+                <div className="ev-list">{planB.map(renderEvent)}</div>
+                {planB.length === 0 && <p className="arrival-option-empty muted">{tx("No steps for you in this option.")}</p>}
+              </section>
+            </div>
+          </section>
+          {(afterArrival.length > 0 || showEndLine) && (
+            <div className="card ev-list day-list">
+              {afterArrival.map(renderEvent)}
+              {showEndLine && <NowLine />}
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="card ev-list day-list">
+          {events.length === 0 && (
+            <Empty icon={<CalendarPlus />}>{tx("Nothing planned")}{onlyMine ? tx(" for you") : ''}{tx(". Add an event or schedule an idea.")}</Empty>
+          )}
+          {events.map(renderEvent)}
+          {showEndLine && <NowLine />}
+        </div>
       )}
-      <div className="card ev-list day-list">
-        {events.length === 0 && (
-          <Empty icon={<CalendarPlus />}>{tx("Nothing planned")}{onlyMine ? tx(" for you") : ''}{tx(". Add an event or schedule an idea.")}</Empty>
-        )}
-        {events.map((e, i) => (
-          <Fragment key={e.id}>
-            {isToday && i === nowIdx && <NowLine />}
-            <EventRow ev={e} t={t} onClick={() => openSheet({ t: 'event', id: e.id })} />
-          </Fragment>
-        ))}
-        {isToday && nowIdx === -1 && events.length > 0 && <NowLine />}
-      </div>
       {!onlyMine && <p className="hint">{tx("Tentative = not booked yet. Dates in grey are placeholders: edit them when you know more.")}</p>}
     </>
   );
