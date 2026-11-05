@@ -339,7 +339,7 @@ function WeatherStrip() {
           {have.length ? 'Open-Meteo forecast' : 'November normals until the forecast reaches the trip'}
         </span>
       </div>
-      <div className="wx-strip">
+      <div className="wx-strip" tabIndex={0} role="group" aria-label="Weather for each trip day">
         {days.map((d) => {
           const w = weather?.days?.[d];
           const ms = Date.parse(`${d}T12:00:00+01:00`);

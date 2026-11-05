@@ -296,7 +296,7 @@ p {
   height: 16px;
   padding: 0 4px;
   border-radius: 99px;
-  background: var(--danger);
+  background: #d92d20;
   color: #fff;
   font-size: 10px;
   line-height: 16px;
@@ -479,7 +479,7 @@ p {
   height: 12px;
 }
 .pill.live {
-  background: var(--danger);
+  background: #d92d20;
   color: #fff;
 }
 .pill.ok {
