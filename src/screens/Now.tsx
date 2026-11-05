@@ -23,7 +23,9 @@ import { Skyline } from '../components/Skyline';
 import { InstallBanner } from '../components/InstallBanner';
 import { SyncBadge } from '../components/SyncBadge';
 import { TimeMachine } from '../components/TimeMachine';
-import { useTripTime } from '../lib/clock';
+import { useNow, useTripTime } from '../lib/clock';
+import { useLocation } from '../lib/location';
+import { distance, fmtDistance, walkMinutes } from '../lib/geo';
 import { DAY_THEMES, SUN } from '../lib/meta';
 import { go } from '../lib/router';
 import { isSeed, useActivity, useDB, useMe } from '../lib/store';
@@ -55,7 +57,8 @@ export function NowScreen() {
     .slice(0, 4);
   const todays = eventsOnDay(db.events, today).filter((e) => e.status !== 'cancelled');
   const stats = taskStats(db.tasks, me);
-  const open = myOpenTasks(db.tasks, me).sort((a, b) => (a.priority === 'high' ? -1 : 0) - (b.priority === 'high' ? -1 : 0));
+  const prio = (x: { priority?: string }) => (x.priority === 'high' ? 0 : x.priority === 'low' ? 2 : 1);
+  const open = myOpenTasks(db.tasks, me).sort((a, b) => prio(a) - prio(b) || (a.due ?? '9999').localeCompare(b.due ?? '9999'));
   const phase = t < TRIP_START_MS - 6 * 3600_000 ? 'before' : t > TRIP_END_MS + 12 * 3600_000 ? 'after' : 'during';
   const cd = countdownParts(firstMine ? Math.min(evStart(firstMine), myArrival) : myArrival, t);
   const theme = DAY_THEMES[today];
@@ -184,6 +187,7 @@ export function NowScreen() {
               <div className="empty">Nothing left on the plan. Time to improvise 🍻</div>
             )}
           </div>
+          <LeaveHint />
           {upcoming[0] && (upcoming[0].placeId || upcoming[0].toPlaceId) && (
             <div className="next-actions">
               {(() => {
@@ -355,5 +359,32 @@ function WeatherStrip() {
         })}
       </div>
     </section>
+  );
+}
+
+/** "Leave now" hint: my next event vs. walking time from my GPS position */
+function LeaveHint() {
+  const db = useDB();
+  const me = useMe()!;
+  const loc = useLocation();
+  const now = useNow(30_000);
+  if (!loc.fix) return null;
+  const next = db.events.find((e) => e.status !== 'cancelled' && e.people.includes(me) && evStart(e) > now && (e.placeId || e.fromPlaceId));
+  if (!next) return null;
+  const pl = db.place[next.fromPlaceId ?? next.placeId ?? ''];
+  if (!pl) return null;
+  const d = distance([loc.fix.lon, loc.fix.lat], [pl.lon, pl.lat]);
+  if (d < 150 || d > 15_000) return null;
+  const walk = walkMinutes(d);
+  const travel = d > 2500 ? Math.round(12 + d / 400) : walk; // rough tram/metro estimate when far
+  const leaveIn = Math.round((evStart(next) - now) / 60_000) - travel - 5;
+  if (leaveIn > 45) return null;
+  return (
+    <div className={`banner ${leaveIn <= 0 ? 'danger' : 'info'}`} style={{ marginTop: 10 }}>
+      <Footprints aria-hidden />
+      <span>
+        {leaveIn <= 0 ? <b>Leave now</b> : <b>Leave in {leaveIn} min</b>} for {next.title}: {fmtDistance(d)} away, ~{travel} min {d > 2500 ? 'by tram/metro' : 'walk'}.
+      </span>
+    </div>
   );
 }
