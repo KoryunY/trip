@@ -846,8 +846,8 @@ export const PLACES: Place[] = [
     "address": "Korunní 2506/106, 101 00 Praha 10 – Vinohrady",
     "area": "Vinohrady",
     "blurb": "Big neighbourhood brewpub, ~1.3 km from home, with excellent house 11° and 12° lagers, decent food and a local crowd.",
-    "hours": "Mon–Sat 11:00–24:00, Sun 11:00–22:00",
-    "url": "https://www.vinohradskypivovar.cz",
+    "hours": "Mon–Sat 11:00–24:00; Sun 11:00–22:00",
+    "url": "https://www.vinohradskypivovar.cz/cs/korunni/",
     "tags": [
       "brewery",
       "local",
@@ -870,7 +870,9 @@ export const PLACES: Place[] = [
       "nearby",
       "zizkov",
       "locals"
-    ]
+    ],
+    "hours": "Mon–Sat 16:30–01:00; Sun closed",
+    "url": "https://www.uvoka.cz/okokontakt/"
   },
   {
     "id": "beergeek-bar",
@@ -1032,8 +1034,8 @@ export const PLACES: Place[] = [
     "address": "Tachovské náměstí 288/6, 130 00 Praha 3 – Žižkov",
     "area": "Žižkov",
     "blurb": "Friendly Žižkov pub ~300 m from the flat at the foot of Vítkov, with daily lunch menus. A good 'local' for a quick pint.",
-    "hours": "Daily 11:00–23:00 (Sun may close 22:00)",
-    "url": "https://uslovanskelipy.cz",
+    "hours": "Daily 11:00–23:00",
+    "url": "https://uslovanskelipy.cz/",
     "tags": [
       "zizkov",
       "nearby",
@@ -1557,6 +1559,65 @@ export const PLACES: Place[] = [
     "blurb": "Arto’s easyJet flights to/from Prague use Terminal 1.",
     "tags": [
       "airport"
+    ],
+    "approx": true
+  },
+  {
+    "id": "la-macumba",
+    "name": "La Macumba · Latin music bar",
+    "category": "nightlife",
+    "lat": 50.072685,
+    "lon": 14.403747,
+    "address": "Štefánikova 230/7, 150 00 Praha 5 – Smíchov",
+    "area": "Anděl / Smíchov",
+    "blurb": "Monday Cuban salsa intermediate class 18:00–19:30, then salsa, bachata and kizomba social from 21:00. Social entry is free; confirm the 16 Nov programme, class drop-in, level and teaching language.",
+    "hours": "Monday bar 18:00–03:00; DJ/social from 21:00",
+    "price": "Social entry free; class price to confirm",
+    "url": "https://www.lamacumba.cz/pondeli/",
+    "tags": [
+      "salsa",
+      "bachata",
+      "dance",
+      "social"
+    ],
+    "approx": true
+  },
+  {
+    "id": "na-verandach",
+    "name": "Potrefená husa Na Verandách",
+    "category": "food",
+    "lat": 50.0685,
+    "lon": 14.40664,
+    "address": "Nádražní 43/84, 150 00 Praha 5 – Smíchov",
+    "area": "Smíchov",
+    "blurb": "Czech brewery restaurant inside the Staropramen brewery, near Anděl. Food plus tank and barrel beer. Reservations: +420 257 191 200 or manager@phnaverandach.cz.",
+    "hours": "Mon–Sat 11:00–23:00; Sun 11:00–22:00",
+    "url": "https://www.phnaverandach.cz/en/",
+    "tags": [
+      "czech",
+      "brewery",
+      "dinner",
+      "andel"
+    ],
+    "approx": true
+  },
+  {
+    "id": "dancedifferent",
+    "name": "DanceDifferent · Salsa & Bachata studio",
+    "category": "venue",
+    "lat": 50.07157,
+    "lon": 14.43003,
+    "address": "Fügnerovo nám. 5, 120 00 Praha 2 – Nové Město",
+    "area": "Nové Město",
+    "blurb": "Monday Bachata 1 18:00–19:00 and Cuban Salsa 1 19:00–20:00. Solo attendance is possible. Complete beginners need a Level 0 introduction before Level 1; confirm your level, 16 Nov availability and English instruction with the studio.",
+    "hours": "Monday: Bachata 1 18:00–19:00; Cuban Salsa 1 19:00–20:00",
+    "price": "350 CZK per single group lesson",
+    "url": "https://dancedifferent.cz/en/timetable/",
+    "tags": [
+      "salsa",
+      "bachata",
+      "dance",
+      "classes"
     ],
     "approx": true
   },

@@ -33,8 +33,8 @@ export const GUIDES: Guide[] = [
         table: {
           head: ['Day', 'Together'],
           rows: [
-            ['Sun 15', 'Arto lands 17:00; estimated base arrival 18:30, welcome dinner 18:45. Keep the evening easy.'],
-            ['Mon 16', 'Castle 10:30–14:30 (arrive 10:15), Strahov lunch 14:45–15:45. Arto can stroll downhill alone 16:00–16:30; Koryun + Alexey return for Korn preparation at 16:30 and the concert in the evening.'],
+            ['Sun 15', 'Arto lands 17:00; estimated base arrival 18:30, bag drop 18:30–19:05, nearby welcome dinner together at U Slovanské lípy 19:15–20:30. Keep the evening easy.'],
+            ['Mon 16', 'Castle 10:30–14:30 (arrive 10:15), Strahov lunch 14:45–15:45. Koryun + Alexey return for Korn preparation at 16:30. Arto returns to shower, then has a tentative solo salsa class 18:00–19:30 and social dancing from 21:00; see Arrival & Monday dancing.'],
             ['Tue 17', 'Korzo Národní 10:30–11:45; Café Louvre 12:00–13:15; Letná viewpoint 14:00–15:15; back to Národní 16:30–17:30 for Modlitba pro Martu at 17:11. Optional celebration/concert wandering 18:00–21:00.'],
             ['Wed 18', 'Plzeň brewery together: leave base 10:30; provisional train 11:15–12:40; lunch 13:00; target English tour 14:00–15:50, including exit buffer. The brewery is a shared must-do, but the slot and trains need confirmation. Dusk centre walk 16:15–17:15; provisional return train 17:45–19:10; easy dinner together 20:00.'],
             ['Thu 19', 'Old Town Square 10:30–11:30, clock at 11:00; Charles Bridge → Malá Strana → Lennon Wall → Kampa 11:30–13:30; lunch at base 14:15; free afternoon for rest or an optional visit; Lokál dinner 18:45–21:00; bridge after dark 21:15–22:00. No GTA while Arto is here.'],
@@ -91,6 +91,72 @@ export const GUIDES: Guide[] = [
     ],
   },
   {
+    id: 'arrival-social',
+    title: 'Arto: arrival & Monday dancing',
+    icon: 'users',
+    summary: 'Sunday: bags at base, dinner together. Monday: Cuban salsa class and a social.',
+    for: ['arto'],
+    sections: [
+      {
+        h: 'Sun 15 Nov · base first, then dinner together',
+        steps: [
+          'Land at Prague T2 at 17:00. Aim to leave the airport around 17:30 and reach the base around 18:30; these transfer times are estimates. Save a 59 + metro A route or use Uber Airport for the door-to-door option.',
+          '18:30–19:05: drop bags, freshen up and meet Koryun + Alexey. If arrival runs late, move the meal rather than rushing.',
+          '19:15–20:30: welcome dinner for all three at U Slovanské lípy, about 5 min from base. Open daily 11:00–23:00; table not reserved. Then an easy evening at base.',
+        ],
+      },
+      {
+        h: 'Arrival alternatives',
+        bullets: [
+          'Vinohradský pivovar on Korunní is another dinner option: Sunday 11:00–22:00, about 20–25 min on foot from base. U Vystřelenýho oka is closed on Sundays.',
+          'Hungry at the airport? U Václava Pilsner restaurant is in T2’s public area and opens Sunday 07:00–21:00, so everyone can meet there without passing security.',
+          'Břevnov’s Klášterní šenk is a possible indoor dinner detour (daily 11:30–23:00) if the crew meets at the airport and wants it. The 17:00 arrival leaves no daylight walk; keep Divoká Šárka for another daytime outing.',
+        ],
+      },
+      {
+        h: 'Mon 16 Nov · salsa class + social, tentative',
+        body: 'After the shared Castle visit and Strahov lunch, this is Arto’s solo evening while Koryun + Alexey go to Korn. La Macumba’s intermediate Cuban salsa fits the intended style; the instructor must still confirm the level and one-off attendance.',
+        table: {
+          head: ['Time', 'Plan'],
+          rows: [
+            ['15:50–16:40', 'Return from Strahov to base; travel estimate.'],
+            ['16:40–17:10', 'Shower, change and rest. Bring comfortable dance shoes.'],
+            ['17:10–17:45', 'Travel to La Macumba, Štefánikova 230/7, near Anděl.'],
+            ['18:00–19:30', 'Tentative intermediate Cuban salsa class. Solo attendance and partner rotation allowed.'],
+            ['19:45–20:30', 'Dinner at Na Verandách, Nádražní 43/84; Monday 11:00–23:00. No table reserved.'],
+            ['21:00–23:30', 'Tentative La Macumba social: salsa, bachata and kizomba. The recurring Monday party runs 21:00–03:00 with free entry; leave when ready.'],
+            ['23:30–00:15', 'Estimated return to base; check the actual night route or take a taxi.'],
+          ],
+        },
+      },
+      {
+        h: 'Confirm before booking; choose one class',
+        bullets: [
+          'La Macumba’s programme is a recurring Monday schedule, not a dated confirmation for 16 Nov, the eve of the public holiday. Confirm that date, English instruction, level, a single-class place and its price. The published two-month course fee is not a drop-in quote. Nothing is booked and no enquiries have been sent.',
+          'Backup class: DanceDifferent Bachata 1, Monday 18:00–19:00, Fügnerovo nám. 5. Published single lesson 350 CZK; no partner needed, partners rotate. Confirm the 16 Nov slot, English and placement for beginner-plus experience. Use this instead of the La Macumba class, then keep the social if confirmed.',
+          'Jorge y Mónica/Ruelto classes are on a published break 16–22 Nov, so they are unavailable that week.',
+        ],
+      },
+    ],
+    sources: [
+      { label: 'U Slovanské lípy · official menu and hours', url: 'https://uslovanskelipy.cz/' },
+      { label: 'Vinohradský pivovar · Korunní hours', url: 'https://www.vinohradskypivovar.cz/cs/korunni/' },
+      { label: 'U Vystřelenýho oka · opening hours', url: 'https://www.uvoka.cz/okokontakt/' },
+      { label: 'Prague Airport · U Václava in T2 public area', url: 'https://www.prg.aero/en/pilsner-urquell-original-restaurant?terminal=reset' },
+      { label: 'Klášterní šenk · hours and reservations', url: 'https://www.klasternisenk.cz/en/' },
+      { label: 'La Macumba · recurring Monday programme', url: 'https://www.lamacumba.cz/pondeli/' },
+      { label: 'Salsa Cubana con Leon · intermediate class and joining rules', url: 'https://salsacubanaconleon.cz/kurz-salsy-praha-stredne-pokrocili' },
+      { label: 'Na Verandách · official restaurant and hours', url: 'https://www.phnaverandach.cz/en/' },
+      { label: 'DanceDifferent · recurring timetable', url: 'https://dancedifferent.cz/en/timetable/' },
+      { label: 'DanceDifferent · single-class price', url: 'https://dancedifferent.cz/en/price-list-group-lessons/' },
+      { label: 'DanceDifferent · solo attendance and partner rotation', url: 'https://dancedifferent.cz/en/' },
+      { label: 'DanceDifferent · level and entry requirements', url: 'https://dancedifferent.cz/en/how-to-join/' },
+      { label: 'Jorge y Mónica · term dates and November break', url: 'https://jorgemonica.com/' },
+      { label: 'Prague Airport · public transport', url: 'https://www.prg.aero/en/public-transport-buses' },
+      { label: 'Prague Airport · official airport taxi', url: 'https://www.prg.aero/en/taxi' },
+    ],
+  },
+  {
     id: 'firstdays',
     title: 'First days: solo, duo, trio',
     icon: 'users',
@@ -124,7 +190,7 @@ export const GUIDES: Guide[] = [
         steps: [
           'Arto: easyJet EZS1563, Geneva T1 15:25 → Prague T2 17:00 (CET). Schengen flight, no passport control for Swiss.',
           'From T2: AE bus to Hlavní nádraží (200 CZK) or trolleybus 59 + metro A (46 CZK in the app).',
-          'Allow ~17:30–18:30 for airport → base (estimate), then join the full crew for dinner at Vinohradský pivovar at 18:45.',
+          'Allow ~17:30–18:30 for airport → base (estimate), then drop bags and freshen up until 19:05. Welcome dinner together at nearby U Slovanské lípy is 19:15–20:30; table not reserved.',
           '21:00: relaxed cards, beer and catch-up at the base. Shared day plans start at 10:30 or later; GTA waits until after Arto leaves Prague on Fri 20.',
         ],
         bullets: ['If Arto lands late: join the crew at the base for the 21:00 chill night instead.'],

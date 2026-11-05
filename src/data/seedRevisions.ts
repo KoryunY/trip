@@ -182,5 +182,25 @@ export const LEGACY_SEED_RECORDS: readonly LegacySeedRecord[] = [
       "status": "planned",
       "notes": "Supermarkets are cheapest for beer/Becherovka to take home. Liquids go in checked baggage only!"
     }
+  },
+  {
+    "col": "events",
+    "id": "arto-to-base",
+    "u": 1793888072553,
+    "by": "arto",
+    "data": {
+      "id": "arto-to-base",
+      "title": "Arto: airport → base",
+      "kind": "transit",
+      "start": "2026-11-15T17:30:00+01:00",
+      "end": "2026-11-15T18:30:00+01:00",
+      "fromPlaceId": "prg-t2",
+      "toPlaceId": "base",
+      "people": [
+        "arto"
+      ],
+      "status": "tentative",
+      "notes": "Estimated transfer after the 17:00 landing at Terminal 2; allow 30 min to exit, then about 1 h to the base. Adjust for the actual arrival and transport."
+    }
   }
 ];

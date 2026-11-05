@@ -119,8 +119,8 @@ export const TASK_CAT_ORDER = Object.keys(TASK_CAT) as TaskCategory[];
 const DAY_THEMES_EN: Record<string, { title: string; emoji: string }> = {
   '2026-11-13': { title: 'Arrival · Friday the 13th', emoji: '🛬' },
   '2026-11-14': { title: 'Optional exploring · Koryun & Alexey', emoji: '🏙️' },
-  '2026-11-15': { title: 'Views, beer halls & Arto arrives', emoji: '🍺' },
-  '2026-11-16': { title: 'Castle together · Korn for Koryun & Alexey', emoji: '🏰' },
+  '2026-11-15': { title: 'Arto arrives · base first & welcome dinner', emoji: '🍺' },
+  '2026-11-16': { title: 'Castle together · Korn & Arto’s salsa night', emoji: '🏰' },
   '2026-11-17': { title: 'Louvre, Letná & 17 November', emoji: '🕯️' },
   '2026-11-18': { title: 'Brewery together · late-start Plzeň', emoji: '🍺' },
   '2026-11-19': { title: 'Prague walk & Czech dinner together', emoji: '🌉' },

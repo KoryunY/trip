@@ -284,6 +284,30 @@ export const TASKS: Task[] = [
 
   // ── Bookings ──
   {
+    id: 't-arrival-dinner',
+    title: 'Arrange an easy welcome dinner for 3 · Sun 15 Nov, 19:15',
+    details: 'Default: Arto goes to the apartment first, drops his bag and freshens up, then we eat at U Slovanské lípy nearby. Official hours daily 11:00–23:00; request a table for 3 around 19:15 via the contact on its official site (+420 734 743 094). No table is reserved. Keep the timing flexible for the flight/transfer, and call to change any reservation if delayed. Vinohradský pivovar is an alternative but farther to walk. U Vystřelenýho oka is closed Sundays.',
+    category: 'bookings',
+    assignees: ['koryun', 'alexey'],
+    mode: 'any',
+    priority: 'normal',
+    due: '2026-11-15',
+    guide: 'arrival-social',
+    link: 'https://uslovanskelipy.cz/',
+  },
+  {
+    id: 't-arto-dance-confirm',
+    title: 'Arto: confirm Monday Cuban salsa drop-in + social',
+    details: 'Primary lead: La Macumba’s recurring Monday intermediate Cuban class 18:00–19:30, then social from 21:00. Ask the instructor to confirm 16 Nov (holiday eve), one-off solo entry, suitable level/role availability, instruction language, partner rotation and the single-lesson price. The advertised course fee covers multiple weeks; do not treat it as a drop-in quote. Save the reply and update the event if times change. Backup: DanceDifferent Bachata 1 at 18:00–19:00, single lesson 350 CZK; also confirm date/level/English. Choose one class. Social entry at La Macumba is listed free, but recheck the dated programme before going. Nothing is booked and no messages have been sent.',
+    category: 'bookings',
+    assignees: ['arto'],
+    mode: 'each',
+    priority: 'high',
+    due: '2026-11-14',
+    guide: 'arrival-social',
+    link: 'https://salsacubanaconleon.cz/kurz-salsy-praha-stredne-pokrocili',
+  },
+  {
     id: 't-pilsner-book',
     title: 'Book the shared Pilsner Urquell tour for 3 · Wed 18 Nov afternoon',
     details: 'This is our shared must-do for 18 Nov, with a later morning start. On the official tour page choose Buy tour, 18 Nov, English and 3 people; target 14:00 only if offered. Published duration 100 min, adult admission 430 CZK each (1,290 CZK for 3 adults); check discounts and the final price before paying. Save the tour confirmation before buying trains. The 11:15 outbound/17:45 return train windows are placeholders, not verified services. Choose a real train with time for lunch and tour check-in. If no afternoon English slot works, rearrange a shared day instead of forcing an early departure.',
