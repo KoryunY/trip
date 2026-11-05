@@ -1,4 +1,4 @@
-import { CalendarPlus, Users, Lightbulb, Plus, Sunrise, Sunset, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { CalendarPlus, CalendarRange, Users, Lightbulb, Plus, Sunrise, Sunset, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Fragment, useEffect, useRef } from 'react';
 import type { Idea } from '../../shared/types';
 import { EventRow } from '../components/EventRow';
@@ -9,7 +9,7 @@ import { CAT, DAY_THEMES, KIND, SUN } from '../lib/meta';
 import { go, useRoute } from '../lib/router';
 import { save, useDB, useMe, useSettings, setSettings } from '../lib/store';
 import { dayKey, fmtDayLong, tripDays, TRIP_END_DAY, TRIP_START_DAY } from '../lib/time';
-import { eventsOnDay, evStart, presentOnDay, voteScore } from '../lib/trip';
+import { eventsOnDay, evStart, evEnd, presentOnDay, voteScore, startLocal } from '../lib/trip';
 import { openSheet } from '../lib/ui';
 import { useWeather, wmo, NORMAL } from '../lib/weather';
 
@@ -51,6 +51,10 @@ export function PlanScreen() {
           <SyncBadge />
         </div>
         <div className="daystrip" ref={stripRef} role="tablist" aria-label="Days">
+          <button role="tab" className="daychip ideas" aria-current={sel === 'all'} aria-selected={sel === 'all'} onClick={() => go('plan/all')}>
+            <CalendarRange aria-hidden />
+            <span className="dc-w">All</span>
+          </button>
           {days.map((d) => {
             const ms = Date.parse(`${d}T12:00:00+01:00`);
             const present = presentOnDay(db.people, d);
@@ -72,13 +76,18 @@ export function PlanScreen() {
           </button>
         </div>
       </header>
-      <div className="wrap">{isIdeas ? <IdeasView /> : <DayView day={sel} t={t} onlyMine={onlyMine} />}</div>
+      <div className="wrap">
+        {isIdeas ? <IdeasView /> : sel === 'all' ? <Overview t={t} onlyMine={onlyMine} /> : <DayView day={sel} t={t} onlyMine={onlyMine} />}
+      </div>
       <button
         className="fab"
         onClick={() =>
           isIdeas
             ? openSheet({ t: 'ideaEdit' })
-            : openSheet({ t: 'eventEdit', draft: { start: `${sel}T12:00:00+01:00`, end: `${sel}T13:00:00+01:00` } })
+            : openSheet({
+                t: 'eventEdit',
+                draft: { start: `${sel === 'all' ? defaultDay : sel}T12:00:00+01:00`, end: `${sel === 'all' ? defaultDay : sel}T13:00:00+01:00` },
+              })
         }
       >
         <Plus aria-hidden /> {isIdeas ? 'Idea' : 'Event'}
@@ -211,5 +220,64 @@ function IdeasView() {
         })}
       </div>
     </>
+  );
+}
+
+const HIGHLIGHT_KINDS = new Set(['flight', 'concert', 'gaming', 'beer', 'sight', 'party', 'train', 'food']);
+
+function Overview({ t, onlyMine }: { t: number; onlyMine: boolean }) {
+  const db = useDB();
+  const me = useMe()!;
+  const weather = useWeather();
+  const today = dayKey(t);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    ref.current?.querySelector('.ov-day.today')?.scrollIntoView({ block: 'start' });
+  }, []);
+  return (
+    <div className="overview" ref={ref}>
+      {tripDays().map((d, i) => {
+        const evs = eventsOnDay(db.events, d).filter((e) => e.status !== 'cancelled' && (!onlyMine || e.people.includes(me)));
+        const key = evs.filter((e) => HIGHLIGHT_KINDS.has(e.kind)).slice(0, 5);
+        const present = presentOnDay(db.people, d);
+        const theme = DAY_THEMES[d];
+        const w = weather?.days?.[d];
+        const ms = Date.parse(`${d}T12:00:00+01:00`);
+        const done = evs.length > 0 && evs.every((e) => evEnd(e) <= t);
+        return (
+          <button key={d} className={`card ov-day ${d === today ? 'today' : ''} ${done ? 'done' : ''}`} onClick={() => go(`plan/${d}`)}>
+            <div className="ov-head">
+              <span className="ov-date">
+                <span className="dc-w">{new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'Europe/Prague' }).format(ms)}</span>
+                <span className="dc-n tnum">{Number(d.slice(8))}</span>
+              </span>
+              <span className="grow">
+                <span className="eyebrow">Day {i + 1}{d === today ? ' · today' : done ? ' · done ✓' : ''}</span>
+                <span className="ov-title">
+                  {theme?.emoji} {theme?.title}
+                </span>
+              </span>
+              <span className="ov-side">
+                <AvatarStack people={present} size="sm" />
+                <span className="muted tnum" style={{ fontSize: 12 }}>
+                  {w ? `${wmo(w.code).emoji} ${Math.round(w.tmax)}°` : `${NORMAL.tmax}°`}
+                </span>
+              </span>
+            </div>
+            <ul className="ov-list">
+              {key.map((e) => (
+                <li key={e.id} className={evEnd(e) <= t ? 'past' : ''}>
+                  <span className="tnum">{startLocal(e)}</span>
+                  <span className="kind-dot" style={{ background: (KIND[e.kind] ?? KIND.other).color }} />
+                  <span className="ov-ev">{e.title}</span>
+                </li>
+              ))}
+              {evs.length > key.length && <li className="more muted">+{evs.length - key.length} more</li>}
+              {evs.length === 0 && <li className="muted">Nothing planned yet</li>}
+            </ul>
+          </button>
+        );
+      })}
+    </div>
   );
 }

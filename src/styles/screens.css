@@ -1931,3 +1931,90 @@ details[open] > summary::before {
   background: var(--info-soft);
   color: var(--info);
 }
+
+.overview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+.ov-day {
+  text-align: left;
+  padding: 12px 14px;
+  width: 100%;
+}
+.ov-day.today {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.ov-day.done {
+  opacity: 0.72;
+}
+.ov-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ov-head .grow {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.ov-date {
+  width: 44px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.ov-title {
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: 16.5px;
+  line-height: 1.2;
+}
+.ov-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.ov-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 13.5px;
+}
+.ov-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.ov-list li .tnum {
+  width: 40px;
+  color: var(--ink-3);
+  font-weight: 600;
+  flex: none;
+}
+.ov-list li.past {
+  color: var(--ink-3);
+  text-decoration: line-through;
+  text-decoration-color: var(--line-2);
+}
+.ov-ev {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ov-list .more {
+  padding-left: 48px;
+}
