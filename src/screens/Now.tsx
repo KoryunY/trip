@@ -98,7 +98,7 @@ export function NowScreen() {
                     <span className="eyebrow">First up</span>
                     <span className="hero-next-t">{firstMine.title}</span>
                     <span className="hero-next-s">
-                      {fmtDayLong(evStart(firstMine))} · {hhmm(evStart(firstMine), firstMine.tz)}
+                      {fmtDayLong(evStart(firstMine), firstMine.tz)} · {hhmm(evStart(firstMine), firstMine.tz)}
                       {firstMine.tz && firstMine.tz !== 'Europe/Prague' ? ' local' : ''}
                     </span>
                   </span>

@@ -353,6 +353,7 @@ p {
   border: 1px solid var(--line);
   transition: transform 0.12s, background 0.15s;
   white-space: nowrap;
+  text-decoration: none;
 }
 .btn:active {
   transform: scale(0.97);

@@ -1,12 +1,31 @@
-// Stylised Prague skyline (castle + St. Vitus, Charles Bridge tower, Týn spires, Žižkov TV tower).
+// Stylised Prague skyline: Týn church spires, St. Vitus, Charles Bridge tower, Žižkov TV tower.
 export function Skyline({ className = '' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M0 120V96h14v-6h10v6h8V84h6v-8l4-6 4 6v8h6v12h10V88h18v-6h4v-6h3v-9l3-8 3 8v9h3v6h4v6h6V70l5-12 5 12v8h4V62l4-14 4 14v16h8V74l3-6 3 6v14h12v-8h10v-6h5l3-14 3 14h5v6h6v16h8V90h10V78l2-4 2 4v12h6V60l3-10h1l2-14 2 14h1l3 10v36h6V64l4-12 4 12v32h4V84h12v12h8V70h4V56h2V44h3V30l3-6 3 6v14h3v12h2v14h4v26h10v-8h14v8h10V80h4l4-8 4 8h4v16h10V92h22v28z"
-      />
-      <path fill="currentColor" d="M290 120V44h-3v-6h3V22h5v16h4v6h-4v76z M305 120V40h4V18h4v22h4v80z" opacity=".9" />
+      <g fill="currentColor">
+        <rect x="0" y="104" width="400" height="16" />
+        <rect x="0" y="92" width="26" height="20" />
+        <rect x="22" y="84" width="20" height="28" />
+        <path d="M46 112V80l8-18 8 18v32z" />
+        <rect x="64" y="94" width="18" height="18" />
+        <path d="M86 112V62l7-28 7 28v50z" />
+        <path d="M104 112V62l7-28 7 28v50z" />
+        <rect x="84" y="78" width="36" height="34" />
+        <path d="M124 112V90l6-8 6 8v22z" />
+        <rect x="140" y="96" width="30" height="16" />
+        <path d="M150 96l6-10 6 10z" />
+        <path d="M174 112V84h12V66l7-34 7 34v18h30v28z" />
+        <path d="M206 84l6-14 6 14z" />
+        <path d="M234 112V88l5-6 5 6v24z" />
+        <rect x="248" y="94" width="40" height="18" />
+        <path d="M262 94l6-12 6 12z" />
+        <rect x="292" y="86" width="22" height="26" />
+        <rect x="324" y="26" width="7" height="86" />
+        <rect x="320" y="44" width="15" height="10" rx="3" />
+        <rect x="321" y="62" width="13" height="8" rx="3" />
+        <rect x="340" y="90" width="26" height="22" />
+        <rect x="366" y="98" width="34" height="14" />
+      </g>
     </svg>
   );
 }

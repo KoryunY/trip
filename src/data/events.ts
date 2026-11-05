@@ -54,7 +54,7 @@ export const EVENTS: TripEvent[] = [
   },
   {
     id: 'k-prg-arrival',
-    title: 'Passport control (EES fingerprints + photo), exit',
+    title: 'Passport control (EES face scan), exit',
     kind: 'airport',
     start: P(13, '06:45'),
     end: P(13, '07:40'),
@@ -62,7 +62,7 @@ export const EVENTS: TripEvent[] = [
     people: K,
     status: 'planned',
     notes:
-      'First Schengen entry under the Entry/Exit System: fingerprints + face photo at the border, so allow extra time.\nHave ready: return ticket (W6 7860), apartment address (Dalimilova 261/14, Praha 3), insurance, some proof of funds.\nFree airport Wi-Fi if the eSIM is not active yet.',
+      'Entry/Exit System: register at a self-service kiosk (face photo; visa fingerprints are already on file), then the booth. Queues of 60–90 min have happened.\nHave ready: return ticket (W6 7860), apartment address (Dalimilova 261/14, Praha 3), insurance, some proof of funds.\nFree airport Wi-Fi if the eSIM is not active yet.',
   },
   {
     id: 'k-airport-to-base',

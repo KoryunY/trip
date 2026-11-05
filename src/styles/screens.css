@@ -1632,7 +1632,6 @@ details[open] > summary::before {
 /* crew markers on the map */
 .crew-marker {
   --c: #888;
-  position: relative;
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -1717,7 +1716,6 @@ details[open] > summary::before {
 .me-dot {
   width: 20px;
   height: 20px;
-  position: relative;
 }
 .me-dot b {
   position: absolute;
@@ -1753,4 +1751,34 @@ details[open] > summary::before {
   .tools {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+.crew-cluster {
+  width: 48px;
+  height: 48px;
+  position: relative;
+  flex: none;
+}
+.crew-cluster .avatar {
+  position: absolute;
+}
+.crew-cluster.n2 .avatar:nth-child(1) {
+  left: 0;
+  top: 0;
+}
+.crew-cluster.n2 .avatar:nth-child(2) {
+  right: 0;
+  bottom: 0;
+}
+.crew-cluster.n3 .avatar:nth-child(1) {
+  left: 10px;
+  top: 0;
+}
+.crew-cluster.n3 .avatar:nth-child(2) {
+  left: 0;
+  bottom: 0;
+}
+.crew-cluster.n3 .avatar:nth-child(3) {
+  right: 0;
+  bottom: 0;
 }
