@@ -103,18 +103,21 @@ export function buildTimeline(person: Person, events: TripEvent[], places: Recor
     if (t1 <= t0) return;
     const gap = t1 - t0;
     const mid = baseAt(t0 + gap / 2);
-    const goesHome = gap > 3 * HOUR && distance(a, mid.p) > 80 && distance(b, mid.p) > 80 && distance(a, mid.p) < 60_000;
-    if (goesHome) {
-      const m1 = Math.min(moveMinutes(distance(a, mid.p)) * MIN, gap / 4);
-      const m2 = Math.min(moveMinutes(distance(mid.p, b)) * MIN, gap / 4);
-      pushMove(t0, t0 + m1, a, mid.p, mid.mode === 'base' ? 'the base' : 'home');
+    const aFar = distance(a, mid.p) > 80;
+    const bFar = distance(b, mid.p) > 80;
+    // long gaps (nights, afternoons off): go back to base/home in between
+    if (gap > 3 * HOUR && (aFar || bFar) && distance(a, mid.p) < 60_000 && distance(b, mid.p) < 60_000) {
+      const m1 = aFar ? Math.min(moveMinutes(distance(a, mid.p)) * MIN, gap / 4) : 0;
+      const m2 = bFar ? Math.min(moveMinutes(distance(mid.p, b)) * MIN, gap / 4) : 0;
+      if (m1 > 0) pushMove(t0, t0 + m1, a, mid.p, mid.mode === 'base' ? 'the base' : 'home');
       pushStay(t0 + m1, t1 - m2, mid.p, mid.label, mid.mode);
-      pushMove(t1 - m2, t1, mid.p, b, bLabel);
+      if (m2 > 0) pushMove(t1 - m2, t1, mid.p, b, bLabel);
       return;
     }
     const d = distance(a, b);
     const mv = Math.min(moveMinutes(d) * MIN, gap);
-    pushStay(t0, t1 - mv, a, aLabel, aMode);
+    const atBase = !aFar;
+    pushStay(t0, t1 - mv, a, atBase ? mid.label : aLabel, atBase ? mid.mode : aMode);
     if (mv > 0) pushMove(t1 - mv, t1, a, b, bLabel);
   };
 
@@ -160,7 +163,7 @@ export function buildTimeline(person: Person, events: TripEvent[], places: Recor
     } else {
       segs.push({ t0: bl.t0, t1: bl.t1, kind: 'stay', from: bl.from, to: bl.from, label: bl.label, mode: 'event', eventId: bl.ev.id });
       curP = bl.from;
-      curLabel = `Just left: ${bl.label}`;
+      curLabel = `After: ${bl.label}`;
       curMode = 'event';
     }
   }

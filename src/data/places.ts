@@ -1519,6 +1519,20 @@ export const PLACES: Place[] = [
     "approx": true
   },
   {
+    "id": "prg-t2",
+    "name": "Prague Airport · Terminal 2",
+    "category": "transport",
+    "lat": 50.1059,
+    "lon": 14.2738,
+    "address": "Aviatická, 161 00 Praha 6 – Ruzyně",
+    "area": "Ruzyně",
+    "blurb": "Schengen terminal (flights from Zürich land here). AE bus and trolleybus 59 stop outside arrivals.",
+    "tags": [
+      "airport"
+    ],
+    "approx": true
+  },
+  {
     "id": "zrh",
     "name": "Zürich Airport (ZRH)",
     "category": "transport",
