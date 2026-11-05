@@ -47,6 +47,9 @@ These hosts are blocked by its proxy: real OpenFreeMap tiles/styles, Open-Meteo 
 ## Free-tier budget (Vercel Hobby)
 Blob allows ~100K simple / 10K advanced ops a month. The app polls at 20 s, the server memo lasts 6 s, CDN `s-maxage` is 5, edits are batched (1.2 s), and GPS is shared at most every 90 s when moving. Expected trip usage is ~20K reads and ~3–5K writes.
 
+## Backups
+The server writes a snapshot to `prague-crew/backups/YYYY-MM-DD-N.json` (one per 6-hour bucket) in the same Blob store. In-app: Settings → Backup/Restore (JSON).
+
 ## Ideas not done yet
 - Push notifications. The `.ics` calendar export covers reminders instead.
 - Photo memories per day.

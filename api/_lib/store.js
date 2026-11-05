@@ -55,8 +55,10 @@ export async function mutateDoc(fn) {
         cacheControlMaxAge: 60,
       };
       if (etag) opts.ifMatch = etag;
-      const r = await put(PATH, JSON.stringify(doc), opts);
+      const body = JSON.stringify(doc);
+      const r = await put(PATH, body, opts);
       memo = { doc, etag: r.etag, at: Date.now() };
+      await maybeBackup(body);
       return doc;
     } catch (e) {
       lastErr = e;
@@ -68,6 +70,25 @@ export async function mutateDoc(fn) {
     }
   }
   throw lastErr || new Error('conflict');
+}
+
+// Rolling snapshots: at most one per 6-hour bucket (keeps Blob writes tiny).
+let lastBackupBucket = null;
+async function maybeBackup(body) {
+  const d = new Date();
+  const bucket = `${d.toISOString().slice(0, 10)}-${Math.floor(d.getUTCHours() / 6)}`;
+  if (bucket === lastBackupBucket) return;
+  lastBackupBucket = bucket;
+  try {
+    await put(`prague-crew/backups/${bucket}.json`, body, {
+      access: 'private',
+      contentType: 'application/json',
+      addRandomSuffix: false,
+      allowOverwrite: false,
+    });
+  } catch {
+    /* already backed up in this bucket (another instance) or transient error */
+  }
 }
 
 export function json(body, status = 200, headers = {}) {

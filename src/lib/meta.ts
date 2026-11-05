@@ -4,7 +4,6 @@ import {
   Beer,
   BedDouble,
   Binoculars,
-  BookOpen,
   Building2,
   Bus,
   CarTaxiFront,
@@ -114,8 +113,6 @@ export const TASK_CAT: Record<TaskCategory, { label: string; icon: LucideIcon }>
 };
 export const TASK_CAT_ORDER = Object.keys(TASK_CAT) as TaskCategory[];
 
-export const GUIDE_ICONS: Record<string, LucideIcon> = {};
-export { BookOpen };
 
 export const DAY_THEMES: Record<string, { title: string; emoji: string }> = {
   '2026-11-13': { title: 'Arrival · Friday the 13th', emoji: '🛬' },
