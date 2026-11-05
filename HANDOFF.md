@@ -52,6 +52,7 @@ These hosts are blocked by its proxy: real OpenFreeMap tiles/styles, Open-Meteo 
 - Booking instructions are in the `must-do` guide, event notes/links and Prep. No tickets or reservations were purchased. Louvre’s linked booking page currently blocks reservations through 10 Jan 2027; recheck before visiting.
 - The live state previously saved seed records at revision 5. Seven exact envelopes in `src/data/seedRevisions.ts` follow the new seed through `rebaseLegacySeedRecord`; changed/newer edits and tombstones are preserved. This handles older saved copies without changing their timestamps or issuing sync writes.
 - Production sync returned persistent Vercel Blob ETag conflicts on the concert edit. That edit was published through the existing deployment branch. Do not bypass `ifMatch` or overwrite unrelated server data to work around this.
+- PWA update fix: with `injectRegister: false`, explicitly set Workbox `skipWaiting` and `clientsClaim`. Without these, the prior worker kept serving an old plan even after a normal reload. The virtual registration uses `autoUpdate`; verify the generated worker activates immediately after deployment.
 
 ## Free-tier budget (Vercel Hobby)
 Blob allows ~100K simple / 10K advanced ops a month. The app polls at 20 s, the server memo lasts 6 s, CDN `s-maxage` is 5, edits are batched (1.2 s), and GPS is shared at most every 90 s when moving. Expected trip usage is ~20K reads and ~3–5K writes.

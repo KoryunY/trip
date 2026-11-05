@@ -31,6 +31,10 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // injectRegister: false leaves activation flags unset even with virtual autoUpdate registration.
+        // Set them explicitly so new workers take control and refresh an already-open app.
+        skipWaiting: true,
+        clientsClaim: true,
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,json}'],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         navigateFallback: '/index.html',
