@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const { doc } = await readDoc();
     return json(docToResponse(doc, 'vercel-blob'), 200, {
-      'Cache-Control': 'public, max-age=0, s-maxage=3, stale-while-revalidate=6',
+      'Cache-Control': 'public, max-age=0, s-maxage=5, stale-while-revalidate=10',
     });
   } catch (e) {
     return json({ ok: false, error: String(e?.message || e) }, 500);

@@ -12,7 +12,7 @@ export function hasBackend() {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export async function readDoc({ fresh = false } = {}) {
-  if (!fresh && memo && Date.now() - memo.at < 2500) {
+  if (!fresh && memo && Date.now() - memo.at < 6000) {
     return { doc: structuredClone(memo.doc), etag: memo.etag };
   }
   let res = null;

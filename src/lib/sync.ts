@@ -115,7 +115,7 @@ export async function flush() {
   }
 }
 
-function scheduleFlush(ms = 700) {
+function scheduleFlush(ms = 1200) {
   if (flushTimer) clearTimeout(flushTimer);
   flushTimer = setTimeout(() => {
     flushTimer = null;
@@ -154,7 +154,7 @@ let pollTimer: ReturnType<typeof setTimeout> | null = null;
 function loop() {
   if (pollTimer) clearTimeout(pollTimer);
   const visible = document.visibilityState === 'visible';
-  const interval = state.status === 'local' ? 90_000 : visible ? 15_000 : 120_000;
+  const interval = state.status === 'local' ? 90_000 : visible ? 20_000 : 180_000;
   pollTimer = setTimeout(async () => {
     if (document.visibilityState === 'visible') await poll();
     loop();
@@ -198,8 +198,9 @@ export async function sendPresence(p: Omit<Presence, 'person' | 'ts'>, force = f
   if (!force && lastSent) {
     const moved = Math.hypot((full.lat - lastSent.lat) * 111_000, (full.lon - lastSent.lon) * 71_000);
     const age = now - lastSentAt;
-    if (age < 45_000) return;
-    if (moved < 40 && age < 4 * 60_000) return;
+    // keep Blob writes low: at most every 90 s, and only when moved > 60 m (or a 5-min heartbeat)
+    if (age < 90_000) return;
+    if (moved < 60 && age < 5 * 60_000) return;
   }
   lastSent = full;
   lastSentAt = now;

@@ -123,7 +123,7 @@ export function SettingsView() {
               <Radio aria-hidden />
               <span className="grow">
                 <b>Share my live location with the crew</b>
-                <span className="muted d-block">While the app is open, your GPS dot appears on everyone’s map (updates ~every minute).</span>
+                <span className="muted d-block">While the app is open, your GPS dot appears on everyone’s map (updates every ~2 min while moving).</span>
               </span>
               <Toggle
                 on={s.shareLocation}
