@@ -49,7 +49,7 @@ export function ExpensesView() {
     <>
       <SubBar
         title={tx("Expenses & split")}
-        sub="Converted to CZK at current rates"
+        sub={tx("Converted to CZK at current rates")}
         right={
           <select className="input cur-sel" value={cur} onChange={(e) => setCur(e.target.value)} aria-label={tx("Display currency")}>
             {CURRENCIES.map((c) => (

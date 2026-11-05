@@ -12,7 +12,7 @@ export function NotesView() {
     <>
       <SubBar
         title={tx("Shared notes")}
-        sub="Everyone can edit"
+        sub={tx("Everyone can edit")}
         right={
           <button className="icon-btn" onClick={() => openSheet({ t: 'noteEdit' })} aria-label={tx("New note")}>
             <Plus />

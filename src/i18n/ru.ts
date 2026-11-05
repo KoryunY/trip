@@ -672,6 +672,7 @@ export const RU: Record<string, string> = {
   'Exact time': 'Точное время',
   'Next · {when}': 'Дальше · {when}',
   'Where’s everyone': 'Кто где',
+  'Converted to CZK at current rates': 'Пересчитано в CZK по текущему курсу',
   'The crew at that moment': 'Команда в тот момент',
   'Key moments': 'Ключевые моменты',
   Follow: 'Следить',

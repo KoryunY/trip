@@ -49,6 +49,25 @@ export const GUIDE_ICON: Record<string, LucideIcon> = {
   users: Users,
 };
 
+const GUIDE_COLOR: Record<string, string> = {
+  'plane-landing': '#2563eb',
+  'plane-takeoff': '#2563eb',
+  bus: '#0891b2',
+  luggage: '#7c3aed',
+  'shield-check': '#16a34a',
+  smartphone: '#0ea5e9',
+  'tram-front': '#dc2626',
+  wallet: '#9333ea',
+  guitar: '#e11d48',
+  'gamepad-2': '#16a34a',
+  beer: '#d97706',
+  'cloud-sun': '#0284c7',
+  siren: '#dc2626',
+  languages: '#c026d3',
+  'calendar-days': '#ea580c',
+  users: '#f97316',
+};
+
 export function GuidesList() {
   const me = useMe()!;
   const db = useDB();
@@ -59,7 +78,7 @@ export function GuidesList() {
     const Icon = GUIDE_ICON[g.icon] ?? BookOpen;
     return (
       <button className="row" onClick={() => go(`guide/${g.id}`)}>
-        <span className="ico-tile">
+        <span className="ico-tile tinted" style={{ ['--tc' as string]: GUIDE_COLOR[g.icon] ?? '#d97706' }}>
           <Icon />
         </span>
         <span className="grow">
@@ -73,7 +92,7 @@ export function GuidesList() {
   };
   return (
     <>
-      <SubBar title={tx("Guides")} sub="Researched Nov 2026; prices can change" />
+      <SubBar title={tx("Guides")} sub={tx("Researched Nov 2026; prices can change")} />
       <div className="wrap">
         {mine.length > 0 && (
           <section className="section" style={{ marginTop: 8 }}>

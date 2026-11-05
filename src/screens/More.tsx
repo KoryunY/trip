@@ -62,12 +62,12 @@ function MoreMenu() {
       </header>
       <div className="wrap">
         <div className="card list" style={{ marginTop: 8 }}>
-          <MenuRow icon={<BookOpen />} title={tx("Guides")} sub={tx('{n} practical guides: airport, baggage, eSIM, money…', { n: GUIDES.length })} onClick={() => go('guides')} />
-          <MenuRow icon={<MapPin />} title={tx("Places")} sub={tx('{n} places: beer, sights, food, transport', { n: db.places.length })} onClick={() => go('places')} />
-          <MenuRow icon={<Lightbulb />} title={tx("Ideas & votes")} sub="Decide what to do together" onClick={() => go('plan/ideas')} />
-          <MenuRow icon={<Receipt />} title={tx("Expenses & split")} sub="Who paid what, who owes whom" onClick={() => go('expenses')} />
-          <MenuRow icon={<StickyNote />} title={tx("Shared notes")} sub="Apartment info, contacts, bookings" onClick={() => go('notes')} />
-          <MenuRow icon={<SettingsIcon />} title={tx("Settings & offline")} sub="Offline map, sync, theme, backup" onClick={() => go('settings')} />
+          <MenuRow color="#d97706" icon={<BookOpen />} title={tx("Guides")} sub={tx('{n} practical guides: airport, baggage, eSIM, money…', { n: GUIDES.length })} onClick={() => go('guides')} />
+          <MenuRow color="#e11d48" icon={<MapPin />} title={tx("Places")} sub={tx('{n} places: beer, sights, food, transport', { n: db.places.length })} onClick={() => go('places')} />
+          <MenuRow color="#ca8a04" icon={<Lightbulb />} title={tx("Ideas & votes")} sub={tx("Decide what to do together")} onClick={() => go('plan/ideas')} />
+          <MenuRow color="#9333ea" icon={<Receipt />} title={tx("Expenses & split")} sub={tx("Who paid what, who owes whom")} onClick={() => go('expenses')} />
+          <MenuRow color="#0891b2" icon={<StickyNote />} title={tx("Shared notes")} sub={tx("Apartment info, contacts, bookings")} onClick={() => go('notes')} />
+          <MenuRow color="#475569" icon={<SettingsIcon />} title={tx("Settings & offline")} sub={tx("Offline map, sync, theme, backup")} onClick={() => go('settings')} />
           <MenuRow
             icon={<Share2 />}
             title={tx("Send the app to the crew")}
@@ -123,10 +123,12 @@ function MoreMenu() {
   );
 }
 
-function MenuRow({ icon, title, sub, onClick }: { icon: ReactNode; title: string; sub: string; onClick: () => void }) {
+function MenuRow({ icon, title, sub, onClick, color }: { icon: ReactNode; title: string; sub: string; onClick: () => void; color?: string }) {
   return (
     <button className="row" onClick={onClick}>
-      <span className="ico-tile">{icon}</span>
+      <span className="ico-tile tinted" style={color ? { ['--tc' as string]: color } : undefined}>
+        {icon}
+      </span>
       <span className="grow">
         <span className="t">{title}</span>
         <span className="s">{sub}</span>

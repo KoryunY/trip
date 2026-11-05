@@ -2906,3 +2906,9 @@ details[open] > summary::before {
   font-size: 11px;
   border: 2px solid var(--surface);
 }
+
+.ico-tile.tinted {
+  --tc: var(--accent-text);
+  background: color-mix(in srgb, var(--tc) 14%, transparent);
+  color: var(--tc);
+}
