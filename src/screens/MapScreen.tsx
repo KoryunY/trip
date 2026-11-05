@@ -1,9 +1,10 @@
 import maplibregl, { type GeoJSONSource, type Map as MLMap } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { Compass, Crosshair, Layers, Navigation, Route as RouteIcon, Users, X, Footprints, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { Compass, Crosshair, Layers, Navigation, Route as RouteIcon, Users, X, Footprints, ExternalLink } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { LngLat, PlaceCategory } from '../../shared/types';
-import { crewLine, groupCrew, namesOf, presenceFresh } from '../components/CrewList';
+import { presenceFresh } from '../components/CrewList';
+import { CrewStrip, HomeChip, PersonCard, PlaceCard } from '../components/map/MapCards';
 import { TimeMachine } from '../components/TimeMachine';
 import { toast } from '../components/ui';
 import { useTimeState, useNow } from '../lib/clock';
@@ -85,11 +86,14 @@ export function MapScreen({ active }: { active: boolean }) {
   const [filter, setFilter] = useState('all');
   const [follow, setFollow] = useState(true);
   const [nav, setNav] = useState<{ to: LngLat; name: string; res?: RouteResult; err?: string; loading?: boolean } | null>(null);
-  const [panel, setPanel] = useState(true);
   const [styleOpen, setStyleOpen] = useState(false);
   const [noteHidden, setNoteHidden] = useState(false);
   const [navFollow, setNavFollow] = useState(false);
   const [showTrails, setShowTrails] = useState(true);
+  const [sel, setSel] = useState<{ type: 'person' | 'place'; id: string } | null>(null);
+  const [followPid, setFollowPid] = useState<string | null>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
+  const selectRef = useRef<(s: { type: 'person' | 'place'; id: string }) => void>(() => {});
   const crewMarkers = useRef<Map<string, { m: maplibregl.Marker; el: HTMLDivElement }>>(new Map());
   const meMarker = useRef<maplibregl.Marker | null>(null);
   const liveMarkers = useRef<Map<string, maplibregl.Marker>>(new Map());
@@ -114,9 +118,17 @@ export function MapScreen({ active }: { active: boolean }) {
     map.touchZoomRotate.enableRotation();
     mapRef.current = map;
     map.on('style.load', () => setReady((r) => r + 1));
-    map.on('dragstart', () => {
-      setFollow(false);
-      setPanel(false);
+    // any user gesture (drag, pinch, rotate) stops auto-following
+    map.on('movestart', (e) => {
+      if ((e as { originalEvent?: Event }).originalEvent) {
+        setFollow(false);
+        setFollowPid(null);
+      }
+    });
+    map.on('click', (e) => {
+      // tap on empty map clears the selection (place taps are handled by the layer handler)
+      const hits = map.getLayer('places') ? map.queryRenderedFeatures(e.point, { layers: ['places'] }) : [];
+      if (!hits.length) setSel(null);
     });
     // long-press (touch) / right-click: add a place here
     const addAt = (ll: maplibregl.LngLat) =>
@@ -232,6 +244,14 @@ export function MapScreen({ active }: { active: boolean }) {
         layout: { 'line-cap': 'round', 'line-join': 'round' },
         paint: { 'line-color': '#2563eb', 'line-width': 6 },
       });
+    if (!map.getSource('sel')) map.addSource('sel', { type: 'geojson', data: empty });
+    if (!map.getLayer('sel-halo'))
+      map.addLayer({
+        id: 'sel-halo',
+        type: 'circle',
+        source: 'sel',
+        paint: { 'circle-radius': 22, 'circle-color': '#f2a007', 'circle-opacity': 0.28, 'circle-stroke-width': 3, 'circle-stroke-color': '#f2a007' },
+      });
     if (!map.getLayer('places'))
       map.addLayer({
         id: 'places',
@@ -263,13 +283,17 @@ export function MapScreen({ active }: { active: boolean }) {
       });
     const onClick = (e: maplibregl.MapLayerMouseEvent) => {
       const f = e.features?.[0];
-      if (f?.properties?.id) openSheet({ t: 'place', id: String(f.properties.id) });
+      if (f?.properties?.id) selectRef.current({ type: 'place', id: String(f.properties.id) });
     };
+    const enter = () => (map.getCanvas().style.cursor = 'pointer');
+    const leave = () => (map.getCanvas().style.cursor = '');
     map.on('click', 'places', onClick);
-    map.on('mouseenter', 'places', () => (map.getCanvas().style.cursor = 'pointer'));
-    map.on('mouseleave', 'places', () => (map.getCanvas().style.cursor = ''));
+    map.on('mouseenter', 'places', enter);
+    map.on('mouseleave', 'places', leave);
     return () => {
       map.off('click', 'places', onClick);
+      map.off('mouseenter', 'places', enter);
+      map.off('mouseleave', 'places', leave);
     };
   }, [ready, hasGlyphs]);
 
@@ -362,9 +386,10 @@ export function MapScreen({ active }: { active: boolean }) {
         elm.className = 'crew-marker';
         elm.setAttribute('role', 'button');
         elm.tabIndex = 0;
+        const pid = pos.person;
         const open = (ev: Event) => {
           ev.stopPropagation();
-          openSheet({ t: 'person', id: pos.person });
+          selectRef.current({ type: 'person', id: pid });
         };
         elm.addEventListener('click', open);
         elm.addEventListener('keydown', (ev) => (ev.key === 'Enter' || ev.key === ' ') && open(ev));
@@ -454,6 +479,7 @@ export function MapScreen({ active }: { active: boolean }) {
   }, [loc.fix, loc.compass]);
 
   // ── follow crew during playback ──
+  const bottomPad = () => (dockRef.current?.offsetHeight ?? 200) + 90;
   const fitCrew = useCallback(
     (animate = true) => {
       const map = mapRef.current;
@@ -461,26 +487,93 @@ export function MapScreen({ active }: { active: boolean }) {
       const pts = crew.map((c) => c.p);
       const [w, s, e, n] = bboxOf(pts);
       const spread = distance([w, s], [e, n]);
-      if (spread < 300) map.easeTo({ center: pts[0], zoom: Math.max(map.getZoom(), 14.5), duration: animate ? 700 : 0 });
-      else
+      const duration = animate ? 800 : 0;
+      if (spread < 300) {
+        const far = distance([map.getCenter().lng, map.getCenter().lat], pts[0]) > 40_000;
+        const opts = { center: pts[0], zoom: Math.max(map.getZoom(), 14.5), padding: { top: 80, bottom: bottomPad(), left: 40, right: 40 } };
+        if (far) map.jumpTo(opts);
+        else map.easeTo({ ...opts, duration });
+      } else
         map.fitBounds(
           [
             [w, s],
             [e, n],
           ],
-          { padding: { top: 120, bottom: panel ? 330 : 170, left: 60, right: 60 }, maxZoom: 15, duration: animate ? 700 : 0 },
+          { padding: { top: 110, bottom: bottomPad(), left: 60, right: 60 }, maxZoom: 15, duration, linear: true },
         );
     },
-    [crew, panel],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [crew],
   );
-  const lastFit = useRef(0);
+  const lastFit = useRef({ at: 0, sig: '' });
   useEffect(() => {
-    if (!follow || !ready || !active) return;
+    if (!follow || followPid || !ready || !active) return;
+    const sig = crew.map((c) => `${c.p[0].toFixed(3)},${c.p[1].toFixed(3)}`).join('|');
     const nowMs = performance.now();
-    if (ts.playing && nowMs - lastFit.current < 900) return;
-    lastFit.current = nowMs;
-    fitCrew(!ts.playing);
-  }, [crew, follow, ready, active, ts.playing, fitCrew]);
+    if (sig === lastFit.current.sig) return; // nobody moved: don't fight the user
+    if (ts.playing && nowMs - lastFit.current.at < 900) return;
+    lastFit.current = { at: nowMs, sig };
+    fitCrew(!ts.playing || ts.speed <= 3600_000);
+  }, [crew, follow, followPid, ready, active, ts.playing, ts.speed, fitCrew]);
+
+  // ── camera helpers: smooth, never the zoom-out-then-in "fly" arc ──
+  const focusOn = useCallback((center: LngLat, zoom?: number) => {
+    const map = mapRef.current;
+    if (!map) return;
+    const z = zoom ?? Math.max(map.getZoom(), 15);
+    const pad = { top: 80, bottom: bottomPad(), left: 30, right: 30 };
+    const far = distance([map.getCenter().lng, map.getCenter().lat], center) > 40_000;
+    if (far) map.jumpTo({ center, zoom: z, padding: pad });
+    else map.easeTo({ center, zoom: z, padding: pad, duration: 650 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const select = useCallback(
+    (s: { type: 'person' | 'place'; id: string }) => {
+      setSel(s);
+      setFollow(false);
+      if (s.type === 'person') {
+        const pos = crew.find((c) => c.person === s.id);
+        if (pos) focusOn(pos.p);
+        setFollowPid(s.id);
+      } else {
+        setFollowPid(null);
+        const pl = db.place[s.id];
+        if (pl) focusOn([pl.lon, pl.lat], Math.max(mapRef.current?.getZoom() ?? 15, 15));
+      }
+    },
+    [crew, db.place, focusOn],
+  );
+  selectRef.current = select;
+
+  // follow one person (camera stays on them as they move)
+  useEffect(() => {
+    if (!followPid || !ready || !active) return;
+    const pos = crew.find((c) => c.person === followPid);
+    const map = mapRef.current;
+    if (!pos || !map) return;
+    const c = map.getCenter();
+    if (distance([c.lng, c.lat], pos.p) < 15) return;
+    if (distance([c.lng, c.lat], pos.p) > 40_000) map.jumpTo({ center: pos.p, padding: { top: 80, bottom: bottomPad(), left: 30, right: 30 } });
+    else map.easeTo({ center: pos.p, duration: ts.playing ? 250 : 600, padding: { top: 80, bottom: bottomPad(), left: 30, right: 30 } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [crew, followPid, ready, active]);
+
+  // highlight the selected place
+  useEffect(() => {
+    const src = mapRef.current?.getSource('sel') as GeoJSONSource | undefined;
+    if (!src) return;
+    const pl = sel?.type === 'place' ? db.place[sel.id] : undefined;
+    src.setData(
+      pl
+        ? { type: 'FeatureCollection', features: [{ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [pl.lon, pl.lat] } }] }
+        : { type: 'FeatureCollection', features: [] },
+    );
+  }, [sel, db.place, ready]);
+  // mark the selected crew marker
+  useEffect(() => {
+    for (const [pid, e] of crewMarkers.current) e.el.classList.toggle('selected', sel?.type === 'person' && sel.id === pid);
+  }, [sel, crew]);
 
   // ── intents from other screens ──
   useEffect(() => {
@@ -488,24 +581,23 @@ export function MapScreen({ active }: { active: boolean }) {
     const map = mapRef.current!;
     if (intent.focus) {
       setFollow(false);
-      map.flyTo({ center: intent.focus.lngLat, zoom: intent.focus.zoom ?? 16, duration: 900 });
+      setFollowPid(null);
+      if (intent.focus.placeId) setSel({ type: 'place', id: intent.focus.placeId });
+      focusOn(intent.focus.lngLat, intent.focus.zoom ?? 16);
     }
     if (intent.fitCrew) {
+      setSel(null);
+      setFollowPid(null);
       setFollow(true);
-      setPanel(true);
+      lastFit.current.sig = '';
       fitCrew();
     }
     if (intent.route) {
       setFollow(false);
       startNav(intent.route.to, intent.route.name);
     }
-    if (intent.person) {
-      const pos = crew.find((c) => c.person === intent.person);
-      if (pos) {
-        setFollow(false);
-        map.flyTo({ center: pos.p, zoom: 15 });
-      }
-    }
+    if (intent.person) select({ type: 'person', id: intent.person });
+    void map;
     clearMapIntent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intent, ready]);
@@ -567,7 +659,7 @@ export function MapScreen({ active }: { active: boolean }) {
     setFollow(false);
     startWatch();
     const fix = await locateOnce();
-    if (fix) mapRef.current?.flyTo({ center: [fix.lon, fix.lat], zoom: 16 });
+    if (fix) focusOn([fix.lon, fix.lat], 16);
     else toast(loc.error ?? tx("Could not get your location"));
   };
 
@@ -700,46 +792,42 @@ export function MapScreen({ active }: { active: boolean }) {
             )}
           </div>
         ) : (
-          <div className={`card map-panel ${panel ? '' : 'collapsed'}`}>
-            <button className="map-panel-toggle" onClick={() => setPanel((v) => !v)} aria-expanded={panel} aria-label={panel ? tx("Collapse panel") : tx("Expand panel")}>
-              {panel ? <ChevronDown /> : <ChevronUp />}
-            </button>
-            {panel && (
-              <div className="map-crew">
-                {groupCrew(crew).map((grp) => {
-                  const pos = grp[0];
-                  const people = grp.map((g) => db.person[g.person]).filter(Boolean);
-                  if (!people.length) return null;
-                  const line = crewLine(pos, db, t);
-                  return (
-                    <button
-                      key={grp.map((g) => g.person).join('-')}
-                      className="map-crew-row"
-                      onClick={() => {
-                        setFollow(false);
-                        mapRef.current?.flyTo({ center: pos.p, zoom: Math.max(14, mapRef.current.getZoom()) });
-                      }}
-                    >
-                      <span className="stack">
-                        {people.map((person) => (
-                          <span key={person.id} className="avatar sm" style={{ ['--c' as string]: person.color }}>
-                            {person.name[0]}
-                          </span>
-                        ))}
-                      </span>
-                      <span className="map-crew-t">
-                        <b>{people.length > 1 ? namesOf(people, db.people.length) : people[0].name}</b> {line.title}
-                      </span>
-                    </button>
-                  );
-                })}
-                {myDistHome != null && myDistHome > 150 && (
-                  <button className="btn sm home-btn" onClick={() => startNav([db.place.base.lon, db.place.base.lat], 'Base')}>{tx("🏠 Home · ")}{fmtDistance(myDistHome)}
-                  </button>
-                )}
-              </div>
+          <div className="map-dock card" ref={dockRef}>
+            {sel?.type === 'person' && crew.find((c) => c.person === sel.id) ? (
+              <PersonCard
+                pos={crew.find((c) => c.person === sel.id)!}
+                t={t}
+                following={followPid === sel.id}
+                onFollow={() => setFollowPid((v) => (v === sel.id ? null : sel.id))}
+                onClose={() => {
+                  setSel(null);
+                  setFollowPid(null);
+                }}
+                onRoute={(to, name) => startNav(to, name)}
+              />
+            ) : sel?.type === 'place' && db.place[sel.id] ? (
+              <PlaceCard
+                place={db.place[sel.id]}
+                from={loc.fix ? [loc.fix.lon, loc.fix.lat] : [db.place.base.lon, db.place.base.lat]}
+                onClose={() => setSel(null)}
+                onRoute={(to, name) => {
+                  setSel(null);
+                  startNav(to, name);
+                }}
+              />
+            ) : (
+              <CrewStrip
+                crew={crew}
+                t={t}
+                onPick={(pid) => select({ type: 'person', id: pid })}
+                extra={
+                  myDistHome != null && myDistHome > 150 ? (
+                    <HomeChip dist={myDistHome} onGo={() => startNav([db.place.base.lon, db.place.base.lat], tx('Base'))} />
+                  ) : null
+                }
+              />
             )}
-            <TimeMachine compact={!panel} />
+            <TimeMachine />
           </div>
         )}
       </div>

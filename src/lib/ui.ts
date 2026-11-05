@@ -18,6 +18,7 @@ export type SheetSpec =
   | { t: 'compass'; target: { lat: number; lon: number; name: string } }
   | { t: 'timeMachine' }
   | { t: 'converter' }
+  | { t: 'timePicker' }
   | { t: 'roulette' };
 
 let stack: SheetSpec[] = [];

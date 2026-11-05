@@ -61,6 +61,12 @@ export default defineConfig({
             options: { cacheName: 'ofm-assets', networkTimeoutSeconds: 4, matchOptions: { ignoreVary: true }, cacheableResponse: { statuses: [200] } },
           },
           {
+            // place photos (low-res thumbnails) stay available offline once seen
+            urlPattern: ({ url }) => url.hostname === 'upload.wikimedia.org' || url.hostname === 'thumb.wikimedia.org',
+            handler: 'CacheFirst',
+            options: { cacheName: 'photos', cacheableResponse: { statuses: [0, 200] }, expiration: { maxEntries: 400, maxAgeSeconds: 60 * 24 * 3600 } },
+          },
+          {
             urlPattern: ({ url }) => url.hostname === 'api.open-meteo.com',
             handler: 'NetworkFirst',
             options: { cacheName: 'weather', networkTimeoutSeconds: 5, expiration: { maxEntries: 10 } },

@@ -10,6 +10,7 @@ import { mapsLink, uberLink, voteScore } from '../../lib/trip';
 import { navigateTo, openSheet, replaceSheet, showPlaceOnMap } from '../../lib/ui';
 import { Avatar, Sheet, toast } from '../ui';
 import { t as tx } from '../../i18n';
+import { PhotoStrip } from '../PhotoStrip';
 
 export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void }) {
   const db = useDB();
@@ -61,6 +62,7 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
             </div>
           </div>
         </div>
+        <PhotoStrip place={p} />
         {p.blurb && <p className="pl-blurb">{p.blurb}</p>}
         <dl className="kv">
           {p.address && (

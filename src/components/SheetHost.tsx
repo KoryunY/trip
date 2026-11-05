@@ -7,6 +7,7 @@ import { ExpenseEditor, NoteEditor } from './sheets/MiscSheets';
 import { PersonSheet } from './sheets/PersonSheet';
 import { CompassSheet } from './sheets/CompassSheet';
 import { ConverterSheet, RouletteSheet } from './sheets/FunSheets';
+import { TimePickerSheet } from './sheets/TimePickerSheet';
 
 export function SheetHost() {
   const stack = useSheets();
@@ -40,6 +41,8 @@ export function SheetHost() {
       return <CompassSheet key={key} target={top.target} onClose={closeSheet} />;
     case 'converter':
       return <ConverterSheet key={key} onClose={closeSheet} />;
+    case 'timePicker':
+      return <TimePickerSheet key={key} onClose={closeSheet} />;
     case 'roulette':
       return <RouletteSheet key={key} onClose={closeSheet} />;
     default:
