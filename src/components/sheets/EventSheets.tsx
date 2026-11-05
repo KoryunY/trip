@@ -7,6 +7,7 @@ import { isSeed, remove, resetToSeed, save, uid, useDB, useMe, getDB } from '../
 import { durationLabel, fmtDayLong, isoInTz, relTime, tripDays, zonedToUtc, dayKey, hhmm, TZ, TZ_LABEL, fmtDayShort, addDays } from '../../lib/time';
 import { endLocal, endTz, localTimeNote, startLocal, startTz, mapsLink, eventDay } from '../../lib/trip';
 import { openSheet, replaceSheet, closeSheet, showPlaceOnMap, navigateTo } from '../../lib/ui';
+import { distance } from '../../lib/geo';
 import { Avatar, Segmented, Sheet, toast } from '../ui';
 import { PeoplePicker, PlacePicker } from './PlacePicker';
 
@@ -61,7 +62,7 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
           </span>
           <div className="grow">
             <div className="evd-when">
-              {fmtDayLong(Date.parse(ev.start))} · {startLocal(ev)}–{endLocal(ev)}
+              {fmtDayLong(Date.parse(ev.start), startTz(ev))} · {startLocal(ev)}–{endLocal(ev)}
             </div>
             <div className="muted" style={{ fontSize: 13.5 }}>
               {k.label} · {durationLabel(e - s)} · <b className={now >= s && now < e ? 'live-txt' : ''}>{when}</b>
@@ -103,9 +104,11 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
 
         {target && (
           <div className="evd-actions">
-            <button className="btn sm" onClick={() => navigateTo(target.lat, target.lon, target.name)}>
-              <Footprints /> Walk route
-            </button>
+            {!['flight', 'train', 'bus'].includes(ev.kind) && distance([db.place.base.lon, db.place.base.lat], [target.lon, target.lat]) < 12_000 && (
+              <button className="btn sm" onClick={() => navigateTo(target.lat, target.lon, target.name)}>
+                <Footprints /> Walk route
+              </button>
+            )}
             <a className="btn sm" href={mapsLink(target.lat, target.lon, 'transit')} target="_blank" rel="noreferrer">
               <Navigation /> Transit
             </a>
@@ -129,6 +132,8 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
             {iAmIn ? <UserMinus /> : <UserPlus />} {iAmIn ? 'I’m out' : 'I’m in'}
           </button>
         </div>
+
+        <ShiftRow ev={ev} />
 
         {ev.booking && (
           <div className="evd-line">
@@ -421,5 +426,48 @@ export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Parti
         </p>
       </form>
     </Sheet>
+  );
+}
+
+/** "Running late?": shift this event (and optionally the rest of the same people's day) */
+function ShiftRow({ ev }: { ev: TripEvent }) {
+  const db = useDB();
+  const [chain, setChain] = useState(true);
+  const shift = (min: number) => {
+    const ms = min * 60_000;
+    const s0 = Date.parse(ev.start);
+    const day = eventDay(ev);
+    const move = (e: TripEvent): TripEvent => ({
+      ...e,
+      start: isoInTz(Date.parse(e.start) + ms, startTz(e)),
+      end: isoInTz(Date.parse(e.end) + ms, endTz(e)),
+    });
+    const later = chain
+      ? db.events.filter(
+          (e) => e.id !== ev.id && Date.parse(e.start) >= s0 && eventDay(e) === day && e.people.some((p) => ev.people.includes(p)) && e.status !== 'cancelled',
+        )
+      : [];
+    const before = [ev, ...later].map((e) => ({ ...e }));
+    for (const e of [ev, ...later]) save('events', move(e));
+    toast(`${min > 0 ? '+' : ''}${min} min${later.length ? ` (+${later.length} later events)` : ''}`, {
+      label: 'Undo',
+      run: () => before.forEach((e) => save('events', e)),
+    });
+  };
+  return (
+    <div className="shift">
+      <div className="eyebrow">Running late / early?</div>
+      <div className="shift-btns">
+        {[-15, 15, 30, 60].map((m) => (
+          <button key={m} className="btn sm" onClick={() => shift(m)}>
+            {m > 0 ? '+' : '−'}
+            {Math.abs(m)}m
+          </button>
+        ))}
+      </div>
+      <label className="shift-chain">
+        <input type="checkbox" checked={chain} onChange={(e) => setChain(e.target.checked)} /> also move the rest of that day
+      </label>
+    </div>
   );
 }

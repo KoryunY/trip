@@ -2018,3 +2018,30 @@ details[open] > summary::before {
 .ov-list .more {
   padding-left: 48px;
 }
+
+.shift {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.shift-btns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.shift-chain {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.shift-chain input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--ink);
+}
