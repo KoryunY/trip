@@ -45,7 +45,7 @@ export function TimeMachine({ compact }: { compact?: boolean }) {
         </button>
         <div className="tm-label">
           <span className="tm-time tnum">
-            {fmtWeekday(t)} {fmtDayShort(t).replace(/^\w+,? /, '')} · {hhmm(t)}
+            {hhmm(t)} <span className="tm-date">{fmtWeekday(t)} {fmtDayShort(t).replace(/^\w+,? /, '')}</span>
           </span>
           <span className="tm-sub">
             {live ? (
