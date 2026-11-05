@@ -1,4 +1,5 @@
 import {
+  Play,
   ArrowLeftRight,
   ArrowRight,
   Beer,
@@ -23,7 +24,7 @@ import { Skyline } from '../components/Skyline';
 import { InstallBanner } from '../components/InstallBanner';
 import { SyncBadge } from '../components/SyncBadge';
 import { TimeMachine } from '../components/TimeMachine';
-import { useNow, useTripTime } from '../lib/clock';
+import { timeMachine, useNow, useTripTime } from '../lib/clock';
 import { useLocation } from '../lib/location';
 import { distance, fmtDistance, walkMinutes } from '../lib/geo';
 import { DAY_THEMES, SUN } from '../lib/meta';
@@ -141,6 +142,16 @@ export function NowScreen() {
             </>
           )}
         </div>
+
+        <button className="watch-trip" onClick={playWholeTrip}>
+          <span className="watch-ico">
+            <Play aria-hidden />
+          </span>
+          <span className="grow">
+            <b>Watch the whole trip</b>
+            <span className="muted">Timelapse: everyone’s icons travel to Prague, explore, and fly home</span>
+          </span>
+        </button>
 
         <InstallBanner />
 
@@ -318,6 +329,14 @@ export function NowScreen() {
       </div>
     </>
   );
+}
+
+function playWholeTrip() {
+  mapIntent({ fitCrew: true });
+  timeMachine.pause();
+  timeMachine.setSpeed(3 * 3600_000);
+  timeMachine.setSim(Date.parse('2026-11-12T22:00:00+01:00'));
+  setTimeout(() => timeMachine.play(), 900);
 }
 
 function Tool({ icon: Icon, label, onClick }: { icon: typeof House; label: string; onClick: () => void }) {
