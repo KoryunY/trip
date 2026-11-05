@@ -173,7 +173,8 @@ export async function downloadOffline() {
     for (const u of assetUrls)
       jobs.push(async () => {
         try {
-          bytes += await cachePut(assets, u, signal);
+          const b = await cachePut(assets, u, signal);
+          bytes += b;
         } catch {
           failed++;
         }
@@ -182,7 +183,8 @@ export async function downloadOffline() {
       const u = template.replace('{z}', String(t.z)).replace('{x}', String(t.x)).replace('{y}', String(t.y));
       jobs.push(async () => {
         try {
-          bytes += await cachePut(tiles, u, signal);
+          const b = await cachePut(tiles, u, signal);
+          bytes += b;
         } catch {
           failed++;
         }

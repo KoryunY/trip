@@ -73,7 +73,7 @@ export function SettingsView() {
           <div className="card pad form">
             <p className="ink2" style={{ fontSize: 14 }}>
               Saves street-level map tiles for Prague (plus Plzeň, Kutná Hora and a Europe overview) on this phone, so the map, places and the
-              crew timelapse work with no internet. ~{tiles.toLocaleString()} tiles, roughly 25–60 MB. Use Wi-Fi.
+              crew timelapse work with no internet. ~{tiles.toLocaleString()} tiles, roughly 15–30 MB. Best on Wi-Fi.
             </p>
             {off.running ? (
               <>
