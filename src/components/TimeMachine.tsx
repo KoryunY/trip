@@ -1,7 +1,7 @@
 import { FastForward, Pause, Play, RotateCcw } from 'lucide-react';
 import { useMemo } from 'react';
 import { rangeBounds, SPEEDS, timeMachine, useNow, useTimeState } from '../lib/clock';
-import { dayKey, fmtDayShort, hhmm, tripDays, zonedToUtc, fmtWeekday } from '../lib/time';
+import { addDays, dayKey, fmtDayShort, hhmm, tripDays, zonedToUtc, fmtWeekday } from '../lib/time';
 
 const MOMENTS: { label: string; at: string }[] = [
   { label: 'Takeoff EVN', at: '2026-11-13T02:30:00+01:00' },
@@ -22,11 +22,18 @@ export function TimeMachine({ compact }: { compact?: boolean }) {
   const t = ts.mode === 'live' ? now : ts.sim;
   const [a, b] = rangeBounds();
   const span = b - a;
-  const ticks = useMemo(
-    () =>
-      tripDays().map((k) => ({ k, at: zonedToUtc(k, '00:00') })).filter((x) => x.at > a && x.at < b),
-    [a, b],
-  );
+  const ticks = useMemo(() => {
+    const trip = new Set(tripDays());
+    const out: { k: string; at: number; trip: boolean }[] = [];
+    let k = dayKey(a);
+    for (let i = 0; i < 40; i++) {
+      const at = zonedToUtc(k, '00:00');
+      if (at > b) break;
+      if (at > a) out.push({ k, at, trip: trip.has(k) });
+      k = addDays(k, 1);
+    }
+    return out;
+  }, [a, b]);
   const speedIdx = SPEEDS.findIndex((s) => s.v === ts.speed);
   const live = ts.mode === 'live';
   const nowPct = ((now - a) / span) * 100;
@@ -79,7 +86,7 @@ export function TimeMachine({ compact }: { compact?: boolean }) {
         />
         <div className="tm-ticks" aria-hidden>
           {ticks.map((x) => (
-            <span key={x.k} style={{ left: `${((x.at - a) / span) * 100}%` }}>
+            <span key={x.k} className={x.trip ? 'trip' : ''} style={{ left: `${((x.at - a) / span) * 100}%` }}>
               {Number(x.k.slice(8))}
             </span>
           ))}

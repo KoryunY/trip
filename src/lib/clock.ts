@@ -62,14 +62,40 @@ export function rangeBounds(): [number, number] {
   return [start, Math.max(end, realNow() + HOUR)];
 }
 
+/** returns the next "interesting" instant after t (an event boundary), or null */
+let nextActivity: ((t: number) => number | null) | null = null;
+export function setActivityProvider(fn: (t: number) => number | null) {
+  nextActivity = fn;
+}
+const skipListeners = new Set<(from: number, to: number) => void>();
+export function onSkip(fn: (from: number, to: number) => void) {
+  skipListeners.add(fn);
+  return () => {
+    skipListeners.delete(fn);
+  };
+}
+
 let raf = 0;
 let lastFrame = 0;
+let lastSkipCheck = 0;
 function frame(t: number) {
   if (!ts.playing) return;
   const dt = lastFrame ? Math.min(250, t - lastFrame) : 16;
   lastFrame = t;
   const [, end] = rangeBounds();
   let next = ts.sim + (dt / 1000) * ts.speed;
+  // smart skip: jump over quiet stretches (nights, days before the trip)
+  if (nextActivity && t - lastSkipCheck > 120) {
+    lastSkipCheck = t;
+    const na = nextActivity(ts.sim);
+    if (na != null && na - ts.sim > 5 * 3600_000 && ts.speed <= 3 * 3600_000) {
+      const to = Math.min(end, na - 45 * 60_000);
+      if (to > next) {
+        skipListeners.forEach((l) => l(ts.sim, to));
+        next = to;
+      }
+    }
+  }
   if (next >= end) {
     next = end;
     setTS({ sim: next, playing: false });

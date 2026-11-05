@@ -10,6 +10,10 @@ import { MoreScreen } from './screens/More';
 import { useRoute, type Tab } from './lib/router';
 import { useMe, useSettings } from './lib/store';
 import { startSync } from './lib/sync';
+import { setActivityProvider, onSkip } from './lib/clock';
+import { getDB } from './lib/store';
+import { toast } from './components/ui';
+import { fmtDayShort, hhmm } from './lib/time';
 
 // MapLibre is heavy: load the map screen on demand (still precached for offline by the service worker)
 const MapScreen = lazy(() => import('./screens/MapScreen').then((m) => ({ default: m.MapScreen })));
@@ -46,6 +50,16 @@ export default function App() {
   const [visited, setVisited] = useState<Set<Tab>>(() => new Set([route.tab]));
   useEffect(() => {
     startSync();
+    // timelapse: the next moment anyone starts/ends something (used to skip quiet hours)
+    setActivityProvider((t) => {
+      let best: number | null = null;
+      for (const e of getDB().events) {
+        if (e.status === 'cancelled') continue;
+        for (const x of [Date.parse(e.start), Date.parse(e.end)]) if (x > t && (best == null || x < best)) best = x;
+      }
+      return best;
+    });
+    return onSkip((_from, to) => toast(`⏩ Skipped quiet hours → ${fmtDayShort(to)} ${hhmm(to)}`, undefined, 1800));
   }, []);
   useEffect(() => {
     setVisited((v) => (v.has(route.tab) ? v : new Set([...v, route.tab])));
