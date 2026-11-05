@@ -45,7 +45,7 @@ export function NowScreen() {
   const days = tripDays();
   const dayIdx = days.indexOf(today);
   const weather = useWeather();
-  const activity = useActivity();
+  const activity = useActivity().filter((a) => a.by in db.person && !a.id.startsWith('__'));
 
   const myArrival = useMemo(() => {
     const s = person?.stayFrom ? Date.parse(person.stayFrom) : TRIP_START_MS;
