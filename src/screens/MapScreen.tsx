@@ -546,6 +546,18 @@ export function MapScreen({ active }: { active: boolean }) {
   );
   selectRef.current = select;
 
+  // big time jumps (picker, moments, back to live) re-frame the crew unless following one person
+  const lastT = useRef(t);
+  useEffect(() => {
+    const jump = Math.abs(t - lastT.current) > 2 * 3600_000 && !ts.playing;
+    lastT.current = t;
+    if (jump && !followPid && ready) {
+      lastFit.current.sig = '';
+      setFollow(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t]);
+
   // follow one person (camera stays on them as they move)
   useEffect(() => {
     if (!followPid || !ready || !active) return;

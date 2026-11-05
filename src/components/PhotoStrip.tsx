@@ -1,5 +1,5 @@
 import { ExternalLink, ImageOff, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import type { Place } from '../../shared/types';
 import { usePhotos, type Photo } from '../lib/photos';
@@ -48,13 +48,23 @@ export function PhotoStrip({ place }: { place: Place }) {
   );
 }
 
-/** single thumbnail (first photo) for compact cards */
-export function PlaceThumb({ place, size = 64 }: { place: Place; size?: number }) {
-  const { photos, loading } = usePhotos(place, 6);
+/** single thumbnail (first photo) for compact cards; fetches only once scrolled into view */
+export function PlaceThumb({ place, size = 64, fallback }: { place: Place; size?: number; fallback?: ReactNode }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || seen) return;
+    if (!('IntersectionObserver' in window)) return setSeen(true);
+    const io = new IntersectionObserver((es) => es.some((e) => e.isIntersecting) && setSeen(true), { rootMargin: '200px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [seen]);
+  const { photos, loading } = usePhotos(place, 6, seen);
   const p = photos[0];
   return (
-    <span className={`ph-thumb ${loading ? 'skeleton' : ''}`} style={{ width: size, height: size }} aria-hidden>
-      {p ? <img src={p.thumb} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" /> : null}
+    <span ref={ref} className={`ph-thumb ${loading ? 'skeleton' : ''}`} style={{ width: size, height: size }} aria-hidden>
+      {p ? <img src={p.thumb} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" /> : !loading ? fallback : null}
     </span>
   );
 }

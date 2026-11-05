@@ -2273,6 +2273,7 @@ details[open] > summary::before {
   gap: 8px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  scroll-padding: 0 18px;
   padding: 0 18px;
   scrollbar-width: none;
 }
@@ -2735,4 +2736,173 @@ details[open] > summary::before {
 .tp-ml {
   flex: 1;
   font-weight: 650;
+}
+
+/* ───────────── Now v2 ───────────── */
+.crew-cards {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 16px;
+  scrollbar-width: none;
+  margin: 0 -16px;
+  padding: 2px 16px 4px;
+}
+.crew-cards::-webkit-scrollbar {
+  display: none;
+}
+.crew-card {
+  --c: #888;
+  flex: none;
+  width: 78%;
+  max-width: 320px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  padding: 14px 14px 14px;
+  border-radius: var(--r-lg);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--c) 16%, var(--surface)) 0%, var(--surface) 55%);
+  border: 1px solid color-mix(in srgb, var(--c) 30%, var(--line));
+  box-shadow: var(--shadow-1);
+  position: relative;
+  overflow: hidden;
+}
+.crew-cards.n1 .crew-card {
+  width: 100%;
+  max-width: none;
+}
+.crew-card:active {
+  transform: scale(0.985);
+}
+.cc-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cc-names {
+  font-weight: 750;
+  font-family: var(--font-display);
+  font-size: 16px;
+  flex: 1;
+  min-width: 0;
+}
+.cc-live {
+  flex: none;
+}
+.cc-status {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  font-weight: 650;
+  font-size: 14.5px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cc-status svg {
+  width: 15px;
+  height: 15px;
+  display: inline;
+  vertical-align: -2px;
+  margin-right: 5px;
+  color: var(--c);
+}
+.cc-sub {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.watch-trip {
+  margin-top: 10px;
+}
+.tool {
+  --tc: var(--accent-text);
+}
+.tool-ico {
+  background: color-mix(in srgb, var(--tc) 14%, transparent);
+  color: var(--tc);
+}
+.guide-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.guide-links .chip svg {
+  color: var(--accent-text);
+}
+.tools {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* ───────────── Plan v2 ───────────── */
+.day-head {
+  --dc: var(--accent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--dc) 20%, var(--surface)) 0%, var(--surface) 70%);
+  border-color: color-mix(in srgb, var(--dc) 35%, var(--line));
+  position: relative;
+  overflow: hidden;
+}
+.day-head::after {
+  content: '';
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--dc) 18%, transparent);
+  pointer-events: none;
+}
+.day-head > * {
+  position: relative;
+  z-index: 1;
+}
+.ev-ico {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: var(--kc);
+  color: #fff;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--kc) 35%, transparent);
+}
+.ev.past .ev-ico {
+  box-shadow: none;
+}
+.ev.tentative .ev-ico {
+  background: color-mix(in srgb, var(--kc) 22%, var(--surface));
+  color: var(--kc);
+  box-shadow: none;
+  outline: 1.5px dashed color-mix(in srgb, var(--kc) 60%, transparent);
+  outline-offset: -1.5px;
+}
+.pl-thumb-wrap {
+  position: relative;
+  flex: none;
+}
+.pl-thumb-fb {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+}
+.pl-thumb-badge {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  border: 2px solid var(--surface);
 }

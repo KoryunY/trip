@@ -11,6 +11,7 @@ import { openSheet } from '../lib/ui';
 const BUCKET: PlaceCategory[] = ['sight', 'viewpoint', 'museum'];
 import { SubBar } from './More';
 import { t as tx } from '../i18n';
+import { PlaceThumb } from '../components/PhotoStrip';
 
 export function PlacesView() {
   const db = useDB();
@@ -59,8 +60,17 @@ export function PlacesView() {
         <div className="card list" style={{ marginTop: 10 }}>
           {list.map(({ p, d }) => (
             <button key={p.id} className="row" onClick={() => openSheet({ t: 'place', id: p.id })}>
-              <span className="ico-tile" style={{ background: CAT[p.category]?.color, color: '#fff' }}>
-                <span aria-hidden style={{ fontSize: 18 }}>
+              <span className="pl-thumb-wrap">
+                <PlaceThumb
+                  place={p}
+                  size={56}
+                  fallback={
+                    <span className="pl-thumb-fb" style={{ background: CAT[p.category]?.color }}>
+                      {CAT[p.category]?.emoji}
+                    </span>
+                  }
+                />
+                <span className="pl-thumb-badge" style={{ background: CAT[p.category]?.color }} aria-hidden>
                   {CAT[p.category]?.emoji}
                 </span>
               </span>

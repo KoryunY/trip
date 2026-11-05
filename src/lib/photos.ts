@@ -145,12 +145,12 @@ export async function fetchPhotos(pl: Place, max = 6): Promise<Photo[]> {
   }
 }
 
-export function usePhotos(pl: Place | undefined | null, max = 6): { photos: Photo[]; loading: boolean } {
+export function usePhotos(pl: Place | undefined | null, max = 6, enabled = true): { photos: Photo[]; loading: boolean } {
   const [state, setState] = useState<{ key: string; photos: Photo[]; loading: boolean }>({ key: '', photos: [], loading: false });
   const key = pl ? `${pl.id}|${pl.name}` : '';
   useEffect(() => {
-    if (!pl || pl.category === 'home' || pl.category === 'city') {
-      setState({ key, photos: [], loading: false });
+    if (!pl || pl.category === 'home' || pl.category === 'city' || !enabled) {
+      setState({ key, photos: mem.get(key) ?? [], loading: false });
       return;
     }
     let alive = true;
@@ -164,6 +164,6 @@ export function usePhotos(pl: Place | undefined | null, max = 6): { photos: Phot
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]);
-  return state.key === key ? { photos: state.photos, loading: state.loading } : { photos: [], loading: Boolean(pl) };
+  }, [key, enabled]);
+  return state.key === key ? { photos: state.photos, loading: state.loading } : { photos: [], loading: Boolean(pl) && enabled };
 }

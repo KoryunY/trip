@@ -5,7 +5,7 @@ import { EventRow } from '../components/EventRow';
 import { SyncBadge } from '../components/SyncBadge';
 import { Avatar, AvatarStack, Empty } from '../components/ui';
 import { useTripTime } from '../lib/clock';
-import { CAT, DAY_THEMES, KIND, SUN } from '../lib/meta';
+import { CAT, DAY_THEMES, KIND, KIND_HEX, SUN } from '../lib/meta';
 import { go, useRoute } from '../lib/router';
 import { save, useDB, useMe, useSettings, setSettings } from '../lib/store';
 import { dayKey, fmtDayLong, fmtWeekday, tripDays, TRIP_END_DAY, TRIP_START_DAY } from '../lib/time';
@@ -105,13 +105,15 @@ function DayView({ day, t, onlyMine }: { day: string; t: number; onlyMine: boole
   const events = onlyMine ? all.filter((e) => e.people.includes(me)) : all;
   const present = presentOnDay(db.people, day);
   const theme = DAY_THEMES[day];
+  const lead = all.find((e) => ['concert', 'gaming', 'flight', 'train', 'beer', 'party', 'sight'].includes(e.kind) && e.status !== 'cancelled');
+  const accent = lead ? KIND_HEX[lead.kind] : '#f2a007';
   const w = weather?.days?.[day];
   const ms = Date.parse(`${day}T12:00:00+01:00`);
   const nowIdx = events.findIndex((e) => evStart(e) > t);
   const isToday = dayKey(t) === day;
   return (
     <>
-      <div className="day-head card">
+      <div className="day-head card" style={{ ['--dc' as string]: accent }}>
         <div className="day-head-top">
           <div>
             <div className="eyebrow">{fmtDayLong(ms)}</div>

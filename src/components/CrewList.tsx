@@ -4,7 +4,7 @@ import { useCrew, nextEventFor } from '../lib/crew';
 import type { PersonPos } from '../lib/positions';
 import { useDB, usePresence, useMe, type DB } from '../lib/store';
 import { fmtDayShort, hhmm, relTime } from '../lib/time';
-import { openSheet } from '../lib/ui';
+import { mapIntent, openSheet } from '../lib/ui';
 import { Avatar } from './ui';
 import { KIND } from '../lib/meta';
 import { distance, fmtDistance } from '../lib/geo';
@@ -140,4 +140,56 @@ export function CrewList({ t, live, onPick }: { t: number; live: boolean; onPick
 
 export function fmtWhen(ms: number) {
   return `${fmtDayShort(ms)} · ${hhmm(ms)}`;
+}
+
+/** Compact visual crew cards (home screen): tap → show that person on the map. */
+export function CrewCards({ t, live }: { t: number; live: boolean }) {
+  const db = useDB();
+  const crew = useCrew(t);
+  const presence = usePresence();
+  const me = useMe();
+  const groups = groupCrew(crew);
+  return (
+    <div className={`crew-cards n${groups.length}`}>
+      {groups.map((grp) => {
+        const pos = grp[0];
+        const people = grp.map((g) => db.person[g.person] as Person).filter(Boolean);
+        const line = crewLine(pos, db, t);
+        const ev = pos.eventId ? db.event[pos.eventId] : undefined;
+        const KI = ev ? (KIND[ev.kind] ?? KIND.other).icon : null;
+        const liveOnes = grp.filter((g) => live && presenceFresh(presence[g.person], Date.now()));
+        return (
+          <button
+            key={grp.map((g) => g.person).join('-')}
+            className="crew-card"
+            style={{ ['--c' as string]: people[0]?.color }}
+            onClick={() => mapIntent({ person: pos.person })}
+          >
+            <span className="cc-top">
+              <span className="stack">
+                {people.map((p) => (
+                  <Avatar key={p.id} person={p} size="md" />
+                ))}
+              </span>
+              <span className="cc-names">
+                {people.length > 1 ? namesOf(people, db.people.length) : people[0]?.name}
+                {people.length === 1 && pos.person === me && <span className="muted"> {tx('(you)')}</span>}
+              </span>
+              {liveOnes.length > 0 && <span className="pill live cc-live">{tx('live')}</span>}
+            </span>
+            <span className="cc-status">
+              {KI && <KI aria-hidden />}
+              {line.title}
+            </span>
+            <span className="cc-sub">{line.sub}</span>
+            {pos.mode === 'travel' && (
+              <span className="progress">
+                <i style={{ width: `${(pos.progress ?? 0) * 100}%`, background: people[0]?.color }} />
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
 }

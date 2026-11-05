@@ -12,18 +12,16 @@ import {
   House,
   Languages,
   Luggage,
-  Map as MapIcon,
   Siren,
   Wallet,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Avatar, Segmented } from '../components/ui';
-import { CrewList } from '../components/CrewList';
+import { CrewCards } from '../components/CrewList';
 import { EventRow } from '../components/EventRow';
 import { Skyline } from '../components/Skyline';
 import { SetupCard } from '../components/SetupCard';
 import { SyncBadge } from '../components/SyncBadge';
-import { TimeMachine } from '../components/TimeMachine';
 import { timeMachine, useNow, useTripTime } from '../lib/clock';
 import { useLocation } from '../lib/location';
 import { distance, fmtDistance, walkMinutes } from '../lib/geo';
@@ -65,6 +63,7 @@ export function NowScreen() {
   const phase = t < TRIP_START_MS - 6 * 3600_000 ? 'before' : t > TRIP_END_MS + 12 * 3600_000 ? 'after' : 'during';
   const cd = countdownParts(firstMine ? Math.min(evStart(firstMine), myArrival) : myArrival, t);
   const theme = DAY_THEMES[today];
+  const nextMine = db.events.find((e) => e.status !== 'cancelled' && e.people.includes(me) && evEnd(e) > t);
   const w = weather?.days?.[today];
 
   return (
@@ -136,6 +135,19 @@ export function NowScreen() {
                 )}
                 {SUN[today] && <span>{tx("🌇 sunset ")}{SUN[today][1]}</span>}
               </div>
+              {nextMine && (
+                <button className="hero-next" onClick={() => openSheet({ t: 'event', id: nextMine.id })}>
+                  <span>
+                    <span className="eyebrow">{evStart(nextMine) <= t ? tx('Now') : tx('Next · {when}', { when: relTime(evStart(nextMine), t) })}</span>
+                    <span className="hero-next-t">{nextMine.title}</span>
+                    <span className="hero-next-s">
+                      {hhmm(evStart(nextMine))}–{hhmm(evEnd(nextMine))}
+                      {db.place[nextMine.placeId ?? nextMine.toPlaceId ?? ''] ? ` · ${db.place[nextMine.placeId ?? nextMine.toPlaceId ?? ''].name}` : ''}
+                    </span>
+                  </span>
+                  <ArrowRight aria-hidden />
+                </button>
+              )}
             </>
           )}
           {phase === 'after' && (
@@ -146,29 +158,27 @@ export function NowScreen() {
           )}
         </div>
 
-        <button className="watch-trip" onClick={playWholeTrip}>
-          <span className="watch-ico">
-            <Play aria-hidden />
-          </span>
-          <span className="grow">
-            <b>{tx("Watch the whole trip")}</b>
-            <span className="muted">{tx("Timelapse: everyone’s icons travel to Prague, explore, and fly home")}</span>
-          </span>
-        </button>
-
-        <SetupCard />
-
-        {/* CREW + TIME MACHINE */}
+        {/* CREW */}
         <section className="section">
           <div className="section-h">
-            <h2>{tx("The crew ")}{live ? tx("right now") : tx("at that moment")}</h2>
-            <button className="link" onClick={() => mapIntent({ fitCrew: true })}>{tx("On map")}</button>
+            <h2>{live ? tx('Where’s everyone') : tx('The crew at that moment')}</h2>
+            <button className="link" onClick={() => mapIntent({ fitCrew: true })}>
+              {tx('On map')}
+            </button>
           </div>
-          <CrewList t={t} live={live} />
-          <div className="card tm-card">
-            <TimeMachine compact />
-          </div>
+          <CrewCards t={t} live={live} />
+          <button className="watch-trip" onClick={playWholeTrip}>
+            <span className="watch-ico">
+              <Play aria-hidden />
+            </span>
+            <span className="grow">
+              <b>{tx('Watch the whole trip')}</b>
+              <span className="muted">{tx('Timelapse: everyone’s icons travel to Prague, explore, and fly home')}</span>
+            </span>
+          </button>
         </section>
+
+        <SetupCard />
 
         {/* UP NEXT */}
         <section className="section">
@@ -200,11 +210,11 @@ export function NowScreen() {
             )}
           </div>
           <LeaveHint />
-          {upcoming[0] && (upcoming[0].placeId || upcoming[0].toPlaceId) && (
+          {upcoming[0] && (upcoming[0].placeId || upcoming[0].toPlaceId) && evStart(upcoming[0]) - t < 8 * 3600_000 && (
             <div className="next-actions">
               {(() => {
                 const pl = db.place[upcoming[0].placeId ?? upcoming[0].toPlaceId ?? ''];
-                if (!pl) return null;
+                if (!pl || distance([pl.lon, pl.lat], [db.place.base.lon, db.place.base.lat]) > 20_000) return null;
                 return (
                   <>
                     <button className="btn sm" onClick={() => mapIntent({ route: { to: [pl.lon, pl.lat], name: pl.name } })}>
@@ -280,18 +290,29 @@ export function NowScreen() {
             <h2>{tx("Handy")}</h2>
           </div>
           <div className="tools">
-            <Tool icon={House} label={tx("Take me home")} onClick={() => mapIntent({ route: { to: [db.place.base.lon, db.place.base.lat], name: 'Base' } })} />
-            <Tool icon={Compass} label={tx("Compass home")} onClick={() => openSheet({ t: 'compass', target: { lat: db.place.base.lat, lon: db.place.base.lon, name: 'Base' } })} />
-            <Tool icon={Bus} label={tx("Airport ↔ base")} onClick={() => go('guide/airport')} />
-            <Tool icon={Luggage} label={tx("Baggage rules")} onClick={() => go('guide/baggage')} />
-            <Tool icon={ArrowLeftRight} label={tx("Converter")} onClick={() => openSheet({ t: 'converter' })} />
-            <Tool icon={Beer} label={tx("Who buys the round?")} onClick={() => openSheet({ t: 'roulette' })} />
-            <Tool icon={Wallet} label={tx("Expenses & split")} onClick={() => go('expenses')} />
-            <Tool icon={Users} label={tx("First days plan")} onClick={() => go('guide/firstdays')} />
-            <Tool icon={Languages} label={tx("Czech phrases")} onClick={() => go('guide/phrases')} />
-            <Tool icon={Siren} label={tx("Emergency")} onClick={() => go('guide/emergency')} />
-            <Tool icon={BookOpen} label={tx("All guides")} onClick={() => go('guides')} />
-            <Tool icon={MapIcon} label={tx("Timelapse")} onClick={() => mapIntent({ fitCrew: true })} />
+            <Tool icon={House} color="#2563eb" label={tx('Take me home')} onClick={() => mapIntent({ route: { to: [db.place.base.lon, db.place.base.lat], name: tx('Base') } })} />
+            <Tool icon={Compass} color="#0891b2" label={tx('Compass home')} onClick={() => openSheet({ t: 'compass', target: { lat: db.place.base.lat, lon: db.place.base.lon, name: tx('Base') } })} />
+            <Tool icon={ArrowLeftRight} color="#16a34a" label={tx('Converter')} onClick={() => openSheet({ t: 'converter' })} />
+            <Tool icon={Beer} color="#e09400" label={tx('Who buys the round?')} onClick={() => openSheet({ t: 'roulette' })} />
+            <Tool icon={Wallet} color="#9333ea" label={tx('Expenses & split')} onClick={() => go('expenses')} />
+            <Tool icon={Siren} color="#dc2626" label={tx('Emergency')} onClick={() => go('guide/emergency')} />
+          </div>
+          <div className="guide-links">
+            <button className="chip" onClick={() => go('guide/airport')}>
+              <Bus /> {tx('Airport ↔ base')}
+            </button>
+            <button className="chip" onClick={() => go('guide/baggage')}>
+              <Luggage /> {tx('Baggage rules')}
+            </button>
+            <button className="chip" onClick={() => go('guide/firstdays')}>
+              <Users /> {tx('First days plan')}
+            </button>
+            <button className="chip" onClick={() => go('guide/phrases')}>
+              <Languages /> {tx('Czech phrases')}
+            </button>
+            <button className="chip" onClick={() => go('guides')}>
+              <BookOpen /> {tx('All guides')}
+            </button>
           </div>
         </section>
 
@@ -304,7 +325,7 @@ export function NowScreen() {
             <div className="card list">
               {[...activity]
                 .reverse()
-                .slice(0, 8)
+                .slice(0, 4)
                 .map((a, i) => (
                   <div className="row act" key={i}>
                     <Avatar person={db.person[a.by]} size="md" />
@@ -335,9 +356,9 @@ function playWholeTrip() {
   setTimeout(() => timeMachine.play(), 900);
 }
 
-function Tool({ icon: Icon, label, onClick }: { icon: typeof House; label: string; onClick: () => void }) {
+function Tool({ icon: Icon, label, onClick, color }: { icon: typeof House; label: string; onClick: () => void; color?: string }) {
   return (
-    <button className="tool" onClick={onClick}>
+    <button className="tool" onClick={onClick} style={color ? { ['--tc' as string]: color } : undefined}>
       <span className="tool-ico">
         <Icon aria-hidden />
       </span>

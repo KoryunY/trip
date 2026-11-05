@@ -12,6 +12,7 @@ import { useWeather, weatherAt, wmo } from '../../lib/weather';
 import { Avatar, Segmented, Sheet, toast } from '../ui';
 import { PeoplePicker, PlacePicker } from './PlacePicker';
 import { t as tx } from '../../i18n';
+import { PlaceThumb } from '../PhotoStrip';
 
 export function EventSheet({ id, onClose }: { id: string; onClose: () => void }) {
   const db = useDB();
@@ -95,7 +96,7 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
               </div>
             ) : place ? (
               <button className="link-row" onClick={() => openSheet({ t: 'place', id: place.id })}>
-                <span aria-hidden>{CAT[place.category]?.emoji}</span>
+                <PlaceThumb place={place} size={52} fallback={<span className="pl-thumb-fb" style={{ background: CAT[place.category]?.color }}>{CAT[place.category]?.emoji}</span>} />
                 <span className="grow">
                   <b>{place.name}</b>
                   {place.address && <span className="muted d-block">{place.address}</span>}
