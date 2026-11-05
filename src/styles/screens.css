@@ -2045,3 +2045,10 @@ details[open] > summary::before {
   height: 18px;
   accent-color: var(--ink);
 }
+
+.been {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}

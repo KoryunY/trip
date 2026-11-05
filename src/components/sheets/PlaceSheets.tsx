@@ -1,4 +1,4 @@
-import { CalendarPlus, Car, Clock, Compass, ExternalLink, Footprints, Globe, LocateFixed, Map as MapIcon, Navigation, Pencil, ThumbsDown, ThumbsUp, Trash2, Wallet, TriangleAlert } from 'lucide-react';
+import { CalendarPlus, CheckCheck, Car, Clock, Compass, ExternalLink, Footprints, Globe, LocateFixed, Map as MapIcon, Navigation, Pencil, ThumbsDown, ThumbsUp, Trash2, Wallet, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import type { Place, PlaceCategory } from '../../../shared/types';
 import { CAT, CAT_ORDER } from '../../lib/meta';
@@ -113,6 +113,26 @@ export function PlaceSheet({ id, onClose }: { id: string; onClose: () => void })
             </a>
           )}
         </div>
+        {['sight', 'viewpoint', 'museum', 'beer', 'daytrip', 'venue', 'nightlife'].includes(p.category) && (
+          <div className="been">
+            <button
+              className={`btn sm ${p.visited?.[me] ? 'primary' : ''}`}
+              aria-pressed={Boolean(p.visited?.[me])}
+              onClick={() => {
+                const visited = { ...(p.visited ?? {}) };
+                if (visited[me]) delete visited[me];
+                else visited[me] = Date.now();
+                save('places', { ...p, visited });
+                if (!p.visited?.[me]) toast('Ticked off ✓');
+              }}
+            >
+              <CheckCheck /> {p.visited?.[me] ? 'Been here' : 'Mark as been here'}
+            </button>
+            {Object.keys(p.visited ?? {}).map((pid) => (
+              <Avatar key={pid} person={db.person[pid]} size="sm" done />
+            ))}
+          </div>
+        )}
         <div className="pl-votes">
           <button className={`vote ${myVote === 1 ? 'on' : ''}`} onClick={() => vote(1)} aria-label="I want to go" aria-pressed={myVote === 1}>
             <ThumbsUp />

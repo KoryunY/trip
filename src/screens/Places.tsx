@@ -7,22 +7,28 @@ import { useLocation } from '../lib/location';
 import { useDB } from '../lib/store';
 import { voteScore } from '../lib/trip';
 import { openSheet } from '../lib/ui';
+
+const BUCKET: PlaceCategory[] = ['sight', 'viewpoint', 'museum'];
 import { SubBar } from './More';
 
 export function PlacesView() {
   const db = useDB();
   const loc = useLocation();
   const [q, setQ] = useState('');
-  const [cat, setCat] = useState<PlaceCategory | 'all'>('all');
+  const [cat, setCat] = useState<PlaceCategory | 'all' | 'bucket'>('all');
+  
   const origin: [number, number] = loc.fix ? [loc.fix.lon, loc.fix.lat] : [db.place.base.lon, db.place.base.lat];
   const list = useMemo(() => {
     const qq = q.trim().toLowerCase();
     return db.places
-      .filter((p) => (cat === 'all' || p.category === cat) && (!qq || `${p.name} ${p.area ?? ''} ${p.address ?? ''} ${(p.tags ?? []).join(' ')}`.toLowerCase().includes(qq)))
+      .filter((p) => (cat === 'all' || (cat === 'bucket' ? BUCKET.includes(p.category) : p.category === cat)) && (!qq || `${p.name} ${p.area ?? ''} ${p.address ?? ''} ${(p.tags ?? []).join(' ')}`.toLowerCase().includes(qq)))
       .map((p) => ({ p, d: distance(origin, [p.lon, p.lat]) }))
       .sort((a, b) => a.d - b.d);
   }, [db.places, q, cat, origin[0], origin[1]]);
   const cats = CAT_ORDER.filter((c) => db.places.some((p) => p.category === c));
+  const bucket = db.places.filter((p) => BUCKET.includes(p.category));
+  const bucketTotal = bucket.length;
+  const bucketDone = bucket.filter((p) => Object.keys(p.visited ?? {}).length > 0).length;
   return (
     <>
       <SubBar
@@ -43,6 +49,9 @@ export function PlacesView() {
           <button className="chip" aria-pressed={cat === 'all'} onClick={() => setCat('all')}>
             All
           </button>
+          <button className="chip" aria-pressed={cat === 'bucket'} onClick={() => setCat('bucket')}>
+            ✅ Bucket list {bucketDone}/{bucketTotal}
+          </button>
           {cats.map((c) => (
             <button key={c} className="chip" aria-pressed={cat === c} onClick={() => setCat(c)}>
               {CAT[c].emoji} {CAT[c].plural}
@@ -58,7 +67,10 @@ export function PlacesView() {
                 </span>
               </span>
               <span className="grow">
-                <span className="t">{p.name}</span>
+                <span className="t">
+                  {p.name}
+                  {Object.keys(p.visited ?? {}).length > 0 && <span className="pill ok" style={{ marginLeft: 6 }}>✓ been</span>}
+                </span>
                 <span className="s">
                   {fmtDistance(d)} · {p.area ?? CAT[p.category]?.label}
                   {voteScore(p.votes) > 0 ? ` · 👍 ${voteScore(p.votes)}` : ''}

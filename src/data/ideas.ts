@@ -2,6 +2,23 @@ import type { Idea } from '../../shared/types';
 
 export const IDEAS: Idea[] = [
   {
+    id: 'i-brew',
+    title: 'Brew our own beer: hands-on brewing workshop',
+    kind: 'beer',
+    durationMin: 240,
+    cost: '~1,500–3,000 CZK pp',
+    notes:
+      'Several Prague brewpubs and beer tour companies run “brew your own beer” sessions (you mash, hop and taste, and some post the bottles later). Search “Prague beer brewing workshop” and book a few days ahead. Fits Fri 20 or Sat 21 if we skip Kutná Hora.',
+  },
+  {
+    id: 'i-tasting',
+    title: 'Guided Czech beer tasting (8–10 beers, small breweries)',
+    kind: 'beer',
+    durationMin: 150,
+    cost: '~1,000–1,500 CZK pp',
+    notes: 'Easy way to try lagers you won’t find in tourist pubs. Several craft bars offer tasting flights without booking.',
+  },
+  {
     id: 'i-kutna',
     title: 'Day trip: Kutná Hora (bone church + St. Barbara’s)',
     kind: 'sight',

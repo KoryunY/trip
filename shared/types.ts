@@ -53,6 +53,8 @@ export interface Place {
   saved?: boolean;
   /** location not double-checked */
   approx?: boolean;
+  /** person -> timestamp they ticked "been here" */
+  visited?: Record<PersonId, number>;
 }
 
 export type EventKind =
