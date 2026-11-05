@@ -646,6 +646,7 @@
   flex-direction: column;
   align-items: flex-end;
   font-weight: 700;
+  white-space: nowrap;
 }
 .day-wx-e {
   font-size: 26px;
@@ -823,8 +824,13 @@
   line-height: 1.3;
 }
 .task-prio {
-  margin-left: 6px;
-  vertical-align: 1px;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  margin-left: 7px;
+  vertical-align: 2px;
 }
 .task-who {
   display: flex;
@@ -1489,13 +1495,47 @@ details[open] > summary::before {
 }
 .map-offline-note {
   margin-top: 8px;
-  font-size: 12.5px;
-  padding: 8px 12px;
+  font-size: 12px;
+  padding: 6px 8px 6px 12px;
   border-radius: 12px;
   background: var(--accent-soft);
   color: var(--accent-text);
   font-weight: 600;
-  max-width: 420px;
+  max-width: min(330px, calc(100% - 58px));
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow-1);
+}
+.map-offline-note button {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+}
+.map-offline-note svg {
+  width: 16px;
+  height: 16px;
+}
+.mine-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.mine-toggle[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
 }
 .map-controls {
   position: absolute;
@@ -1856,4 +1896,23 @@ details[open] > summary::before {
 }
 .roulette-result svg {
   color: var(--accent-text);
+}
+
+.install-banner {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+}
+.install-banner img {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  flex: none;
+}
+.install-banner .grow {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
 }

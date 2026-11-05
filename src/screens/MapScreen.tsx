@@ -83,6 +83,7 @@ export function MapScreen({ active }: { active: boolean }) {
   const [nav, setNav] = useState<{ to: LngLat; name: string; res?: RouteResult; err?: string; loading?: boolean } | null>(null);
   const [panel, setPanel] = useState(true);
   const [styleOpen, setStyleOpen] = useState(false);
+  const [noteHidden, setNoteHidden] = useState(false);
   const crewMarkers = useRef<Map<string, { m: maplibregl.Marker; el: HTMLDivElement }>>(new Map());
   const meMarker = useRef<maplibregl.Marker | null>(null);
   const liveMarkers = useRef<Map<string, maplibregl.Marker>>(new Map());
@@ -106,7 +107,10 @@ export function MapScreen({ active }: { active: boolean }) {
     map.touchZoomRotate.enableRotation();
     mapRef.current = map;
     map.on('style.load', () => setReady((r) => r + 1));
-    map.on('dragstart', () => setFollow(false));
+    map.on('dragstart', () => {
+      setFollow(false);
+      setPanel(false);
+    });
     // long-press / right-click: add a place here
     map.on('contextmenu', (e) => {
       openSheet({ t: 'placeEdit', draft: { lat: Number(e.lngLat.lat.toFixed(5)), lon: Number(e.lngLat.lng.toFixed(5)), category: 'sight' } });
@@ -491,9 +495,12 @@ export function MapScreen({ active }: { active: boolean }) {
             </button>
           ))}
         </div>
-        {!remote && (
-          <div className="map-offline-note">
-            Offline map mode: download the offline map in Settings to see streets without internet.
+        {!remote && !noteHidden && (
+          <div className="map-offline-note" role="status">
+            <span>No street map right now. Settings → Download offline map.</span>
+            <button onClick={() => setNoteHidden(true)} aria-label="Dismiss">
+              <X />
+            </button>
           </div>
         )}
       </div>

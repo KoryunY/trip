@@ -20,6 +20,7 @@ import { Avatar, Segmented } from '../components/ui';
 import { CrewList } from '../components/CrewList';
 import { EventRow } from '../components/EventRow';
 import { Skyline } from '../components/Skyline';
+import { InstallBanner } from '../components/InstallBanner';
 import { SyncBadge } from '../components/SyncBadge';
 import { TimeMachine } from '../components/TimeMachine';
 import { useTripTime } from '../lib/clock';
@@ -137,6 +138,8 @@ export function NowScreen() {
             </>
           )}
         </div>
+
+        <InstallBanner />
 
         {/* CREW + TIME MACHINE */}
         <section className="section">

@@ -1,7 +1,8 @@
-import { ArrowLeft, BookOpen, ChevronRight, Lightbulb, MapPin, Receipt, Settings as SettingsIcon, StickyNote, Users } from 'lucide-react';
+import { ArrowLeft, Share2, BookOpen, ChevronRight, Lightbulb, MapPin, Receipt, Settings as SettingsIcon, StickyNote, Users } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { SyncBadge } from '../components/SyncBadge';
-import { Avatar } from '../components/ui';
+import { Avatar, toast } from '../components/ui';
+import { shareApp } from '../components/InstallBanner';
 import { GUIDES } from '../data/guides';
 import { back, go, useRoute } from '../lib/router';
 import { useDB } from '../lib/store';
@@ -62,6 +63,14 @@ function MoreMenu() {
           <MenuRow icon={<Receipt />} title="Expenses & split" sub="Who paid what, who owes whom" onClick={() => go('expenses')} />
           <MenuRow icon={<StickyNote />} title="Shared notes" sub="Apartment info, contacts, bookings" onClick={() => go('notes')} />
           <MenuRow icon={<SettingsIcon />} title="Settings & offline" sub="Offline map, sync, theme, backup" onClick={() => go('settings')} />
+          <MenuRow
+            icon={<Share2 />}
+            title="Send the app to the crew"
+            sub={location.host}
+            onClick={async () => {
+              if ((await shareApp()) === 'copied') toast('Link copied');
+            }}
+          />
         </div>
 
         <section className="section">

@@ -114,7 +114,7 @@ export function TaskRow({ task }: { task: Task }) {
       <button className="grow task-main" onClick={() => openSheet({ t: 'task', id: task.id })}>
         <span className="t">
           {task.title}
-          {task.priority === 'high' && !complete && <span className="pill danger task-prio">important</span>}
+          {task.priority === 'high' && !complete && <span className="task-prio" role="img" aria-label="important" title="Important" />}
         </span>
         <span className="task-who">
           {task.assignees.map((pid) => (

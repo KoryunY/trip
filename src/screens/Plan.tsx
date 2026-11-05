@@ -1,4 +1,4 @@
-import { CalendarPlus, Filter, Lightbulb, Plus, Sunrise, Sunset, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { CalendarPlus, Users, Lightbulb, Plus, Sunrise, Sunset, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Fragment, useEffect, useRef } from 'react';
 import type { Idea } from '../../shared/types';
 import { EventRow } from '../components/EventRow';
@@ -24,6 +24,7 @@ export function PlanScreen() {
   const { onlyMine } = useSettings();
   const stripRef = useRef<HTMLDivElement>(null);
   const db = useDB();
+  const me = useMe()!;
 
   useEffect(() => {
     const el = stripRef.current?.querySelector('[aria-current="true"]') as HTMLElement | null;
@@ -39,13 +40,13 @@ export function PlanScreen() {
             <div className="sub">13–22 Nov · tap anything to edit</div>
           </div>
           <button
-            className={`icon-btn ${onlyMine ? 'on-accent' : ''}`}
+            className="mine-toggle"
             onClick={() => setSettings({ onlyMine: !onlyMine })}
             aria-pressed={onlyMine}
-            aria-label={onlyMine ? 'Showing only my events' : 'Showing everyone’s events'}
-            title={onlyMine ? 'Only mine' : 'Everyone'}
+            aria-label={onlyMine ? 'Showing only my events. Tap to show everyone' : 'Showing everyone. Tap to show only mine'}
           >
-            <Filter />
+            {onlyMine ? <Avatar person={db.person[me]} size="sm" /> : <Users aria-hidden style={{ width: 16, height: 16 }} />}
+            {onlyMine ? 'Mine' : 'Everyone'}
           </button>
           <SyncBadge />
         </div>
