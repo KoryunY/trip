@@ -6,6 +6,7 @@ import { downloadOffline, useOffline } from '../lib/offline';
 import { setSettings, useDB, useMe, useSettings } from '../lib/store';
 import { go } from '../lib/router';
 import { toast } from './ui';
+import { realNow } from '../lib/clock';
 
 const LS = 'pc.setup.v1';
 const read = () => {
@@ -60,7 +61,7 @@ export function SetupCard() {
     { done: standalone, icon: Smartphone, label: 'Install on the home screen', run: () => go('settings') },
   ];
   const left = items.filter((i) => !i.done).length;
-  if (st.hidden || left === 0) return null;
+  if (st.hidden || left === 0 || realNow() > Date.parse('2026-11-22T20:00:00+01:00')) return null;
   return (
     <div className="card pad setup">
       <div className="setup-h">
