@@ -294,10 +294,14 @@ export function MapScreen({ active }: { active: boolean }) {
       if (!entry) {
         const elm = document.createElement('div');
         elm.className = 'crew-marker';
-        elm.addEventListener('click', (ev) => {
+        elm.setAttribute('role', 'button');
+        elm.tabIndex = 0;
+        const open = (ev: Event) => {
           ev.stopPropagation();
           openSheet({ t: 'person', id: pos.person });
-        });
+        };
+        elm.addEventListener('click', open);
+        elm.addEventListener('keydown', (ev) => (ev.key === 'Enter' || ev.key === ' ') && open(ev));
         const m = new maplibregl.Marker({ element: elm, anchor: 'center' }).setLngLat(pos.p).addTo(map);
         entry = { m, el: elm };
         crewMarkers.current.set(pos.person, entry);

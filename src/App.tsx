@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
 import { TabBar } from './components/TabBar';
 import { SheetHost } from './components/SheetHost';
 import { Toasts } from './components/ui';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Login } from './screens/Login';
 import { NowScreen } from './screens/Now';
 import { PlanScreen } from './screens/Plan';
@@ -38,7 +39,7 @@ function useTheme() {
 function Screen({ active, full, children }: { active: boolean; full?: boolean; children: ReactNode }) {
   return (
     <section className={`screen ${full ? 'full' : ''}`} hidden={!active} aria-hidden={!active}>
-      {children}
+      <ErrorBoundary>{children}</ErrorBoundary>
     </section>
   );
 }
@@ -83,7 +84,9 @@ export default function App() {
         <Screen active={t === 'more'}>{visited.has('more') && <MoreScreen />}</Screen>
       </main>
       <TabBar />
-      <SheetHost />
+      <ErrorBoundary label="this sheet">
+        <SheetHost />
+      </ErrorBoundary>
       <Toasts />
     </div>
   );

@@ -127,6 +127,31 @@ function resolveItem(key: string): SyncItem | undefined {
   return best;
 }
 
+// ---------- normalisation (synced data may be partial/old) ----------
+const arr = (v: unknown) => (Array.isArray(v) ? v : []);
+function normalise(col: Collection, d: any): any | null {
+  if (!d || typeof d !== 'object' || typeof d.id !== 'string') return null;
+  switch (col) {
+    case 'events': {
+      if (!Number.isFinite(Date.parse(d.start)) || !Number.isFinite(Date.parse(d.end))) return null;
+      return { kind: 'other', status: 'planned', title: '(untitled)', ...d, people: arr(d.people) };
+    }
+    case 'places':
+      if (!Number.isFinite(Number(d.lat)) || !Number.isFinite(Number(d.lon))) return null;
+      return { category: 'sight', name: '(unnamed)', ...d, lat: Number(d.lat), lon: Number(d.lon) };
+    case 'tasks':
+      return { category: 'other', mode: 'each', title: '(untitled)', ...d, assignees: arr(d.assignees) };
+    case 'people':
+      return Array.isArray(d.home) && d.home.length === 2 ? { name: d.id, color: '#888', homeName: '', ...d } : null;
+    case 'expenses':
+      return { currency: 'CZK', ...d, amount: Number(d.amount) || 0, split: arr(d.split) };
+    case 'ideas':
+      return { kind: 'other', title: '(untitled)', ...d };
+    case 'notes':
+      return { title: '', body: '', ...d };
+  }
+}
+
 function buildDB(): DB {
   const keys = new Set<string>([...seedLayer.keys(), ...serverLayer.keys(), ...pending.keys()]);
   const buckets: Record<Collection, { data: any; key: string }[]> = {
@@ -142,7 +167,9 @@ function buildDB(): DB {
   for (const key of keys) {
     const it = resolveItem(key);
     if (!it || it.data === null || !buckets[it.col]) continue;
-    buckets[it.col].push({ data: it.data, key });
+    const data = normalise(it.col, it.data);
+    if (!data) continue;
+    buckets[it.col].push({ data, key });
     if (it.u > 0) meta[key] = { u: it.u, by: it.by };
   }
   const bySeed = (a: { key: string }, b: { key: string }) =>
