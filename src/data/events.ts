@@ -75,7 +75,7 @@ export const EVENTS: TripEvent[] = [
     people: K,
     status: 'planned',
     notes:
-      'Cheapest (46 CZK): trolleybus 59 → metro A, on one 90-min PID ticket from the PID Lítačka app.\nEasiest with a bag: Airport Express (AE) bus to Hlavní nádraží (200 CZK, buy on board; normal PID tickets are not valid), then ~15 min walk or tram 5/9/15/26 to Husinecká.\nZero effort: Bolt (~450–700 CZK) or Uber (~620–850 CZK), 25–35 min.\nFull comparison in Guides → Airport → base.',
+      'Cheapest (46 CZK): trolleybus 59 → metro A, on one 90-min PID ticket from the PID Lítačka app.\nEasiest with a bag: Airport Express (AE) bus to Hlavní nádraží (200 CZK, buy on board; normal PID tickets are not valid), then ~15 min walk or tram 5/9/15/26 two stops to Lipanská (330 m from the base).\nZero effort: Bolt (~450–700 CZK) or Uber (~620–850 CZK), 25–35 min.\nFull comparison in Guides → Airport → base.',
     links: [{ label: 'Guide', url: '#/guide/airport' }],
   },
   {

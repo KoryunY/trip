@@ -137,7 +137,7 @@ export const GUIDES: Guide[] = [
           'Buy a 90-minute ticket (46 CZK) in PID Lítačka and activate it before boarding.',
           'Trolleybus 59 from T1 to Nádraží Veleslavín (~16 min).',
           'Metro A (green) towards Depo Hostivař → Jiřího z Poděbrad (≈ 8 stops).',
-          'Walk ~12–15 min north to Dalimilova, or take the tram from Husinecká.',
+          'Walk ~12 min north to Dalimilova.',
         ],
       },
       {
@@ -145,7 +145,7 @@ export const GUIDES: Guide[] = [
         steps: [
           'AE bus stop is right outside arrivals; pay the driver 200 CZK (PID tickets NOT valid).',
           'Get off at Praha hlavní nádraží (last stop).',
-          'Walk east ~15 min (Husitská / Seifertova), or tram 5/9/15/26 two stops to Husinecká.',
+          'Walk east ~15 min, or tram 5/9/15/26 two stops (Husinecká → Lipanská) and walk 330 m.',
         ],
       },
       {
@@ -296,7 +296,7 @@ export const GUIDES: Guide[] = [
       {
         h: 'From the base',
         bullets: [
-          'Tram stop Husinecká (Seifertova street): trams to Hlavní nádraží, Václavské náměstí, Národní, Malá Strana.',
+          'Tram stops Lipanská (~330 m) and Husinecká (~400 m) on Seifertova: trams towards Hlavní nádraží, Václavské náměstí and the centre.',
           'Metro A: Jiřího z Poděbrad (~12–15 min walk).',
           'Metro B/C: Florenc (~15 min walk), direct to O2 arena (B).',
           'Hlavní nádraží (trains to Plzeň / Kutná Hora): ~15 min walk.',
