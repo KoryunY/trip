@@ -50,5 +50,21 @@ export async function GET(request) {
   const fx = await check('https://open.er-api.com/v6/latest/CZK');
   out.rates = { status: fx.status, cors: fx.cors, eur: fx.j?.rates?.EUR, amd: fx.j?.rates?.AMD };
   out.carto = await check('https://a.basemaps.cartocdn.com/rastertiles/voyager/14/8853/5549.png', 'bin');
+  const places = [
+    ['U Fleků', 50.0789, 14.41698],
+    ['Lokál Dlouhááá', 50.09074, 14.42576],
+    ['U Vystřelenýho oka', 50.08715, 14.44956],
+    ['Vítkov', 50.08872, 14.44998],
+    ['Naše maso', 50.0908, 14.4269],
+  ];
+  out.commons = [];
+  for (const [name, lat, lon] of places) {
+    const s1 = await check(`https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(name + ' Praha')}&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url&iiurlwidth=480`);
+    const s2 = await check(`https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=geosearch&ggscoord=${lat}%7C${lon}&ggsradius=80&ggsnamespace=6&ggslimit=8&prop=imageinfo&iiprop=url&iiurlwidth=480`);
+    const titles = (r) => Object.values(r.j?.query?.pages ?? {}).map((p) => p.title).slice(0, 6);
+    out.commons.push({ name, search: { status: s1.status, cors: s1.cors, titles: titles(s1), thumb: Object.values(s1.j?.query?.pages ?? {})[0]?.imageinfo?.[0]?.thumburl }, geo: { status: s2.status, titles: titles(s2) } });
+  }
+  const wp = await check('https://en.wikipedia.org/api/rest_v1/page/summary/U_Fleků');
+  out.wikiSummary = { status: wp.status, cors: wp.cors, thumb: wp.j?.thumbnail?.source, title: wp.j?.title };
   return json(out, 200, { 'Cache-Control': 'no-store' });
 }
