@@ -114,9 +114,35 @@ export function MapScreen({ active }: { active: boolean }) {
       setFollow(false);
       setPanel(false);
     });
-    // long-press / right-click: add a place here
+    // long-press (touch) / right-click: add a place here
+    const addAt = (ll: maplibregl.LngLat) =>
+      openSheet({ t: 'placeEdit', draft: { lat: Number(ll.lat.toFixed(5)), lon: Number(ll.lng.toFixed(5)), category: 'sight' } });
+    let press: { t: ReturnType<typeof setTimeout>; x: number; y: number } | null = null;
+    const cancelPress = () => {
+      if (press) clearTimeout(press.t);
+      press = null;
+    };
+    let lastTouch = 0;
+    map.on('touchstart', (e) => {
+      lastTouch = Date.now();
+      cancelPress();
+      if (e.originalEvent.touches.length !== 1) return;
+      const ll = e.lngLat;
+      press = { x: e.point.x, y: e.point.y, t: setTimeout(() => {
+        press = null;
+        navigator.vibrate?.(15);
+        addAt(ll);
+      }, 650) };
+    });
+    map.on('touchmove', (e) => {
+      if (press && Math.hypot(e.point.x - press.x, e.point.y - press.y) > 10) cancelPress();
+    });
+    map.on('touchend', cancelPress);
+    map.on('touchcancel', cancelPress);
+    map.on('movestart', cancelPress);
     map.on('contextmenu', (e) => {
-      openSheet({ t: 'placeEdit', draft: { lat: Number(e.lngLat.lat.toFixed(5)), lon: Number(e.lngLat.lng.toFixed(5)), category: 'sight' } });
+      if (Date.now() - lastTouch < 2000) return; // touch devices: handled by long-press above
+      addAt(e.lngLat);
     });
     return () => {
       map.remove();

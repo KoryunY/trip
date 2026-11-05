@@ -111,6 +111,7 @@ body {
   font-feature-settings: 'cv11', 'ss01';
   overscroll-behavior-y: none;
   -webkit-font-smoothing: antialiased;
+  touch-action: manipulation;
 }
 button,
 input,
