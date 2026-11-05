@@ -28,7 +28,7 @@ import { DAY_THEMES, SUN } from '../lib/meta';
 import { go } from '../lib/router';
 import { isSeed, useActivity, useDB, useMe } from '../lib/store';
 import { countdownParts, dayKey, fmtDayLong, relTime, tripDays, hhmm } from '../lib/time';
-import { eventsOnDay, myOpenTasks, taskStats, TRIP_START_MS, TRIP_END_MS, evEnd, evStart } from '../lib/trip';
+import { eventDay, eventsOnDay, myOpenTasks, taskStats, TRIP_START_MS, TRIP_END_MS, evEnd, evStart } from '../lib/trip';
 import { openSheet, mapIntent } from '../lib/ui';
 import { useWeather, wmo, NORMAL } from '../lib/weather';
 
@@ -176,7 +176,7 @@ export function NowScreen() {
                   key={e.id}
                   ev={e}
                   t={t}
-                  showDay={dayKey(evStart(e)) !== today ? dayKey(evStart(e)).slice(8) + '/11' : undefined}
+                  showDay={eventDay(e) !== today ? eventDay(e).slice(8) + '/11' : undefined}
                   onClick={() => openSheet({ t: 'event', id: e.id })}
                 />
               ))

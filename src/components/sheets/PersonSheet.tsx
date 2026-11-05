@@ -6,6 +6,7 @@ import { useCrew } from '../../lib/crew';
 import { save, useDB, usePresence, useMe } from '../../lib/store';
 import { dayKey, hhmm, isoInTz, relTime, zonedToUtc, fmtDayShort } from '../../lib/time';
 import { mapIntent, openSheet } from '../../lib/ui';
+import { eventDay } from '../../lib/trip';
 import { crewLine, presenceFresh } from '../CrewList';
 import { EventRow } from '../EventRow';
 import { Avatar, Sheet, toast } from '../ui';
@@ -83,7 +84,7 @@ export function PersonSheet({ id, onClose }: { id: string; onClose: () => void }
             </div>
             <div className="card ev-list">
               {upcoming.map((e) => (
-                <EventRow key={e.id} ev={e} t={t} showDay={dayKey(Date.parse(e.start)).slice(8) + '/11'} onClick={() => openSheet({ t: 'event', id: e.id })} />
+                <EventRow key={e.id} ev={e} t={t} showDay={eventDay(e).slice(8) + '/11'} onClick={() => openSheet({ t: 'event', id: e.id })} />
               ))}
               {!upcoming.length && <div className="empty">Nothing upcoming</div>}
             </div>

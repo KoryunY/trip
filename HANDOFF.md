@@ -1,0 +1,53 @@
+# Handoff: Prague Crew
+
+Status as of 5 Nov 2026. Live at **https://prague-crew.vercel.app**. Every push to branch `claude/jolly-cori-z7w6mu` auto-deploys to production on Vercel (project `prague-crew`, team `darkillerygmailcoms-projects`).
+
+## Architecture
+- **Client:** Vite + React 19 + TypeScript PWA (`src/`). It uses a hash router, MapLibre GL 5, and vite-plugin-pwa (Workbox).
+- **Data:** a local-first store (`src/lib/store.ts`) with three layers: seed (`src/data/*`), server, and pending edits.
+  - Last-writer-wins per record.
+  - Persisted in localStorage.
+- **Sync:** `src/lib/sync.ts`.
+  - Pushes pending ops to `POST /api/sync`.
+  - Polls `GET /api/state` every 20 s while visible.
+  - Opt-in live GPS goes to `POST /api/presence`.
+- **Server:** `api/*.js` are plain JS Vercel Functions.
+  - One JSON doc in the private Vercel Blob store `prague-crew-db` (fra1), env `BLOB_READ_WRITE_TOKEN`.
+  - Optimistic concurrency via ETag `ifMatch`.
+  - Shared merge logic lives in `shared/merge.js`.
+- **Map:** OpenFreeMap vector styles (liberty/positron/bright/dark).
+  - Tile URLs are pinned from TileJSON.
+  - Bundled Natural Earth world underlay (`public/data/world.json`).
+  - Offline pack downloader in `src/lib/offline.ts` (418 tiles + styles/sprites/fonts → Cache Storage).
+- **Positions / timelapse:** `src/lib/positions.ts` turns each person's events into a continuous timeline.
+  - Includes travel arcs and going home on long gaps.
+  - `src/lib/clock.ts` is the time machine: play, speeds, and skipping quiet hours.
+- **Navigation:** OSRM foot routing (routing.openstreetmap.de) with follow-me mode, next turn and arrival. Google Maps handles transit, plus the Uber deep link and an offline compass.
+
+## Verified
+- Typecheck and build pass.
+- Two-browser sync works against `scripts/dev-api.mjs`.
+- Production API reads/writes were checked with a temporary self-test endpoint, since removed.
+- Offline reload via the service worker works.
+- Offline map download works with mocked tiles.
+- Live presence works.
+- Navigation works with mocked routing.
+- Editor time-zone and midnight handling work.
+- The position engine was simulated for all three people across the trip.
+
+## Not verifiable from the build container
+These hosts are blocked by its proxy: real OpenFreeMap tiles/styles, Open-Meteo weather, OSRM routing, and er-api rates. The code paths were exercised with mocks; check them on a phone.
+
+## Data placeholders (edit in the app)
+- Arto's flights (ZRH ⇄ PRG T2 assumed).
+- Alexey's Kožlany connection.
+- The outbound flight number (W6 7859 likely).
+- Apartment door code, Wi-Fi and host in Notes.
+
+## Free-tier budget (Vercel Hobby)
+Blob allows ~100K simple / 10K advanced ops a month. The app polls at 20 s, the server memo lasts 6 s, CDN `s-maxage` is 5, edits are batched (1.2 s), and GPS is shared at most every 90 s when moving. Expected trip usage is ~20K reads and ~3–5K writes.
+
+## Ideas not done yet
+- Push notifications. The `.ics` calendar export covers reminders instead.
+- Photo memories per day.
+- A Cloudflare Worker backend alternative. The client already supports a custom server URL in Settings.
