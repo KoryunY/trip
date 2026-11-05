@@ -2124,3 +2124,36 @@ details[open] > summary::before {
   fill: currentColor;
   margin-left: 2px;
 }
+
+.numbers {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.numbers-grid div {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+.numbers-grid b {
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1;
+}
+.numbers-grid span {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 4px;
+}
+.numbers-km {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

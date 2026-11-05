@@ -12,6 +12,7 @@ import { ExpensesView } from './Expenses';
 import { NotesView } from './Notes';
 import { SettingsView } from './Settings';
 import { openSheet } from '../lib/ui';
+import { TripNumbers } from '../components/TripNumbers';
 
 export function SubBar({ title, sub, right }: { title: string; sub?: string; right?: ReactNode }) {
   return (
@@ -91,6 +92,13 @@ function MoreMenu() {
               </button>
             ))}
           </div>
+        </section>
+
+        <section className="section">
+          <div className="section-h">
+            <h2>Trip in numbers</h2>
+          </div>
+          <TripNumbers />
         </section>
 
         <section className="section">

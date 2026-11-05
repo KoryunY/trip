@@ -8,6 +8,7 @@ import { durationLabel, fmtDayLong, isoInTz, relTime, tripDays, zonedToUtc, dayK
 import { endLocal, endTz, localTimeNote, startLocal, startTz, mapsLink, eventDay } from '../../lib/trip';
 import { openSheet, replaceSheet, closeSheet, showPlaceOnMap, navigateTo } from '../../lib/ui';
 import { distance } from '../../lib/geo';
+import { useWeather, weatherAt, wmo } from '../../lib/weather';
 import { Avatar, Segmented, Sheet, toast } from '../ui';
 import { PeoplePicker, PlacePicker } from './PlacePicker';
 
@@ -70,6 +71,7 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
           </div>
         </div>
         <div className="evd-pills">
+          <EventWeather ev={ev} />
           <span className={`pill ${ev.status === 'confirmed' ? 'ok' : ev.status === 'cancelled' ? 'danger' : ev.status === 'tentative' ? 'warn' : ''}`}>{ev.status}</span>
           {local && (
             <span className="pill info">
@@ -469,5 +471,16 @@ function ShiftRow({ ev }: { ev: TripEvent }) {
         <input type="checkbox" checked={chain} onChange={(e) => setChain(e.target.checked)} /> also move the rest of that day
       </label>
     </div>
+  );
+}
+
+function EventWeather({ ev }: { ev: TripEvent }) {
+  const w = useWeather();
+  const at = weatherAt(w, Date.parse(ev.start));
+  if (!at) return null;
+  return (
+    <span className="pill info" title="Forecast at start time">
+      {wmo(at.code).emoji} {Math.round(at.temp)}°C
+    </span>
   );
 }

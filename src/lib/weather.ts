@@ -83,3 +83,13 @@ export function wmo(code: number): { emoji: string; label: string } {
 
 /** November normals, used when no forecast is available yet */
 export const NORMAL = { tmax: 8, tmin: 2 };
+
+/** hourly forecast at an instant (Prague local hour), if available */
+export function weatherAt(cache: { hourly?: { time: string[]; temp: number[]; code: number[] } } | null, ms: number) {
+  const h = cache?.hourly;
+  if (!h) return null;
+  const local = new Date(ms + 3600_000).toISOString().slice(0, 13) + ':00'; // CET (+01:00) during the trip
+  const i = h.time.indexOf(local);
+  if (i < 0) return null;
+  return { temp: h.temp[i], code: h.code[i] };
+}
