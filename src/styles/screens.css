@@ -1922,3 +1922,12 @@ details[open] > summary::before {
   min-width: 0;
   font-size: 13.5px;
 }
+
+.nav-next {
+  font-size: 16px;
+  font-weight: 650;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--info-soft);
+  color: var(--info);
+}

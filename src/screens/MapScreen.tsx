@@ -9,11 +9,11 @@ import { toast } from '../components/ui';
 import { useTimeState, useNow } from '../lib/clock';
 import { useCrew } from '../lib/crew';
 import { bboxOf, distance, fmtDistance } from '../lib/geo';
-import { useLocation, startWatch, locateOnce } from '../lib/location';
+import { useLocation, startWatch, locateOnce, startCompass } from '../lib/location';
 import { buildStyle, type BaseStyleName } from '../lib/mapstyle';
 import { CAT, KIND_HEX } from '../lib/meta';
 import { travelLegs } from '../lib/positions';
-import { route as fetchRoute, type RouteResult } from '../lib/routing';
+import { route as fetchRoute, routeProgress, type RouteResult } from '../lib/routing';
 import { useDB, useMe, usePresence, useSettings, setSettings } from '../lib/store';
 import { durationLabel } from '../lib/time';
 import { mapsLink } from '../lib/trip';
@@ -84,6 +84,7 @@ export function MapScreen({ active }: { active: boolean }) {
   const [panel, setPanel] = useState(true);
   const [styleOpen, setStyleOpen] = useState(false);
   const [noteHidden, setNoteHidden] = useState(false);
+  const [navFollow, setNavFollow] = useState(false);
   const crewMarkers = useRef<Map<string, { m: maplibregl.Marker; el: HTMLDivElement }>>(new Map());
   const meMarker = useRef<maplibregl.Marker | null>(null);
   const liveMarkers = useRef<Map<string, maplibregl.Marker>>(new Map());
@@ -439,6 +440,23 @@ export function MapScreen({ active }: { active: boolean }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intent, ready]);
 
+  // ── follow-me navigation ──
+  const prog = nav?.res && loc.fix ? routeProgress(nav.res, [loc.fix.lon, loc.fix.lat]) : null;
+  const distToDest = nav && loc.fix ? distance([loc.fix.lon, loc.fix.lat], nav.to) : null;
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !navFollow || !loc.fix) return;
+    const heading = loc.compass ?? loc.fix.heading;
+    map.easeTo({ center: [loc.fix.lon, loc.fix.lat], zoom: Math.max(map.getZoom(), 17), bearing: heading ?? map.getBearing(), pitch: 45, duration: 700 });
+  }, [navFollow, loc.fix, loc.compass]);
+  useEffect(() => {
+    if (nav && distToDest != null && distToDest < 35 && navFollow) {
+      setNavFollow(false);
+      toast(`You’ve arrived at ${nav.name} 🎉`);
+      navigator.vibrate?.([60, 60, 120]);
+    }
+  }, [distToDest, nav, navFollow]);
+
   // ── navigation ──
   const startNav = useCallback(async (to: LngLat, name: string) => {
     setNav({ to, name, loading: true });
@@ -469,6 +487,8 @@ export function MapScreen({ active }: { active: boolean }) {
   }, []);
   const stopNav = () => {
     setNav(null);
+    setNavFollow(false);
+    mapRef.current?.easeTo({ pitch: 0, bearing: 0, duration: 500 });
     const src = mapRef.current?.getSource('route') as GeoJSONSource | undefined;
     src?.setData({ type: 'FeatureCollection', features: [] });
   };
@@ -553,16 +573,42 @@ export function MapScreen({ active }: { active: boolean }) {
                 <span className="s">
                   {nav.loading
                     ? 'Finding a walking route…'
-                    : nav.res
-                      ? `${durationLabel(nav.res.duration * 1000)} walk · ${fmtDistance(nav.res.distance)}`
-                      : nav.err}
+                    : nav.res && prog
+                      ? `${fmtDistance(prog.remaining)} left · ~${durationLabel((prog.remaining / 1.3) * 1000)}`
+                      : nav.res
+                        ? `${durationLabel(nav.res.duration * 1000)} walk · ${fmtDistance(nav.res.distance)}`
+                        : nav.err}
                 </span>
               </span>
               <button className="icon-btn" onClick={stopNav} aria-label="Stop navigation">
                 <X />
               </button>
             </div>
+            {navFollow && prog?.next && (
+              <div className="nav-next">
+                <b className="tnum">{fmtDistance(prog.next.inM)}</b> {prog.next.text}
+              </div>
+            )}
+            {prog && prog.offRoute > 70 && nav.res && (
+              <button className="btn sm danger" onClick={() => startNav(nav.to, nav.name)}>
+                Off route: re-route from here
+              </button>
+            )}
             <div className="nav-actions">
+              {nav.res && (
+                <button
+                  className={`btn sm ${navFollow ? 'primary' : 'accent'}`}
+                  onClick={async () => {
+                    if (!navFollow) {
+                      startWatch();
+                      await startCompass().catch(() => false);
+                    } else mapRef.current?.easeTo({ pitch: 0, duration: 400 });
+                    setNavFollow((v) => !v);
+                  }}
+                >
+                  <Navigation /> {navFollow ? 'Following you' : 'Start'}
+                </button>
+              )}
               <a className="btn sm" href={mapsLink(nav.to[1], nav.to[0], 'transit', loc.fix ? [loc.fix.lon, loc.fix.lat] : undefined)} target="_blank" rel="noreferrer">
                 <ExternalLink /> Transit (Google)
               </a>

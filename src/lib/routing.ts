@@ -5,7 +5,7 @@ export interface RouteResult {
   path: LngLat[];
   distance: number; // m
   duration: number; // s
-  steps: { text: string; distance: number }[];
+  steps: { text: string; distance: number; loc?: LngLat }[];
   profile: 'foot' | 'car';
 }
 
@@ -70,7 +70,7 @@ export async function route(from: LngLat, to: LngLat, profile: 'foot' | 'car' = 
       path: rt.geometry.coordinates,
       distance: rt.distance,
       duration: profile === 'foot' ? rt.distance / 1.3 : rt.duration,
-      steps: (rt.legs?.[0]?.steps ?? []).map((s: any) => ({ text: stepText(s), distance: s.distance })),
+      steps: (rt.legs?.[0]?.steps ?? []).map((s: any) => ({ text: stepText(s), distance: s.distance, loc: s.maneuver?.location })),
       profile,
     };
     mem.set(key, res);
@@ -79,4 +79,41 @@ export async function route(from: LngLat, to: LngLat, profile: 'foot' | 'car' = 
   } finally {
     clearTimeout(t);
   }
+}
+
+import { distance as dist } from './geo';
+
+/** progress of a position along a route: remaining metres, distance off the route, next instruction */
+export function routeProgress(r: RouteResult, at: LngLat) {
+  let best = 0;
+  let bestD = Infinity;
+  r.path.forEach((p, i) => {
+    const d = dist(at, p);
+    if (d < bestD) {
+      bestD = d;
+      best = i;
+    }
+  });
+  let remaining = bestD;
+  for (let i = best + 1; i < r.path.length; i++) remaining += dist(r.path[i - 1], r.path[i]);
+  let next: { text: string; inM: number } | null = null;
+  for (const st of r.steps) {
+    if (!st.loc) continue;
+    let si = 0;
+    let sd = Infinity;
+    r.path.forEach((p, i) => {
+      const d = dist(st.loc!, p);
+      if (d < sd) {
+        sd = d;
+        si = i;
+      }
+    });
+    if (si > best) {
+      let m = bestD;
+      for (let i = best + 1; i <= si; i++) m += dist(r.path[i - 1], r.path[i]);
+      next = { text: st.text, inM: m };
+      break;
+    }
+  }
+  return { remaining, offRoute: bestD, next };
 }
