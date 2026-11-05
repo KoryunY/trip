@@ -140,6 +140,23 @@ function DayView({ day, t, onlyMine }: { day: string; t: number; onlyMine: boole
           )}
         </div>
       </div>
+      {day === '2026-11-15' && (
+        <section className="card pad form" aria-labelledby="arrival-plans-title" style={{ marginBottom: 14 }}>
+          <h3 id="arrival-plans-title">{tx("Arrival plans")}</h3>
+          <p className="muted">{tx("Choose one arrival plan; times are provisional.")}</p>
+          <div>
+            <b>{tx("Plan A: Břevnov dinner")}</b>
+            <p>{tx("Meet at Klášterní šenk at 18:30, then go to the base.")}</p>
+          </div>
+          <div>
+            <b>{tx("Plan B: Base first")}</b>
+            <p>{tx("Drop your bag, then U Slovanské lípy at 19:15. Vinohradský pivovar is an alternative.")}</p>
+          </div>
+          <button className="btn sm" onClick={() => go('guide/arrival-social')}>
+            {tx("Travel & booking details")}
+          </button>
+        </section>
+      )}
       <div className="card ev-list day-list">
         {events.length === 0 && (
           <Empty icon={<CalendarPlus />}>{tx("Nothing planned")}{onlyMine ? tx(" for you") : ''}{tx(". Add an event or schedule an idea.")}</Empty>

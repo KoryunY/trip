@@ -238,6 +238,13 @@ export const RU: Record<string, string> = {
   'Full crew': 'Вся команда',
   'Nobody here yet': 'Пока никого',
   'Nothing planned': 'Ничего не запланировано',
+  'Arrival plans': 'Варианты прилёта',
+  'Choose one arrival plan; times are provisional.': 'Выберите один вариант прилёта; время предварительное.',
+  'Plan A: Břevnov dinner': 'План А: ужин в Břevnov',
+  'Meet at Klášterní šenk at 18:30, then go to the base.': 'Встречаемся в Klášterní šenk в 18:30, затем едем на базу.',
+  'Plan B: Base first': 'План Б: сначала база',
+  'Drop your bag, then U Slovanské lípy at 19:15. Vinohradský pivovar is an alternative.': 'Оставить сумку, затем U Slovanské lípy в 19:15. Альтернатива — Vinohradský pivovar.',
+  'Travel & booking details': 'Подробности дороги и бронирования',
   'for you': 'для тебя',
   '. Add an event or schedule an idea.': '. Добавь событие или запланируй идею.',
   'Tentative = not booked yet. Dates in grey are placeholders: edit them when you know more.':

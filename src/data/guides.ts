@@ -33,8 +33,8 @@ export const GUIDES: Guide[] = [
         table: {
           head: ['Day', 'Together'],
           rows: [
-            ['Sun 15', 'Arto lands 17:00; estimated base arrival 18:30, bag drop 18:30–19:05, nearby welcome dinner together at U Slovanské lípy 19:15–20:30. Keep the evening easy.'],
-            ['Mon 16', 'Castle 10:30–14:30 (arrive 10:15), Strahov lunch 14:45–15:45. Koryun + Alexey return for Korn preparation at 16:30. Arto returns to shower, then has a tentative solo salsa class 18:00–19:30 and social dancing from 21:00; see Arrival & Monday dancing.'],
+            ['Sun 15', 'Choose one arrival plan: A — meet at Klášterní šenk in Břevnov for dinner 18:30–20:00, then base around 20:30–21:00; B — base first around 18:30, bag drop until 19:05, U Slovanské lípy dinner 19:15–20:30. The timeline currently keeps B as a provisional draft. Neither dinner is reserved.'],
+            ['Mon 16', 'Castle 10:30–14:30 (arrive 10:15), Strahov lunch 14:45–15:45. Koryun + Alexey return for Korn preparation at 16:30. Arto returns to shower, then has a tentative solo salsa class 18:00–19:30 and social dancing from 21:00; see Arrival Plan A/B & Monday dancing.'],
             ['Tue 17', 'Korzo Národní 10:30–11:45; Café Louvre 12:00–13:15; Letná viewpoint 14:00–15:15; back to Národní 16:30–17:30 for Modlitba pro Martu at 17:11. Optional celebration/concert wandering 18:00–21:00.'],
             ['Wed 18', 'Plzeň brewery together: leave base 10:30; provisional train 11:15–12:40; lunch 13:00; target English tour 14:00–15:50, including exit buffer. The brewery is a shared must-do, but the slot and trains need confirmation. Dusk centre walk 16:15–17:15; provisional return train 17:45–19:10; easy dinner together 20:00.'],
             ['Thu 19', 'Old Town Square 10:30–11:30, clock at 11:00; Charles Bridge → Malá Strana → Lennon Wall → Kampa 11:30–13:30; lunch at base 14:15; free afternoon for rest or an optional visit; Lokál dinner 18:45–21:00; bridge after dark 21:15–22:00. No GTA while Arto is here.'],
@@ -92,25 +92,34 @@ export const GUIDES: Guide[] = [
   },
   {
     id: 'arrival-social',
-    title: 'Arto: arrival & Monday dancing',
+    title: 'Arto: arrival Plan A/B & Monday dancing',
     icon: 'users',
-    summary: 'Sunday: bags at base, dinner together. Monday: Cuban salsa class and a social.',
+    summary: 'Sunday: Břevnov dinner or base first — choose one. Monday: Cuban salsa class and a social.',
     for: ['arto'],
     sections: [
       {
-        h: 'Sun 15 Nov · base first, then dinner together',
+        h: 'Sun 15 Nov · Plan A: meet for dinner in Břevnov',
+        body: 'Plan A takes Arto directly from Prague T2 to Klášterní šenk, Markétská 28/1, for Czech food and Benedict monastery beer. With the small under-seat bag, there is no need to visit the apartment first. Save Divoká Šárka for daylight.',
         steps: [
-          'Land at Prague T2 at 17:00. Aim to leave the airport around 17:30 and reach the base around 18:30; these transfer times are estimates. Save a 59 + metro A route or use Uber Airport for the door-to-door option.',
-          '18:30–19:05: drop bags, freshen up and meet Koryun + Alexey. If arrival runs late, move the meal rather than rushing.',
-          '19:15–20:30: welcome dinner for all three at U Slovanské lípy, about 5 min from base. Open daily 11:00–23:00; table not reserved. Then an easy evening at base.',
+          '17:00 landing; aim to leave T2 around 17:30. Allow roughly 20–30 min by taxi, or 40–60 min by public transport, including waiting and the walk. These are estimates.',
+          'Public transport: bus 191 towards Na Knížecí → Vypich, then tram 22 or 25 two stops to Břevnovský klášter, followed by a short walk. Check departures for 15 Nov in PID before travelling.',
+          'Koryun + Alexey meet Arto at the restaurant; no airport pickup is needed. For Plan A, they skip the optional Wenceslas Square stop and leave enough time to reach Břevnov for 18:30.',
+          '18:30–20:00: dinner together at Klášterní šenk, open daily 11:30–23:00. Afterwards go to the apartment, arriving roughly 20:30–21:00, then catch up at base from 21:00.',
         ],
+        tip: 'If choosing A, request a table for 3 on Sun 15 Nov at 18:30 and mention the 17:00 flight arrival. The official form needs at least 24 h notice and the booking is valid only after staff confirmation. For same-day arrangements, or if the flight is late, call +420 220 406 294. No reservation has been made.',
       },
       {
-        h: 'Arrival alternatives',
+        h: 'Plan B: base first, then dinner nearby',
+        body: 'B is the provisional plan currently shown in the timeline. Drop the bag and freshen up, then have a Czech pub dinner within walking distance of the apartment. Choose A or B before reserving a table.',
+        steps: [
+          '17:30–18:30: estimated airport → base transfer. Save a 59 + metro A route or use Uber Airport for the door-to-door option.',
+          '18:30–19:05: drop bags, freshen up and meet Koryun + Alexey.',
+          '19:15–20:30: dinner for all three at U Slovanské lípy, about 5 min from base. Open daily 11:00–23:00; reservations +420 734 743 094. No table is reserved; check kitchen hours if arriving late.',
+          '21:00: catch-up at base. If the flight or transfer runs late, adjust the dinner time.',
+        ],
         bullets: [
-          'Vinohradský pivovar on Korunní is another dinner option: Sunday 11:00–22:00, about 20–25 min on foot from base. U Vystřelenýho oka is closed on Sundays.',
-          'Hungry at the airport? U Václava Pilsner restaurant is in T2’s public area and opens Sunday 07:00–21:00, so everyone can meet there without passing security.',
-          'Břevnov’s Klášterní šenk is a possible indoor dinner detour (daily 11:30–23:00) if the crew meets at the airport and wants it. The 17:00 arrival leaves no daylight walk; keep Divoká Šárka for another daytime outing.',
+          'Alternative within B: Vinohradský pivovar on Korunní, 19:15–20:45, open Sunday 11:00–22:00. It is 20–25 min on foot from base, so shorten the bag drop and leave around 18:50–18:55 if walking. Reservations +420 602 549 557 or rezervace@vinohradskypivovar.cz; no table reserved.',
+          'U Vystřelenýho oka is closed on Sundays. For a late airport delay, U Václava Pilsner in T2’s public area is a food fallback, open Sunday 07:00–21:00.',
         ],
       },
       {
@@ -144,6 +153,8 @@ export const GUIDES: Guide[] = [
       { label: 'U Vystřelenýho oka · opening hours', url: 'https://www.uvoka.cz/okokontakt/' },
       { label: 'Prague Airport · U Václava in T2 public area', url: 'https://www.prg.aero/en/pilsner-urquell-original-restaurant?terminal=reset' },
       { label: 'Klášterní šenk · hours and reservations', url: 'https://www.klasternisenk.cz/en/' },
+      { label: 'PID · bus 191 timetable valid from 29 Aug 2026', url: 'https://pid.cz/zastavkove-jizdni-rady/?cid=191&from=1787954400&type=bus' },
+      { label: 'PID · tram 25 timetable valid from 13 Nov 2026', url: 'https://pid.cz/zastavkove-jizdni-rady/?cid=25&from=1794524400&type=tram' },
       { label: 'La Macumba · recurring Monday programme', url: 'https://www.lamacumba.cz/pondeli/' },
       { label: 'Salsa Cubana con Leon · intermediate class and joining rules', url: 'https://salsacubanaconleon.cz/kurz-salsy-praha-stredne-pokrocili' },
       { label: 'Na Verandách · official restaurant and hours', url: 'https://www.phnaverandach.cz/en/' },
@@ -189,8 +200,8 @@ export const GUIDES: Guide[] = [
         h: '3 · Trio from Sunday 15 evening',
         steps: [
           'Arto: easyJet EZS1563, Geneva T1 15:25 → Prague T2 17:00 (CET). Schengen flight, no passport control for Swiss.',
-          'From T2: AE bus to Hlavní nádraží (200 CZK) or trolleybus 59 + metro A (46 CZK in the app).',
-          'Allow ~17:30–18:30 for airport → base (estimate), then drop bags and freshen up until 19:05. Welcome dinner together at nearby U Slovanské lípy is 19:15–20:30; table not reserved.',
+          'Choose one Sunday arrival plan: A — Arto goes straight from T2 to Klášterní šenk for dinner with the crew at 18:30; B — airport → base around 17:30–18:30, bag drop, then U Slovanské lípy at 19:15. Neither table is reserved; the timeline currently keeps B as a provisional draft.',
+          'For A, Koryun + Alexey skip the optional Wenceslas stop and meet at the restaurant; no airport pickup is needed. For B, use trolleybus 59 + metro A or AE + a walk to the base. Full routes, booking rules and the Vinohradský alternative are in Arrival Plan A/B & Monday dancing.',
           '21:00: relaxed cards, beer and catch-up at the base. Shared day plans start at 10:30 or later; GTA waits until after Arto leaves Prague on Fri 20.',
         ],
         bullets: ['If Arto lands late: join the crew at the base for the 21:00 chill night instead.'],

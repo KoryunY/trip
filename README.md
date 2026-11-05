@@ -18,7 +18,7 @@ Login = pick your name. Everyone sees and edits everything.
 
 **Shared essentials:** star-labelled **Must do together** events are scheduled for all three on **16–19 Nov**, during Arto’s stay. Shared sightseeing days start at **10:30 or later**; the brewery on the 18th targets an afternoon English tour, subject to booking. **GTA is for Koryun and Alexey only, after Arto’s departure on 20 Nov.** The label can be changed in the event editor and is included in calendar exports. **More → Guides → Must do together & booking plan** contains the dated overview, official booking links, walk-in rules and optional alternatives; matching booking actions are in **Prep**. Planned visits are not reservations or purchased tickets.
 
-**Arrival and solo evening:** Arto goes to base first on 15 Nov, then all three have a nearby welcome dinner at U Slovanské lípy at 19:15. Monday evening has a tentative intermediate Cuban salsa class and social at La Macumba for Arto, with a bachata alternative and confirmation checklist in **Guides → Arto: arrival & Monday dancing**.
+**Arrival and solo evening:** 15 Nov has two alternatives, visible in Plan and the arrival guide: **A**, meet for dinner at Břevnov’s Klášterní šenk at 18:30, then base; **B**, base/bag drop first, then U Slovanské lípy at 19:15 (or Vinohradský pivovar for a longer walk and house-brewed beer). B stays on the timeline as a tentative draft; choose one route and dinner. Travel estimates, official reservation links and a checklist are included. Nothing is booked. Monday evening has a tentative intermediate Cuban salsa class and social at La Macumba for Arto, with a bachata alternative and confirmation checklist in the same guide.
 
 **Languages & theme:** English by default, Russian via the EN/RU switch (top of Now/More/login, or Settings). The 🌙/☀️ button switches dark/light mode (Settings also has Auto).
 - UI strings: `src/i18n/ru.ts`, used through `t()`/`tx()` in `src/i18n/index.ts`.
@@ -53,7 +53,7 @@ API_PROXY=http://localhost:8787 npm run dev
 ## Data
 
 * `src/data/events.ts`: the itinerary. Times are ISO with offsets; Yerevan legs carry `tz`.
-* `src/data/places.ts`: 97 researched places (`approx: true` = pin not double-checked). Regenerate with `node scripts/build-places.mjs scripts/places.research.json`.
+* `src/data/places.ts`: researched places (`approx: true` = pin not double-checked). Regenerate with `node scripts/build-places.mjs scripts/places.research.json`.
 * `src/data/tasks.ts`, `ideas.ts`, `guides.ts`, `people.ts`.
 * `src/data/seedRevisions.ts`: exact historical saved records that follow the current shared itinerary; newer edits and deletions remain untouched.
 

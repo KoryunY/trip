@@ -285,15 +285,15 @@ export const TASKS: Task[] = [
   // ── Bookings ──
   {
     id: 't-arrival-dinner',
-    title: 'Arrange an easy welcome dinner for 3 · Sun 15 Nov, 19:15',
-    details: 'Default: Arto goes to the apartment first, drops his bag and freshens up, then we eat at U Slovanské lípy nearby. Official hours daily 11:00–23:00; request a table for 3 around 19:15 via the contact on its official site (+420 734 743 094). No table is reserved. Keep the timing flexible for the flight/transfer, and call to change any reservation if delayed. Vinohradský pivovar is an alternative but farther to walk. U Vystřelenýho oka is closed Sundays.',
+    title: 'Choose arrival Plan A or B & reserve one dinner for 3 · Sun 15 Nov',
+    details: 'Choose one arrival plan before requesting a table. PLAN A: Arto goes from T2 to Klášterní šenk at Břevnov Monastery, meeting Koryun + Alexey there at 18:30; dinner until 20:00, then base together. Daily 11:30–23:00. Web requests on the official site need at least 24 hours and are only valid after staff confirm by phone/email; for same-day requests call +420 220 406 294. Mention the 17:00 flight arrival and call if delayed. PLAN B: airport to base, bag drop, then U Slovanské lípy at 19:15 (~5 min walk), daily 11:00–23:00; reserve on +420 734 743 094. Alternative within B: Vinohradský pivovar on Korunní, target 19:15–20:45 (~20–25 min walk), Sunday 11:00–22:00; +420 602 549 557 or rezervace@vinohradskypivovar.cz. Do not reserve multiple dinners. Save the confirmation and update the Plan events/place/times once chosen; B remains the provisional timeline. For A, replace the base-first transfer/bag drop/dinner and skip the guys’ Wenceslas stop. No booking has been made. See the arrival guide for all official links and route estimates.',
     category: 'bookings',
-    assignees: ['koryun', 'alexey'],
+    assignees: ['koryun', 'alexey', 'arto'],
     mode: 'any',
     priority: 'normal',
     due: '2026-11-15',
     guide: 'arrival-social',
-    link: 'https://uslovanskelipy.cz/',
+    link: '#/guide/arrival-social',
   },
   {
     id: 't-arto-dance-confirm',

@@ -202,5 +202,24 @@ export const LEGACY_SEED_RECORDS: readonly LegacySeedRecord[] = [
       "status": "tentative",
       "notes": "Estimated transfer after the 17:00 landing at Terminal 2; allow 30 min to exit, then about 1 h to the base. Adjust for the actual arrival and transport."
     }
+  },
+  {
+    "col": "events",
+    "id": "wenceslas",
+    "u": 1793888072558,
+    "by": "arto",
+    "data": {
+      "id": "wenceslas",
+      "title": "Wenceslas Square & National Museum lit up",
+      "kind": "sight",
+      "start": "2026-11-15T17:30:00+01:00",
+      "end": "2026-11-15T18:15:00+01:00",
+      "placeId": "wenceslas-square",
+      "people": [
+        "koryun",
+        "alexey"
+      ],
+      "status": "planned"
+    }
   }
 ];

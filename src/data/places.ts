@@ -1521,6 +1521,25 @@ export const PLACES: Place[] = [
     "approx": true
   },
   {
+    "id": "klasterni-senk",
+    "name": "Klášterní šenk · Břevnov Monastery tavern",
+    "category": "food",
+    "lat": 50.08381,
+    "lon": 14.35672,
+    "address": "Markétská 28/1, 169 00 Praha 6 – Břevnov",
+    "area": "Břevnov",
+    "blurb": "Arrival Plan A: meet for Czech dinner and Benedict monastery beer at 18:30 on Sun 15 Nov, then go to base. Airport travel estimate: 20–30 min by taxi or 40–60 min by 191 → Vypich → tram 22/25. Recommend booking for 3: +420 220 406 294; web requests need at least 24 h and staff confirmation. Not reserved. Optional dinner, separate from Monday’s Strahov lunch.",
+    "hours": "Daily 11:30–23:00",
+    "url": "https://www.klasternisenk.cz/en/",
+    "tags": [
+      "czech",
+      "monastery",
+      "beer",
+      "arrival-option"
+    ],
+    "approx": true
+  },
+  {
     "id": "prg-t2",
     "name": "Prague Airport · Terminal 2",
     "category": "transport",

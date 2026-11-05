@@ -3,6 +3,12 @@
 // English name has descriptive words; pure Czech venue names stay as-is.
 
 export const PLACES_RU: Record<string, { name?: string; blurb?: string; hours?: string; price?: string; area?: string }> = {
+  "klasterni-senk": {
+    name: "Klášterní šenk · трактир Бржевновского монастыря",
+    area: "Бржевнов",
+    blurb: "План A на прилёт: общий чешский ужин и монастырское пиво Benedict в вс 15 ноября в 18:30, затем едем на базу. Из аэропорта ориентировочно 20–30 мин на такси или 40–60 мин на автобусе 191 до Vypich, затем трамвае 22/25. Рекомендуется стол на 3: +420 220 406 294; заявки через сайт минимум за 24 ч, бронь действительна только после подтверждения. Пока не забронировано. Дополнительный ужин, отдельно от понедельничного обеда в Strahov.",
+    hours: "Ежедневно 11:30–23:00",
+  },
   "base": {
     name: "Наша база · Dalimilova 261/14",
     area: "Жижков",

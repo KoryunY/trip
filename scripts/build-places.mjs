@@ -55,6 +55,8 @@ Object.assign(byId['vinohradsky-pivovar'], {
   url: 'https://www.vinohradskypivovar.cz/cs/korunni/',
 });
 const extra = [
+  // Restaurant pin from Prague City Tourism's route link; navigation entrance not checked.
+  { id: 'klasterni-senk', name: 'Klášterní šenk · Břevnov Monastery tavern', category: 'food', lat: 50.08381, lon: 14.35672, address: 'Markétská 28/1, 169 00 Praha 6 – Břevnov', area: 'Břevnov', blurb: 'Arrival Plan A: meet for Czech dinner and Benedict monastery beer at 18:30 on Sun 15 Nov, then go to base. Airport travel estimate: 20–30 min by taxi or 40–60 min by 191 → Vypich → tram 22/25. Recommend booking for 3: +420 220 406 294; web requests need at least 24 h and staff confirmation. Not reserved. Optional dinner, separate from Monday’s Strahov lunch.', hours: 'Daily 11:30–23:00', url: 'https://www.klasternisenk.cz/en/', tags: ['czech', 'monastery', 'beer', 'arrival-option'], approx: true },
   { id: 'prg-t2', name: 'Prague Airport · Terminal 2', category: 'transport', lat: 50.1059, lon: 14.2738, address: 'Aviatická, 161 00 Praha 6 – Ruzyně', area: 'Ruzyně', blurb: 'Schengen terminal (flights from Geneva land here). AE bus and trolleybus 59 stop outside arrivals.', tags: ['airport'], approx: true },
   { id: 'zrh', name: 'Zürich Airport (ZRH)', category: 'transport', lat: 47.45819, lon: 8.55547, address: 'Kloten, Switzerland', area: 'Zürich', blurb: 'Zürich Airport, Switzerland.', tags: ['airport'], approx: true },
   // Airport-wide coordinates: https://ourairports.com/airports/LSGG/
