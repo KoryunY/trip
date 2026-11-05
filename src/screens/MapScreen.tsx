@@ -11,6 +11,7 @@ import { useCrew } from '../lib/crew';
 import { bboxOf, distance, fmtDistance } from '../lib/geo';
 import { useLocation, startWatch, locateOnce, startCompass } from '../lib/location';
 import { buildStyle, type BaseStyleName } from '../lib/mapstyle';
+import { useIsDark } from '../lib/theme';
 import { CAT, KIND_HEX } from '../lib/meta';
 import { travelLegs } from '../lib/positions';
 import { route as fetchRoute, routeProgress, type RouteResult } from '../lib/routing';
@@ -89,7 +90,8 @@ export function MapScreen({ active }: { active: boolean }) {
   const meMarker = useRef<maplibregl.Marker | null>(null);
   const liveMarkers = useRef<Map<string, maplibregl.Marker>>(new Map());
 
-  const styleName: BaseStyleName = settings.mapStyle === 'liberty' && isDark() ? 'dark' : settings.mapStyle;
+  const dark = useIsDark();
+  const styleName: BaseStyleName = settings.mapStyle === 'liberty' && dark ? 'dark' : settings.mapStyle;
 
   // ── create map ──
   useEffect(() => {
@@ -127,7 +129,7 @@ export function MapScreen({ active }: { active: boolean }) {
     const map = mapRef.current;
     if (!map) return;
     let cancelled = false;
-    buildStyle(styleName, isDark()).then(({ style, remote, hasGlyphs }) => {
+    buildStyle(styleName, dark).then(({ style, remote, hasGlyphs }) => {
       if (cancelled) return;
       setRemote(remote);
       setHasGlyphs(hasGlyphs);
@@ -136,7 +138,7 @@ export function MapScreen({ active }: { active: boolean }) {
     return () => {
       cancelled = true;
     };
-  }, [styleName]);
+  }, [styleName, dark]);
 
   useEffect(() => {
     if (active) setTimeout(() => mapRef.current?.resize(), 30);
@@ -215,8 +217,8 @@ export function MapScreen({ active }: { active: boolean }) {
             : {}),
         },
         paint: {
-          'text-color': isDark() ? '#f4f2ee' : '#18171b',
-          'text-halo-color': isDark() ? '#18181d' : '#ffffff',
+          'text-color': dark ? '#f4f2ee' : '#18171b',
+          'text-halo-color': dark ? '#18181d' : '#ffffff',
           'text-halo-width': 1.6,
         },
       });

@@ -9,7 +9,8 @@ import { PlanScreen } from './screens/Plan';
 import { PrepScreen } from './screens/Prep';
 import { MoreScreen } from './screens/More';
 import { useRoute, type Tab } from './lib/router';
-import { useMe, useSettings } from './lib/store';
+import { useMe } from './lib/store';
+import { useIsDark } from './lib/theme';
 import { startSync } from './lib/sync';
 import { setActivityProvider, onSkip } from './lib/clock';
 import { getDB } from './lib/store';
@@ -20,15 +21,7 @@ import { fmtDayShort, hhmm } from './lib/time';
 const MapScreen = lazy(() => import('./screens/MapScreen').then((m) => ({ default: m.MapScreen })));
 
 function useTheme() {
-  const { theme } = useSettings();
-  const [sysDark, setSysDark] = useState(() => matchMedia('(prefers-color-scheme: dark)').matches);
-  useEffect(() => {
-    const mq = matchMedia('(prefers-color-scheme: dark)');
-    const on = () => setSysDark(mq.matches);
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
-  }, []);
-  const dark = theme === 'dark' || (theme === 'auto' && sysDark);
+  const dark = useIsDark();
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0e0e11' : '#f5f2ec');
