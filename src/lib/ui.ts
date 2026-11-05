@@ -16,7 +16,9 @@ export type SheetSpec =
   | { t: 'noteEdit'; id?: string }
   | { t: 'person'; id: string }
   | { t: 'compass'; target: { lat: number; lon: number; name: string } }
-  | { t: 'timeMachine' };
+  | { t: 'timeMachine' }
+  | { t: 'converter' }
+  | { t: 'roulette' };
 
 let stack: SheetSpec[] = [];
 const ls = new Set<() => void>();

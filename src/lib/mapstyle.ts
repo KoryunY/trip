@@ -73,8 +73,17 @@ export function fallbackStyle(dark: boolean): StyleSpecification {
 
 /** Loads the remote base style, pins tile URLs, and adds the offline world underlay. */
 export async function buildStyle(name: BaseStyleName, dark: boolean): Promise<{ style: StyleSpecification; remote: boolean; hasGlyphs: boolean }> {
+  for (const n of name === 'liberty' ? [name] : [name, 'liberty' as BaseStyleName]) {
+    const r = await tryStyle(n, dark);
+    if (r) return r;
+  }
+  return { style: fallbackStyle(dark), remote: false, hasGlyphs: false };
+}
+
+async function tryStyle(name: BaseStyleName, dark: boolean): Promise<{ style: StyleSpecification; remote: boolean; hasGlyphs: boolean } | null> {
   try {
     const style = (await fetchJSON(STYLE_URL(name))) as StyleSpecification;
+    if (!style || !Array.isArray(style.layers) || !style.sources) return null;
     // Resolve TileJSON so tile URLs are stable (enables offline cache hits).
     for (const [key, src] of Object.entries(style.sources)) {
       const s = src as { type: string; url?: string; attribution?: string };
@@ -112,7 +121,7 @@ export async function buildStyle(name: BaseStyleName, dark: boolean): Promise<{ 
     else style.layers.unshift(...under);
     return { style, remote: true, hasGlyphs: Boolean(style.glyphs) };
   } catch {
-    return { style: fallbackStyle(dark), remote: false, hasGlyphs: false };
+    return null;
   }
 }
 

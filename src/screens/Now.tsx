@@ -1,5 +1,8 @@
 import {
+  ArrowLeftRight,
   ArrowRight,
+  Beer,
+  Users,
   BookOpen,
   Bus,
   ClipboardCheck,
@@ -267,7 +270,10 @@ export function NowScreen() {
             <Tool icon={Compass} label="Compass home" onClick={() => openSheet({ t: 'compass', target: { lat: db.place.base.lat, lon: db.place.base.lon, name: 'Base' } })} />
             <Tool icon={Bus} label="Airport ↔ base" onClick={() => go('guide/airport')} />
             <Tool icon={Luggage} label="Baggage rules" onClick={() => go('guide/baggage')} />
-            <Tool icon={Wallet} label="Money & split" onClick={() => go('expenses')} />
+            <Tool icon={ArrowLeftRight} label="Converter" onClick={() => openSheet({ t: 'converter' })} />
+            <Tool icon={Beer} label="Who buys the round?" onClick={() => openSheet({ t: 'roulette' })} />
+            <Tool icon={Wallet} label="Expenses & split" onClick={() => go('expenses')} />
+            <Tool icon={Users} label="First days plan" onClick={() => go('guide/firstdays')} />
             <Tool icon={Languages} label="Czech phrases" onClick={() => go('guide/phrases')} />
             <Tool icon={Siren} label="Emergency" onClick={() => go('guide/emergency')} />
             <Tool icon={BookOpen} label="All guides" onClick={() => go('guides')} />

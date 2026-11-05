@@ -15,6 +15,7 @@ import {
   TramFront,
   Wallet,
   Beer,
+  Users,
   ChevronRight,
   ExternalLink,
   Lightbulb,
@@ -43,6 +44,7 @@ export const GUIDE_ICON: Record<string, LucideIcon> = {
   siren: Siren,
   languages: Languages,
   'calendar-days': CalendarDays,
+  users: Users,
 };
 
 export function GuidesList() {

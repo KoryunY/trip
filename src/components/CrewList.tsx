@@ -7,7 +7,7 @@ import { fmtDayShort, hhmm, relTime } from '../lib/time';
 import { openSheet } from '../lib/ui';
 import { Avatar } from './ui';
 import { KIND } from '../lib/meta';
-import { distance } from '../lib/geo';
+import { distance, fmtDistance } from '../lib/geo';
 
 export function crewLine(pos: PersonPos, db: DB, t: number): { title: string; sub: string } {
   const ev = pos.eventId ? db.event[pos.eventId] : undefined;
@@ -26,6 +26,23 @@ export function crewLine(pos: PersonPos, db: DB, t: number): { title: string; su
     default:
       return { title: pos.label, sub: nextTxt };
   }
+}
+
+/** human label for a live GPS fix: nearest known place, or distance from the base */
+export function liveLabel(pr: Presence, db: DB): string {
+  let best: { name: string; d: number } | null = null;
+  for (const pl of db.places) {
+    const d = distance([pr.lon, pr.lat], [pl.lon, pl.lat]);
+    if (!best || d < best.d) best = { name: pl.name, d };
+  }
+  if (best && best.d < 120) return `At ${best.name}`;
+  if (best && best.d < 400) return `Near ${best.name}`;
+  const base = db.place.base;
+  if (base) {
+    const d = distance([pr.lon, pr.lat], [base.lon, base.lat]);
+    return d < 60_000 ? `${fmtDistance(d)} from the base` : `${fmtDistance(d)} away`;
+  }
+  return 'Live location';
 }
 
 export function presenceFresh(p: Presence | undefined, t: number) {
@@ -97,10 +114,16 @@ export function CrewList({ t, live, onPick }: { t: number; live: boolean; onPick
                 )}
               </span>
               <span className="crew-status">
-                {KI && <KI aria-hidden />}
-                {line.title}
+                {solo && liveOnes.length > 0 && pr ? (
+                  <>📍 {liveLabel(pr, db)}</>
+                ) : (
+                  <>
+                    {KI && <KI aria-hidden />}
+                    {line.title}
+                  </>
+                )}
               </span>
-              <span className="s">{solo && liveOnes.length && pr ? `GPS ${relTime(pr.ts, Date.now())} · ${line.sub}` : line.sub}</span>
+              <span className="s">{solo && liveOnes.length > 0 && pr ? `GPS ${relTime(pr.ts, Date.now())} · plan: ${line.title}` : line.sub}</span>
               {pos.mode === 'travel' && (
                 <span className="progress" style={{ marginTop: 6 }}>
                   <i style={{ width: `${(pos.progress ?? 0) * 100}%`, background: people[0].color }} />

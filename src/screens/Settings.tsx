@@ -123,7 +123,7 @@ export function SettingsView() {
               <Radio aria-hidden />
               <span className="grow">
                 <b>Share my live location with the crew</b>
-                <span className="muted block">While the app is open, your GPS dot appears on everyone’s map (updates ~every minute).</span>
+                <span className="muted d-block">While the app is open, your GPS dot appears on everyone’s map (updates ~every minute).</span>
               </span>
               <Toggle
                 on={s.shareLocation}
@@ -150,7 +150,7 @@ export function SettingsView() {
               <Server aria-hidden />
               <span className="grow">
                 <b>{statusText[sync.status]}</b>
-                <span className="muted block">
+                <span className="muted d-block">
                   {sync.lastOk ? `Last sync ${relTime(sync.lastOk, Date.now())}` : 'Not synced yet'}
                   {sync.pending ? ` · ${sync.pending} change(s) waiting` : ''} · rev {serverInfo().rev}
                   {sync.backend ? ` · ${sync.backend}` : ''}

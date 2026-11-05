@@ -22,6 +22,53 @@ export interface Guide {
 
 export const GUIDES: Guide[] = [
   {
+    id: 'firstdays',
+    title: 'First days: solo, duo, trio',
+    icon: 'users',
+    summary: 'Koryun alone on Fri morning → Koryun + Arto Fri night → full crew from Sat.',
+    sections: [
+      {
+        h: '1 · Koryun solo (Fri 13, 06:45 → evening)',
+        steps: [
+          'Land 06:45, EES kiosk + passport booth (budget up to 1–1.5 h).',
+          'Airport → base: trolleybus 59 + metro A (46 CZK) or AE bus (200 CZK) + 15 min walk.',
+          'Bag drop at the apartment (ask the host!) or left-luggage at Hlavní nádraží.',
+          'Breakfast at Café Pavlač, then the setup run at Atrium Flora (ATM, SIM shop, pharmacy, Albert).',
+          'Vítkov hill viewpoint (10 min walk), lunch menu at U Slovanské lípy.',
+          'Nap 14:30–17:00. You’ll have been up since ~01:00 Yerevan time.',
+          'Evening: Old Town lights + dinner at U Medvídků. Keep it light; Arto lands around 19:30.',
+        ],
+        tip: 'Low on energy? Swap the Old Town walk for the Žižkov TV Tower deck (10 min from base) and an early beer downstairs.',
+      },
+      {
+        h: '2 · Duo night: Koryun + Arto (Fri 13 evening)',
+        steps: [
+          'Arto arrives at Terminal 2 (Schengen flights, no passport control for Swiss).',
+          'From T2: AE bus to Hlavní nádraží (200 CZK) or trolleybus 59 + metro A (46 CZK in the app).',
+          'Meet at the base ~20:40, then a welcome beer at U Vystřelenýho oka (2 min walk).',
+        ],
+        bullets: ['If Arto lands late: meet straight at the pub, Koryun holds the table.', 'If Arto comes by train: arrival is Praha hlavní nádraží, 15 min walk to the base.'],
+      },
+      {
+        h: '3 · Trio from Saturday 14',
+        steps: [
+          'Alexey: Kožlany → Plzeň (bus) → train to Praha hl.n. (~1 h 15), or Rakovník + bus 404 to Zličín. Check idos.cz the evening before.',
+          'Bring the Xbox in hand luggage; a backpack-sized bag is fine on buses/trains.',
+          '10:45 crew breakfast, then Prague Castle → Strahov brewery → sunset → Malá Strana → Lokál.',
+        ],
+        tip: 'Whoever arrives first gets the keys from the host and shares the door code in Notes.',
+      },
+      {
+        h: 'If plans shift',
+        bullets: [
+          'Arto arrives Sat instead: Fri night becomes a Koryun solo early night; welcome beer moves to Sat.',
+          'Alexey arrives later on Sat: start with Old Town/Josefov instead of the Castle so he can join midway (Castle area is far from Zličín).',
+          'Everyone edits their own travel events in Plan, and the map/timelapse update automatically.',
+        ],
+      },
+    ],
+  },
+  {
     id: 'arrival',
     title: 'Arrival day, step by step',
     icon: 'plane-landing',

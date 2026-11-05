@@ -94,7 +94,7 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
                 <span aria-hidden>{CAT[place.category]?.emoji}</span>
                 <span className="grow">
                   <b>{place.name}</b>
-                  {place.address && <span className="muted block">{place.address}</span>}
+                  {place.address && <span className="muted d-block">{place.address}</span>}
                 </span>
               </button>
             ) : null}

@@ -6,6 +6,7 @@ import { IdeaSheet, IdeaEditor } from './sheets/IdeaSheets';
 import { ExpenseEditor, NoteEditor } from './sheets/MiscSheets';
 import { PersonSheet } from './sheets/PersonSheet';
 import { CompassSheet } from './sheets/CompassSheet';
+import { ConverterSheet, RouletteSheet } from './sheets/FunSheets';
 
 export function SheetHost() {
   const stack = useSheets();
@@ -37,6 +38,10 @@ export function SheetHost() {
       return <PersonSheet key={key} id={top.id} onClose={closeSheet} />;
     case 'compass':
       return <CompassSheet key={key} target={top.target} onClose={closeSheet} />;
+    case 'converter':
+      return <ConverterSheet key={key} onClose={closeSheet} />;
+    case 'roulette':
+      return <RouletteSheet key={key} onClose={closeSheet} />;
     default:
       return null;
   }
