@@ -1473,13 +1473,13 @@ export const PLACES: Place[] = [
   },
   {
     "id": "zurich-home",
-    "name": "Zürich (Arto, placeholder)",
+    "name": "Zürich HB (main station)",
     "category": "city",
     "lat": 47.37802,
     "lon": 8.54019,
     "address": "Bahnhofplatz, 8001 Zürich, Switzerland",
     "area": "Zürich",
-    "blurb": "Arto's possible starting point. Zürich–Prague flights land at Prague T2 (Schengen); there are also direct night and day trains.",
+    "blurb": "Zürich main railway station. Direct day and night trains connect Zürich and Prague.",
     "tags": [
       "origin",
       "switzerland",
@@ -1526,7 +1526,7 @@ export const PLACES: Place[] = [
     "lon": 14.2738,
     "address": "Aviatická, 161 00 Praha 6 – Ruzyně",
     "area": "Ruzyně",
-    "blurb": "Schengen terminal (flights from Zürich land here). AE bus and trolleybus 59 stop outside arrivals.",
+    "blurb": "Schengen terminal (flights from Geneva land here). AE bus and trolleybus 59 stop outside arrivals.",
     "tags": [
       "airport"
     ],
@@ -1540,7 +1540,21 @@ export const PLACES: Place[] = [
     "lon": 8.55547,
     "address": "Kloten, Switzerland",
     "area": "Zürich",
-    "blurb": "Placeholder origin for Arto (edit if he travels differently).",
+    "blurb": "Zürich Airport, Switzerland.",
+    "tags": [
+      "airport"
+    ],
+    "approx": true
+  },
+  {
+    "id": "gva",
+    "name": "Geneva Airport · Terminal 1",
+    "category": "transport",
+    "lat": 46.2381,
+    "lon": 6.10895,
+    "address": "Geneva Airport, Switzerland",
+    "area": "Geneva",
+    "blurb": "Arto’s easyJet flights to/from Prague use Terminal 1.",
     "tags": [
       "airport"
     ],

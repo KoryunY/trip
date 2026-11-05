@@ -32,9 +32,9 @@ export const PEOPLE: Person[] = [
     emoji: '🏔️',
     homeName: 'Switzerland',
     home: [8.5402, 47.3782],
-    from: 'Coming from Switzerland',
-    stayFrom: '2026-11-13T20:40:00+01:00',
-    stayTo: '2026-11-22T10:30:00+01:00',
-    note: 'Arrival/departure times are placeholders — Arto, please edit your travel events.',
+    from: 'Flying in from Geneva',
+    stayFrom: '2026-11-15T18:30:00+01:00',
+    stayTo: '2026-11-20T17:15:00+01:00',
+    note: 'easyJet EZS1563: Sun 15 Nov, Geneva 15:25 → Prague 17:00. EZS1564: Fri 20 Nov, Prague 20:15 → Geneva 21:50. All times CET. Apartment arrival/departure are estimates based on airport transfers.',
   },
 ];

@@ -41,7 +41,7 @@ Test scripts used (Playwright, run against `vite preview` + `scripts/dev-api.mjs
 These hosts are blocked by its proxy: real OpenFreeMap tiles/styles, Open-Meteo weather, OSRM routing, and er-api rates. The code paths were exercised with mocks; check them on a phone.
 
 ## Data placeholders (edit in the app)
-- Arto's flights (ZRH ⇄ PRG T2 assumed).
+- Arto's flights are calendar-confirmed: GVA T1 → PRG T2, 15 Nov 15:25–17:00 (EZS1563); return 20 Nov 20:15–21:50 (EZS1564), all CET. Airport transfers remain estimates.
 - Alexey's Kožlany connection.
 - The outbound flight number (W6 7859 likely).
 - Apartment door code, Wi-Fi and host in Notes.

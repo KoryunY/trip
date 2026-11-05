@@ -160,5 +160,5 @@ export function countdownParts(targetMs: number, nowMs: number) {
 export const TZ_LABEL: Record<string, string> = {
   'Europe/Prague': tx('Prague'),
   'Asia/Yerevan': tx('Yerevan'),
-  'Europe/Zurich': tx('Zürich'),
+  'Europe/Zurich': tx('Switzerland'),
 };

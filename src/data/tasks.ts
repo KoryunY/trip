@@ -110,8 +110,8 @@ export const TASKS: Task[] = [
   },
   {
     id: 't-arto-travel',
-    title: 'Arto: add your real travel to the plan',
-    details: 'Edit “Arto: Switzerland → Prague (TBD)” and the return event with your flight/train numbers and times.',
+    title: 'Arto: check in for your easyJet flights',
+    details: 'Flights are in the plan: EZS1563 Geneva → Prague, Sun 15 Nov 15:25–17:00; EZS1564 Prague → Geneva, Fri 20 Nov 20:15–21:50 (CET). Check in and save both boarding passes offline. Cabin bag: max 45 × 36 × 20 cm.',
     category: 'flights',
     assignees: ['arto'],
     mode: 'each',
@@ -259,10 +259,10 @@ export const TASKS: Task[] = [
   // ── Concert ──
   {
     id: 't-korn-tickets',
-    title: 'Korn: confirm all 3 have tickets (16 Nov, 19:30)',
+    title: 'Korn: confirm Koryun & Alexey have tickets (16 Nov, 19:30)',
     details: 'Download tickets offline. With Architects + Pixel Grip.',
     category: 'concert',
-    assignees: ALL,
+    assignees: ['koryun', 'alexey'],
     mode: 'each',
     priority: 'high',
     guide: 'korn',
@@ -272,7 +272,7 @@ export const TASKS: Task[] = [
     title: 'Concert bag plan: nothing bigger than 40×30×20 cm, no bottles',
     details: 'Leave the laptop backpack at home; the deposit costs 20–100 CZK. Earplugs!',
     category: 'concert',
-    assignees: ALL,
+    assignees: ['koryun', 'alexey'],
     mode: 'each',
     priority: 'normal',
     guide: 'korn',

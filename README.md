@@ -52,4 +52,6 @@ API_PROXY=http://localhost:8787 npm run dev
 * `src/data/places.ts`: 97 researched places (`approx: true` = pin not double-checked). Regenerate with `node scripts/build-places.mjs scripts/places.research.json`.
 * `src/data/tasks.ts`, `ideas.ts`, `guides.ts`, `people.ts`.
 
-Placeholders to fix: Arto's travel (Zürich assumed), Alexey's connection from Kožlany, apartment details in **More → Notes**.
+Arto's flights are confirmed from the calendar: **15 Nov, Geneva → Prague 15:25–17:00 (easyJet EZS1563)**; **20 Nov, Prague → Geneva 20:15–21:50 (EZS1564)**, all CET. Airport transfers and apartment arrival/departure remain estimates.
+
+Placeholders to fix: Alexey's connection from Kožlany, apartment details in **More → Notes**.

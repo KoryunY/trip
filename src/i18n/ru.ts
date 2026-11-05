@@ -267,6 +267,7 @@ export const RU: Record<string, string> = {
   Prague: 'Прага',
   Yerevan: 'Ереван',
   Zürich: 'Цюрих',
+  Switzerland: 'Швейцария',
   '🌇 sunset': '🌇 закат',
 
   // ── event sheet / editor ──
@@ -303,7 +304,7 @@ export const RU: Record<string, string> = {
   'Start (': 'Начало (',
   'End (': 'Конец (',
   '· ends the next day': '· заканчивается на следующий день',
-  'Time zones (for flights from Yerevan / Zürich)': 'Часовые пояса (для рейсов из Еревана / Цюриха)',
+  'Time zones (for flights from Yerevan / Switzerland)': 'Часовые пояса (для рейсов из Еревана / Швейцарии)',
   'Start time zone': 'Пояс начала',
   'End time zone': 'Пояс окончания',
   Where: 'Где',

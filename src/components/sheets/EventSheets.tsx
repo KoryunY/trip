@@ -184,7 +184,7 @@ export function EventSheet({ id, onClose }: { id: string; onClose: () => void })
 const TZ_OPTIONS = [
   { v: 'Europe/Prague', label: 'Prague' },
   { v: 'Asia/Yerevan', label: 'Yerevan' },
-  { v: 'Europe/Zurich', label: 'Zürich' },
+  { v: 'Europe/Zurich', label: 'Switzerland (Geneva / Zürich)' },
 ];
 
 function toLocalParts(iso: string, tz: string) {
@@ -311,7 +311,7 @@ export function EventEditor({ id, draft, onClose }: { id?: string; draft?: Parti
           {eventDay(f) !== dayKey(Date.parse(f.end) - 1, eTz) ? tx(" · ends the next day") : ''}
         </p>
         <details>
-          <summary className="muted" style={{ fontSize: 13.5 }}>{tx("Time zones (for flights from Yerevan / Zürich)")}</summary>
+          <summary className="muted" style={{ fontSize: 13.5 }}>{tx("Time zones (for flights from Yerevan / Switzerland)")}</summary>
           <div className="grid2" style={{ marginTop: 10 }}>
             <div className="field">
               <label htmlFor="ev-tz">{tx("Start time zone")}</label>
