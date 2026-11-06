@@ -533,15 +533,17 @@ export const PLACES: Place[] = [
     "category": "sight",
     "lat": 50.08674,
     "lon": 14.41715,
-    "address": "Mariánské náměstí 5 / Karlova 1, 110 00 Praha 1",
+    "address": "Mariánské náměstí 5, 110 00 Praha 1",
     "area": "Old Town",
-    "blurb": "Former Jesuit college with a jaw-dropping Baroque library hall and an astronomical tower with a top Old Town view. Guided tours only, roughly every 30 min; book ahead.",
-    "price": "Guided tour, paid",
+    "blurb": "Baroque Library doorway view and Astronomical Tower on an English guided tour of about 45 min. First-choice optional extra on Thu 19 Nov: target 16:00, check in 15:45; slot unconfirmed. Book through eTickets on Prague City Tourism; walk-up places are not guaranteed.",
+    "price": "380 CZK adult; ages 16–26: 300 CZK",
     "tags": [
       "library",
       "baroque",
       "view"
-    ]
+    ],
+    "hours": "Daily 08:00–21:00; entry on a booked guided tour",
+    "url": "https://prague.eu/en/objevujte/the-clementinum-astronomical-tower-and-baroque-library/"
   },
   {
     "id": "zizkov-tower",
@@ -655,14 +657,15 @@ export const PLACES: Place[] = [
     "lon": 14.43723,
     "address": "náměstí Míru, 120 00 Praha 2 – Vinohrady",
     "area": "Vinohrady",
-    "blurb": "Vinohrady's main square, with the twin-spired neo-Gothic St. Ludmila (now a basilica) and the Vinohrady Theatre. Metro A Náměstí Míru, one stop from JzP. A Christmas market usually starts here in late November.",
-    "hours": "Square 24/7",
-    "price": "Free",
+    "blurb": "Vinohrady square outside St. Ludmila. The organiser confirms its Christmas market runs 20 Nov–24 Dec 2026, opening daily from 10:00. Optional shared opening-day browse Fri 20 Nov 13:30–14:00, then back to base before Arto packs at 14:30. Open-air market with no ticketing listed; food and purchases extra.",
+    "hours": "2026 Christmas market: 20 Nov–24 Dec, opens daily 10:00; square 24/7",
+    "price": "No advance ticketing listed; food/shopping extra",
     "tags": [
       "square",
       "church",
       "vinohrady"
-    ]
+    ],
+    "url": "https://www.vanocnitrhy.cz/namesti-miru/"
   },
   {
     "id": "havlickovy-sady-grebovka",
@@ -1517,6 +1520,26 @@ export const PLACES: Place[] = [
     "tags": [
       "origin",
       "armenia"
+    ],
+    "approx": true
+  },
+  {
+    "id": "old-town-hall-tower",
+    "name": "Old Town Hall tower · Staroměstská radnice",
+    "category": "viewpoint",
+    "lat": 50.087,
+    "lon": 14.42076,
+    "address": "Staroměstské náměstí 1, 110 00 Praha 1",
+    "area": "Old Town",
+    "blurb": "Optional self-guided tower visit on Thu 19 Nov around 17:00 for the illuminated city. About 10 min on foot from Klementinum; allow roughly 45 min to visit, then 15–20 min towards Lokál. Separate from the free square/clock exterior. Historical-interior tours are extra; no ticket bought.",
+    "hours": "November daily 09:00–20:00",
+    "price": "350 CZK adult on site / 450 CZK online; lift +100 CZK",
+    "url": "https://prague.eu/en/objevujte/old-town-hall-with-astronomical-clock-staromestska-radnice-s-orlojem/",
+    "tags": [
+      "tower",
+      "view",
+      "optional",
+      "old-town"
     ],
     "approx": true
   },

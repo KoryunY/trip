@@ -54,7 +54,22 @@ Object.assign(byId['vinohradsky-pivovar'], {
   hours: 'Mon–Sat 11:00–24:00; Sun 11:00–22:00',
   url: 'https://www.vinohradskypivovar.cz/cs/korunni/',
 });
+Object.assign(byId['klementinum'], {
+  address: 'Mariánské náměstí 5, 110 00 Praha 1',
+  blurb: 'Baroque Library doorway view and Astronomical Tower on an English guided tour of about 45 min. First-choice optional extra on Thu 19 Nov: target 16:00, check in 15:45; slot unconfirmed. Book through eTickets on Prague City Tourism; walk-up places are not guaranteed.',
+  hours: 'Daily 08:00–21:00; entry on a booked guided tour',
+  price: '380 CZK adult; ages 16–26: 300 CZK',
+  url: 'https://prague.eu/en/objevujte/the-clementinum-astronomical-tower-and-baroque-library/',
+});
+Object.assign(byId['namesti-miru-st-ludmila'], {
+  blurb: 'Vinohrady square outside St. Ludmila. The organiser confirms its Christmas market runs 20 Nov–24 Dec 2026, opening daily from 10:00. Optional shared opening-day browse Fri 20 Nov 13:30–14:00, then back to base before Arto packs at 14:30. Open-air market with no ticketing listed; food and purchases extra.',
+  hours: '2026 Christmas market: 20 Nov–24 Dec, opens daily 10:00; square 24/7',
+  price: 'No advance ticketing listed; food/shopping extra',
+  url: 'https://www.vanocnitrhy.cz/namesti-miru/',
+});
 const extra = [
+  // Approximate pin shared with the researched Old Town Square POI; entrance not checked.
+  { id: 'old-town-hall-tower', name: 'Old Town Hall tower · Staroměstská radnice', category: 'viewpoint', lat: 50.087, lon: 14.42076, address: 'Staroměstské náměstí 1, 110 00 Praha 1', area: 'Old Town', blurb: 'Optional self-guided tower visit on Thu 19 Nov around 17:00 for the illuminated city. About 10 min on foot from Klementinum; allow roughly 45 min to visit, then 15–20 min towards Lokál. Separate from the free square/clock exterior. Historical-interior tours are extra; no ticket bought.', hours: 'November daily 09:00–20:00', price: '350 CZK adult on site / 450 CZK online; lift +100 CZK', url: 'https://prague.eu/en/objevujte/old-town-hall-with-astronomical-clock-staromestska-radnice-s-orlojem/', tags: ['tower', 'view', 'optional', 'old-town'], approx: true },
   // Restaurant pin from Prague City Tourism's route link; navigation entrance not checked.
   { id: 'klasterni-senk', name: 'Klášterní šenk · Břevnov Monastery tavern', category: 'food', lat: 50.08381, lon: 14.35672, address: 'Markétská 28/1, 169 00 Praha 6 – Břevnov', area: 'Břevnov', blurb: 'Arrival Plan A: meet for Czech dinner and Benedict monastery beer at 18:30 on Sun 15 Nov, then go to base. Airport travel estimate: 20–30 min by taxi or 40–60 min by 191 → Vypich → tram 22/25. Recommend booking for 3: +420 220 406 294; web requests need at least 24 h and staff confirmation. Not reserved. Optional dinner, separate from Monday’s Strahov lunch.', hours: 'Daily 11:30–23:00', url: 'https://www.klasternisenk.cz/en/', tags: ['czech', 'monastery', 'beer', 'arrival-option'], approx: true },
   { id: 'prg-t2', name: 'Prague Airport · Terminal 2', category: 'transport', lat: 50.1059, lon: 14.2738, address: 'Aviatická, 161 00 Praha 6 – Ruzyně', area: 'Ruzyně', blurb: 'Schengen terminal (flights from Geneva land here). AE bus and trolleybus 59 stop outside arrivals.', tags: ['airport'], approx: true },

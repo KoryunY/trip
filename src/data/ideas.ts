@@ -91,11 +91,13 @@ export const IDEAS: Idea[] = [
   },
   {
     id: 'i-klementinum',
-    title: 'Klementinum: baroque library + astronomical tower tour',
+    title: 'Optional · Klementinum library & Astronomical Tower · Thu 19',
     kind: 'sight',
     placeId: 'klementinum',
-    durationMin: 60,
-    notes: 'Guided tours only, every 30 min. One of the most beautiful libraries in the world.',
+    durationMin: 65,
+    cost: '380 CZK adult; ages 16–26: 300 CZK',
+    scheduledEventId: 'thu-klementinum',
+    notes: 'Now in the Thursday timetable as the first-choice optional extra, 15:45–16:50 including check-in and exit buffer. Target English tour 16:00 for 3; actual availability is unconfirmed. Guided visit lasts about 45 min; the library is viewed from the doorway and the Astronomical Tower is included. Book through eTickets on the official Prague City Tourism page; no tickets purchased. Skip the later Town Hall tower if one viewpoint is enough. Keep Lokál dinner at 18:45.\nhttps://prague.eu/en/objevujte/the-clementinum-astronomical-tower-and-baroque-library/',
   },
   {
     id: 'i-akropolis',
